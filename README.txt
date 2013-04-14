@@ -12,3 +12,8 @@ Feltöltöttem néhány példaprogramot, bevezetőt készítettem az OpenGl hasz
 
 Szabó Zoltán
 2013 április 12
+
+Megírtama Sierpinski négyszöget rekurzió segítségével.
+
+Szabó Zoltán
+2013 április 14
