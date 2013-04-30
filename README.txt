@@ -1,4 +1,4 @@
-A programmal kapcsolatos minden anyagot ide fogok feltölteni:
+﻿A programmal kapcsolatos minden anyagot ide fogok feltölteni:
 https://github.com/szaza/materials
 
 A GIT nevű verziókezelő rendszert fogjuk használni.
@@ -17,3 +17,5 @@ Megírtama Sierpinski négyszöget rekurzió segítségével.
 
 Szabó Zoltán
 2013 április 14
+
+teszt - ati
