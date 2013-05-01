@@ -18,4 +18,6 @@ Megírtama Sierpinski négyszöget rekurzió segítségével.
 Szabó Zoltán
 2013 április 14
 
-teszt - ati
+Ati
+2013 május 1
+A dokumentáció első pontját kicsit kibővítettem, nézd át és javítsad, ahol javítani kell, vagy majd megbeszéljük. A végére bemásoltam pár forrást, hogy honnan szedtem össze a dolgokat, arra az esetre, hogyha erre is szükség lesz majd.
