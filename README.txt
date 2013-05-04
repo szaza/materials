@@ -25,3 +25,7 @@ A dokumentáció első pontját kicsit kibővítettem, nézd át és javítsad, 
 Szabó Zoltán
 2013 május 2
 Átírtam a dokumentációt felhasználva azokat amit te írtál. Kidolgoztam azt, hogy hogy lehet openGl-t használni Gtk-val együtt. Ezt beleírtam a dokumentációba is, valamint bekerült a példák katalógusba is.
+
+Szabó Zoltán
+2013 május 4
+Elkezdtem kidolgozni a fraktál generáló programot. Feltöltöttem a Fractal katalógusba
