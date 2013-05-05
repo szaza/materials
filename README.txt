@@ -29,3 +29,8 @@ Szabó Zoltán
 Szabó Zoltán
 2013 május 4
 Elkezdtem kidolgozni a fraktál generáló programot. Feltöltöttem a Fractal katalógusba
+
+Szabó Zoltán
+2013 május 5
+A java projekttel kapcsolatos fejlesztéseket a a jProject katalógusban találod!
+Jó munkát!
