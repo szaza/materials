@@ -5,30 +5,35 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import collect.TriangleList;
 
-public class JAddTriangFrame {
+public class JAddTriangFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private int x;
 	private int y;
 	private int width;
 	private int height;
 	String title;
+	TriangleList tList;
 
-	JFrame frame;
 	JPanel buttonContainer;
 	JButton ok;
 	JButton cancel;
 	JTriangPanel triangSettings;
 
 	public JAddTriangFrame() {
-		this("Háromszög hozzáadása", 30, 30, 300, 300);
+		this("Háromszög hozzáadása", 30, 30, 300, 300,null);
+	}
+	
+	public JAddTriangFrame(TriangleList tList) {
+		this("Háromszög hozzáadása", 30, 30, 300, 300,tList);
 	}
 
-	public JAddTriangFrame(String title, int x, int y, int width, int height)
+	public JAddTriangFrame(String title, int x, int y, int width, int height,TriangleList tList)
 			throws HeadlessException {
 		super();
 		this.title = title;
@@ -36,30 +41,30 @@ public class JAddTriangFrame {
 		this.setY(y);
 		this.setWidth(width);
 		this.setHeight(height);
+		this.tList = tList;
 		
-		frame = new JFrame();
-		frame.setBounds(x, y, width, height);
-		frame.setTitle(title);
-		frame.setLayout(new BorderLayout());
+		setBounds(x, y, width, height);
+		setTitle(title);
+		setLayout(new BorderLayout());
 
 		
 		ok = new JButton("Ok");
 		cancel = new JButton("Mégse");
 		buttonContainer = new JPanel();
 		triangSettings = new JTriangPanel();
-		triangSettings.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
+		triangSettings.setSize(new Dimension(getWidth(), getHeight()));
 		buttonContainer.add(ok);
 		buttonContainer.add(cancel);
-		frame.add(buttonContainer, BorderLayout.SOUTH);
-		frame.add(triangSettings, BorderLayout.NORTH);
-		frame.setResizable(false);
-		frame.setVisible(true);
+		add(buttonContainer, BorderLayout.SOUTH);
+		add(triangSettings, BorderLayout.NORTH);
+		setResizable(false);
+		setVisible(true);
 		
 		cancel.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				dispose();
 			}
 		});	
 		
@@ -67,13 +72,17 @@ public class JAddTriangFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				frame.dispose();			
+				saveSettings();
+				dispose();	
 			}
 			
 		});
 	}
 
+	public void saveSettings() {
+		tList.insertItem(triangSettings.getTriangSettings());
+	}
+	
 	public int getWidth() {
 		return width;
 	}
@@ -104,6 +113,10 @@ public class JAddTriangFrame {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+	
+	public TriangleList gettList() {
+		return tList;
 	}
 	
 }

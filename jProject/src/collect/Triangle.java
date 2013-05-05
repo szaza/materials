@@ -1,6 +1,12 @@
 package collect;
 
-public class Triangle {
+import java.awt.Point;
+import java.io.Serializable;
+
+public class Triangle implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	Point A;
 	Point B;
 	Point C;

@@ -6,7 +6,6 @@ public class Fractal {
 		UIFrame frame = new UIFrame();
 		frame.setBounds(10,10,1000,600);
 		frame.setVisible(true);
-
 	}
 
 }

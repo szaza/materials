@@ -5,8 +5,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
+
+import collect.TriangleList;
+import collect.TriangleListIterator;
 import graphics.JCanvas;
 
 public class UIFrame extends JFrame {
@@ -22,6 +26,8 @@ public class UIFrame extends JFrame {
 	JMenuItem fileMenu;
 	JCanvas canvas;
 	JButton addTriang;
+	
+	TriangleList tList = new TriangleList();
 	
 	public UIFrame() {
 		this.setTitle("Fractal");
@@ -43,13 +49,23 @@ public class UIFrame extends JFrame {
 		controlPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		controlPanel.add(menuBar);
 		
-		
-		
         addTriang.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JAddTriangFrame addFrame = new JAddTriangFrame();
+				final JAddTriangFrame addFrame = new JAddTriangFrame(tList);
+				addFrame.addWindowListener(new WindowAdapter(){
+					@Override
+					public void windowClosing(WindowEvent e) {
+						tList = addFrame.gettList();
+						
+						System.out.println("Ebbe pedig belep!");
+						
+						for (TriangleListIterator it = tList.getIterator(); it.hasMoreElements();) {
+							System.out.println(it.nextElement());
+						}	
+					}
+				});
 			}
         });
         

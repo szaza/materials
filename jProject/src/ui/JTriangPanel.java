@@ -2,10 +2,13 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Point;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import collect.Triangle;
 
 import layout.SpringUtilities;
 
@@ -97,6 +100,14 @@ public class JTriangPanel extends JPanel {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+	
+	public Triangle getTriangSettings() {
+		Point a = new Point(Integer.parseInt(axField.getText()),Integer.parseInt(ayField.getText()));
+		Point b = new Point(Integer.parseInt(bxField.getText()),Integer.parseInt(byField.getText()));
+		Point c = new Point(Integer.parseInt(cxField.getText()),Integer.parseInt(cyField.getText()));
+		Triangle triang = new Triangle(a,b,c);
+		return triang;
 	}
 	
 	@Override
