@@ -3,23 +3,21 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import collect.TriangleList;
 
-public class JAddTriangFrame extends JFrame {
+public class JAddTriangFrame extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private int x;
 	private int y;
 	private int width;
 	private int height;
-	String title;
+	private String title;
+	
 	TriangleList tList;
-
 	JPanel buttonContainer;
 	JButton ok;
 	JButton cancel;
@@ -45,42 +43,21 @@ public class JAddTriangFrame extends JFrame {
 		
 		setBounds(x, y, width, height);
 		setTitle(title);
-		setLayout(new BorderLayout());
-
 		
+		setLayout(new BorderLayout());
 		ok = new JButton("Ok");
-		cancel = new JButton("Mégse");
-		buttonContainer = new JPanel();
+		cancel = new JButton("Mégse");		
+		buttonContainer = new JPanel();		
 		triangSettings = new JTriangPanel();
 		triangSettings.setSize(new Dimension(getWidth(), getHeight()));
-		buttonContainer.add(ok);
+		
+		buttonContainer.add(ok);	
 		buttonContainer.add(cancel);
-		add(buttonContainer, BorderLayout.SOUTH);
+
+		add(buttonContainer,BorderLayout.SOUTH);
 		add(triangSettings, BorderLayout.NORTH);
 		setResizable(false);
 		setVisible(true);
-		
-		cancel.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});	
-		
-		ok.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveSettings();
-				dispose();	
-			}
-			
-		});
-	}
-
-	public void saveSettings() {
-		tList.insertItem(triangSettings.getTriangSettings());
 	}
 	
 	public int getWidth() {
@@ -119,4 +96,15 @@ public class JAddTriangFrame extends JFrame {
 		return tList;
 	}
 	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public void saveSettings() {
+		tList.insertItem(triangSettings.getTriangSettings());
+	}
 }
