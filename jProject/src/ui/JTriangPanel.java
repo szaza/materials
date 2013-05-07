@@ -130,6 +130,5 @@ public class JTriangPanel extends JPanel {
 	public void setSize(Dimension d) {
 		this.width = d.width;
 		this.height = d.height;
-	}
-	
+	}	
 }

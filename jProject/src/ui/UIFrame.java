@@ -30,6 +30,7 @@ public class UIFrame extends JFrame {
 	private JMenuItem fileMenu;
 	private JCanvas canvas;
 	private JButton addTriang;
+	private JButton removeTriang;
 	private JComboBox<String> selectTriangle;
 	private JLabel triangSettings;
 	private JAddTriangFrame addFrame;
@@ -50,6 +51,7 @@ public class UIFrame extends JFrame {
 		selectTriangle = new JComboBox<String>();
 		triangSettings = new JLabel("A Háromszög adatai:");
 		addTriang = new JButton("Új háromszög");
+		removeTriang = new JButton("Törlés");
 		
 		fileMenu.setText("File");
 		menuBar.add(fileMenu);
@@ -63,6 +65,7 @@ public class UIFrame extends JFrame {
 		editPanel.add(selectTriangle);
 		editPanel.add(innerPanel);
 		editPanel.add(addTriang);
+		editPanel.add(removeTriang);
 		editPanel.setPreferredSize(new Dimension(300,400));	
 		
 		contentPanel.setLayout(new BorderLayout());
@@ -87,12 +90,44 @@ public class UIFrame extends JFrame {
        selectTriangle.addItemListener(new ItemListener(){
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
-				int index = selectTriangle.getSelectedIndex();	
-				Triangle triang;
-				triang = tList.getValue(index);
-				innerPanel.setFields(triang.getA(),triang.getB(),triang.getC());
+				refreshInnerPanel();
 			}   
        });
+       
+       removeTriang.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int index = selectTriangle.getSelectedIndex();
+				tList.deleteItem(index);
+				selectTriangle.removeItemAt(selectTriangle.getItemCount()-1);
+				refreshInnerPanel();
+				setRemoveTriangButtonState();
+			}
+       });
+	}
+		
+	public void init() {
+		Point A = new Point(1,1);
+		Point B = new Point(-1,1);
+		Point C = new Point(1,-1);
+		
+		tList.insertItem(new Triangle(A,B,C));
+		selectTriangle.addItem("1");
+		innerPanel.setFields(A,B,C);
+		innerPanel.addFocusListener(new fieldListener());
+		setRemoveTriangButtonState();
+	}
+	
+	public void setRemoveTriangButtonState() {
+		if (selectTriangle.getItemCount() > 1) removeTriang.setEnabled(true);
+		else removeTriang.setEnabled(false);
+	}	
+	
+	public void refreshInnerPanel() {
+		int index = selectTriangle.getSelectedIndex();			
+		Triangle triang;
+		triang = tList.getValue(index);
+		innerPanel.setFields(triang.getA(),triang.getB(),triang.getC());		
 	}
 	
 	class okPressed implements ActionListener {
@@ -106,9 +141,9 @@ public class UIFrame extends JFrame {
 					selectTriangle.addItem(Integer.toString(i));
 				}
 			}
-		}
-		
-	}
+			setRemoveTriangButtonState();
+		}	
+	}	
 	
 	class exitDialog implements ActionListener {
 
@@ -134,16 +169,5 @@ public class UIFrame extends JFrame {
 			tList.updateValue(triang, index);
 		}
 		
-	}
-	
-	public void init() {
-		Point A = new Point(1,1);
-		Point B = new Point(-1,1);
-		Point C = new Point(1,-1);
-		
-		tList.insertItem(new Triangle(A,B,C));
-		selectTriangle.addItem("1");
-		innerPanel.setFields(A,B,C);
-		innerPanel.addFocusListener(new fieldListener());
-	}
+	}	
 }

@@ -42,11 +42,18 @@ public class TriangleList implements Serializable {
 	}	
 	
 	//Töröl egy elemet a listabol
-	public void deleteItem(Item p) {
-		Item r = new Item();
-		r = p;
-		r.getPrev().setNext(r.getPrev());
-		p.getNext().setPrev(r.getPrev());
+	public void deleteItem(int index) {
+		int count = 1;
+		Item p = first;		
+		
+		while ((p != null) && (count < index)) {
+			p = p.getNext();
+			count++;
+		}		
+		
+		if (p==last) last = p.getPrev();
+		if (p!=first) p.getPrev().setNext(p.getNext());
+		if (p!=last) p.getNext().setPrev(p.getPrev());
 		length--;
 	}	
 	
@@ -66,7 +73,7 @@ public class TriangleList implements Serializable {
 	
 	//Felulirom egy elem erteket
 	public void updateValue(Triangle triang,int n) {
-		int count=0;
+		int count=1;
 		Item tmp;
 		tmp = first;
 
