@@ -1,6 +1,6 @@
 package collect;
 
-import java.awt.Point;
+import collect.Point;
 import java.io.Serializable;
 
 public class Triangle implements Serializable {

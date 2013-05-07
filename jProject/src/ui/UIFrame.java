@@ -5,7 +5,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import collect.Point;
+
 import javax.swing.*;
+
+import collect.Triangle;
 import collect.TriangleList;
 import graphics.JCanvas;
 
@@ -61,7 +68,7 @@ public class UIFrame extends JFrame {
 		contentPanel.add(canvas,BorderLayout.CENTER);
 		contentPanel.add(editPanel,BorderLayout.EAST);
 		
-		selectTriangle.addItem("1");
+		init();
 		
 		this.setContentPane(contentPanel);
 		
@@ -73,7 +80,17 @@ public class UIFrame extends JFrame {
 				addFrame.ok.addActionListener(new exitDialog());
 				addFrame.cancel.addActionListener(new exitDialog());
 			}
-        });		
+        });	
+       
+       selectTriangle.addItemListener(new ItemListener(){
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				int index = selectTriangle.getSelectedIndex();	
+				Triangle triang;
+				triang = tList.getValue(index);
+				innerPanel.setFields(triang.getA(),triang.getB(),triang.getC());
+			}   
+       });
 	}
 	
 	class okPressed implements ActionListener {
@@ -98,5 +115,15 @@ public class UIFrame extends JFrame {
 			addFrame.dispose();			
 		}
 		
+	}
+	
+	public void init() {
+		Point A = new Point(1,1);
+		Point B = new Point(-1,1);
+		Point C = new Point(1,-1);
+		
+		tList.insertItem(new Triangle(A,B,C));
+		selectTriangle.addItem("1");
+		innerPanel.setFields(A,B,C);
 	}
 }

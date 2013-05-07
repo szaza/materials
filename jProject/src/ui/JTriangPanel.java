@@ -1,13 +1,12 @@
 package ui;
 
+import collect.Point;
+import collect.Triangle;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Point;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
-import collect.Triangle;
 
 import layout.SpringUtilities;
 
@@ -99,11 +98,20 @@ public class JTriangPanel extends JPanel {
 	}
 	
 	public Triangle getTriangSettings() {
-		Point a = new Point(Integer.parseInt(axField.getText()),Integer.parseInt(ayField.getText()));
-		Point b = new Point(Integer.parseInt(bxField.getText()),Integer.parseInt(byField.getText()));
-		Point c = new Point(Integer.parseInt(cxField.getText()),Integer.parseInt(cyField.getText()));
+		Point a = new Point(Double.parseDouble(axField.getText()),Double.parseDouble(ayField.getText()));
+		Point b = new Point(Double.parseDouble(bxField.getText()),Double.parseDouble(byField.getText()));
+		Point c = new Point(Double.parseDouble(cxField.getText()),Double.parseDouble(cyField.getText()));
 		Triangle triang = new Triangle(a,b,c);
 		return triang;
+	}
+	
+	public void setFields(Point A,Point B,Point C) {
+		axField.setText(Double.toString(A.getX()));
+		ayField.setText(Double.toString(A.getY()));
+		bxField.setText(Double.toString(B.getX()));
+		byField.setText(Double.toString(B.getY()));
+		cxField.setText(Double.toString(C.getX()));
+		cyField.setText(Double.toString(C.getY()));		
 	}
 	
 	@Override

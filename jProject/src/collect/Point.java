@@ -1,29 +1,33 @@
 package collect;
 
-public class Point {
+import java.awt.geom.Point2D;
+
+public class Point extends Point2D {
 	
-	private double x;
-	private double y;
-	
+	private Point2D.Double Point;
+
 	public Point() {
-		x=0;
-		y=0;
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
+		this (0,0);
+	}	
+	
+	public Point(double x, double y) {
+		Point = new Point2D.Double();
+		Point.setLocation(x,y);
 	}
 	
+	@Override
+	public double getX() {
+		return Point.getX();
+	}
+
+	@Override
+	public double getY() {
+		return Point.getY();
+	}
+
+	@Override
+	public void setLocation(double x, double y) {
+		Point.setLocation(x,y);		
+	}
+
 }
