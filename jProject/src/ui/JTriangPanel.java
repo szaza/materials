@@ -7,7 +7,6 @@ import java.awt.Point;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
-import javax.swing.SwingConstants;
 import collect.Triangle;
 
 import layout.SpringUtilities;
@@ -15,32 +14,30 @@ import layout.SpringUtilities;
 public class JTriangPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	JPanel contentPanel;
-	JLabel labelEdit1;
-	JLabel axEdit;
-	JLabel ayEdit;
-	JLabel bxEdit;
-	JLabel byEdit;
-	JLabel cxEdit;
-	JLabel cyEdit;
-	JCustomField axField;
-	JCustomField ayField;
-	JCustomField bxField;
-	JCustomField byField;
-	JCustomField cxField;
-	JCustomField cyField;
+	
 	private String text;
 	private int width;
-	private int height;
+	private int height;	
+	
+	private JPanel contentPanel;
+	private JLabel axEdit;
+	private JLabel ayEdit;
+	private JLabel bxEdit;
+	private JLabel byEdit;
+	private JLabel cxEdit;
+	private JLabel cyEdit;
+	private JCustomField axField;
+	private JCustomField ayField;
+	private JCustomField bxField;
+	private JCustomField byField;
+	private JCustomField cxField;
+	private JCustomField cyField;
 	
 	public JTriangPanel() {
-		text = "A háromszög beállításai:";
 		width = 200;
 		height = 200;
 		
 		contentPanel = new JPanel();
-		labelEdit1 = new JLabel(text);
-		labelEdit1.setHorizontalAlignment(SwingConstants.CENTER);		
 		
 		axEdit = new JLabel("Ax:");
 		axField = new JCustomField("0");
@@ -74,7 +71,6 @@ public class JTriangPanel extends JPanel {
 		setPreferredSize(new Dimension(width,height));
         SpringUtilities.makeCompactGrid(contentPanel,6,2,3,3,3,3);		
         
-        this.add(labelEdit1,BorderLayout.NORTH);
         this.add(contentPanel,BorderLayout.CENTER);
 	}
 

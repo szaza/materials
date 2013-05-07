@@ -7,10 +7,34 @@ public class Triangle implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	Point A;
-	Point B;
-	Point C;
+	private Point A;
+	private Point B;
+	private Point C;
 	
+	public Point getA() {
+		return A;
+	}
+
+	public void setA(Point a) {
+		A = a;
+	}
+
+	public Point getB() {
+		return B;
+	}
+
+	public void setB(Point b) {
+		B = b;
+	}
+
+	public Point getC() {
+		return C;
+	}
+
+	public void setC(Point c) {
+		C = c;
+	}
+
 	public Triangle(){
 		A = new Point();
 		B = new Point();

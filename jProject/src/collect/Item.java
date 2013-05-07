@@ -23,7 +23,7 @@ public class Item implements Serializable {
 	}
 
 	public String toString() {
-		return triang.A + " " + triang.B + " " + triang.C;
+		return triang.getA() + " " + triang.getB() + " " + triang.getC();
 	}
 
 	public Item getNext() {

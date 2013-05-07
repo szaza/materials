@@ -17,11 +17,11 @@ public class JAddTriangFrame extends JDialog {
 	private int height;
 	private String title;
 	
-	TriangleList tList;
-	JPanel buttonContainer;
-	JButton ok;
-	JButton cancel;
-	JTriangPanel triangSettings;
+	private TriangleList tList;
+	private JPanel buttonContainer;
+	public JButton ok;
+	public JButton cancel;
+	private JTriangPanel triangSettings;
 
 	public JAddTriangFrame() {
 		this("Háromszög hozzáadása", 30, 30, 300, 300,null);
