@@ -64,6 +64,20 @@ public class TriangleList implements Serializable {
 		return tmp.getTriang();
 	}	
 	
+	//Felulirom egy elem erteket
+	public void updateValue(Triangle triang,int n) {
+		int count=0;
+		Item tmp;
+		tmp = first;
+
+		while ((tmp != null) && (count < n)) {
+			tmp = tmp.getNext();
+			count++;
+		}
+
+		tmp.setTriang(triang);
+	}	
+	
 	public int getLength() {
 		return length;
 	}	
