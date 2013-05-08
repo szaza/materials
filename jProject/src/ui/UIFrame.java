@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -119,23 +117,6 @@ public class UIFrame extends JFrame {
 		
 	}
 	
-	class fieldListener implements FocusListener {
-
-		@Override
-		public void focusGained(FocusEvent e) {
-			
-		}
-
-		@Override
-		public void focusLost(FocusEvent e) {
-			int index = selectTriangle.getSelectedIndex();
-			Triangle triang;
-			triang = innerPanel.getTriangSettings();
-			tList.updateValue(triang, index);
-		}
-		
-	}
-	
 	public void init() {
 		Point A = new Point(1,1);
 		Point B = new Point(-1,1);
@@ -144,6 +125,5 @@ public class UIFrame extends JFrame {
 		tList.insertItem(new Triangle(A,B,C));
 		selectTriangle.addItem("1");
 		innerPanel.setFields(A,B,C);
-		innerPanel.addFocusListener(new fieldListener());
 	}
 }

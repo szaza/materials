@@ -4,8 +4,6 @@ import collect.Point;
 import collect.Triangle;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.FocusListener;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
@@ -114,16 +112,6 @@ public class JTriangPanel extends JPanel {
 		byField.setText(Double.toString(B.getY()));
 		cxField.setText(Double.toString(C.getX()));
 		cyField.setText(Double.toString(C.getY()));		
-	}
-	
-	@Override
-	public void addFocusListener(FocusListener action) {
-		axField.addFocusListener(action);
-		ayField.addFocusListener(action);
-		bxField.addFocusListener(action);
-		byField.addFocusListener(action);
-		cxField.addFocusListener(action);
-		cyField.addFocusListener(action);
 	}
 	
 	@Override
