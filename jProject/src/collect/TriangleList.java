@@ -78,7 +78,7 @@ public class TriangleList implements Serializable {
 
 	// Felulirom egy elem erteket
 	public void updateValue(Triangle triang, int n) {
-		int count = 1;
+		int count = 0;
 		Item tmp;
 		tmp = first;
 
@@ -86,7 +86,7 @@ public class TriangleList implements Serializable {
 			tmp = tmp.getNext();
 			count++;
 		}
-
+		System.out.println("Meghivodik");
 		tmp.setTriang(triang);
 	}
 
