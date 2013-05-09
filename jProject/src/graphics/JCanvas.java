@@ -40,6 +40,7 @@ public class JCanvas extends Canvas3D {
 	    scale.invert();
 		
 	    grid(group);
+	    //komment
 	    
 		group.addChild(new ColorCube(0.3));
 		universe.getViewingPlatform().getViewPlatformTransform().setTransform(scale);
