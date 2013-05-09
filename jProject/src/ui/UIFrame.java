@@ -3,6 +3,7 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -13,6 +14,8 @@ import java.awt.event.ItemListener;
 import collect.Point;
 
 import javax.swing.*;
+
+import com.sun.j3d.utils.universe.SimpleUniverse;
 
 import collect.Triangle;
 import collect.TriangleList;
@@ -27,7 +30,9 @@ public class UIFrame extends JFrame {
 	private JPanel editPanel;
 	private JTriangPanel innerPanel;
 	private JMenuBar menuBar;
-	private JMenuItem fileMenu;
+	private JMenu fileMenu;
+	private JMenuItem saveMenu;
+	private JMenuItem exitMenu;
 	private JCanvas canvas;
 	private JButton addTriang;
 	private JButton removeTriang;
@@ -46,14 +51,18 @@ public class UIFrame extends JFrame {
 		editPanel = new JPanel();
 		innerPanel = new JTriangPanel();
 		menuBar = new JMenuBar();
-		fileMenu = new JMenuItem();
-		canvas = new JCanvas();
+		fileMenu = new JMenu("File");
+		saveMenu = new JMenuItem("Save");
+		exitMenu = new JMenuItem("Exit");
+		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
+		canvas = new JCanvas(config);
 		selectTriangle = new JComboBox<String>();
 		triangSettings = new JLabel("A Háromszög adatai:");
 		addTriang = new JButton("Új háromszög");
 		removeTriang = new JButton("Törlés");
 
-		fileMenu.setText("File");
+		fileMenu.add(saveMenu);
+		fileMenu.add(exitMenu);
 		menuBar.add(fileMenu);
 
 		selectTriangle.setPreferredSize(new Dimension(150, 26));
