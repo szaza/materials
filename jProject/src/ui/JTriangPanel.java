@@ -118,13 +118,13 @@ public class JTriangPanel extends JPanel {
 	
 	@Override
 	public void addFocusListener(FocusListener action) {
-		axField.addFocusListener(action);
-		ayField.addFocusListener(action);
-		bxField.addFocusListener(action);
-		byField.addFocusListener(action);
-		cxField.addFocusListener(action);
-		cyField.addFocusListener(action);
-	}
+	axField.addFocusListener(action);
+	ayField.addFocusListener(action);
+	bxField.addFocusListener(action);
+	byField.addFocusListener(action);
+	cxField.addFocusListener(action);
+	cyField.addFocusListener(action);
+	}	
 	
 	@Override
 	public void setSize(Dimension d) {
