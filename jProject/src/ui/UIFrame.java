@@ -11,9 +11,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import collect.Point;
-
 import javax.swing.*;
+import javax.vecmath.Point3f;
 
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
@@ -123,15 +122,16 @@ public class UIFrame extends JFrame {
 	}
 
 	public void init() {
-		Point A = new Point(1, 1);
-		Point B = new Point(-1, 1);
-		Point C = new Point(1, -1);
+		Point3f A = new Point3f(0.0f,0.0f,0.0f);
+		Point3f B = new Point3f(-1.0f,0.0f,0.0f);
+		Point3f C = new Point3f(0.0f,-1.0f,0.0f);
 
 		tList.insertItem(new Triangle(A, B, C));
 		selectTriangle.addItem("1");
 		innerPanel.setFields(A, B, C);
 		innerPanel.addFocusListener(new fieldListener());
 		setRemoveTriangButtonState();
+		canvas.drawTList(tList);
 	}
 
 	public void setRemoveTriangButtonState() {

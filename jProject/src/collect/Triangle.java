@@ -1,47 +1,48 @@
 package collect;
 
-import collect.Point;
 import java.io.Serializable;
+
+import javax.vecmath.Point3f;
 
 public class Triangle implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Point A;
-	private Point B;
-	private Point C;
+	private Point3f A;
+	private Point3f B;
+	private Point3f C;
 	
-	public Point getA() {
+	public Point3f getA() {
 		return A;
 	}
 
-	public void setA(Point a) {
+	public void setA(Point3f a) {
 		A = a;
 	}
 
-	public Point getB() {
+	public Point3f getB() {
 		return B;
 	}
 
-	public void setB(Point b) {
+	public void setB(Point3f b) {
 		B = b;
 	}
 
-	public Point getC() {
+	public Point3f getC() {
 		return C;
 	}
 
-	public void setC(Point c) {
+	public void setC(Point3f c) {
 		C = c;
 	}
 
 	public Triangle(){
-		A = new Point();
-		B = new Point();
-		C = new Point();
+		A = new Point3f();
+		B = new Point3f();
+		C = new Point3f();
 	}
 	
-	public Triangle(Point a,Point b, Point c) {
+	public Triangle(Point3f a,Point3f b, Point3f c) {
 		A = a;
 		B = b;
 		C = c;
@@ -49,6 +50,6 @@ public class Triangle implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "[" + A.getX() + "," + A.getY() + "]" + "[" + B.getX() + "," + B.getY() + "]" + "[" + C.getX() + "," + C.getY() + "]";
+		return "[" + A.x + "," + A.y + "]" + "[" + B.x + "," + B.y + "]" + "[" + C.x + "," + C.y + "]";
 	}
 }
