@@ -7,41 +7,41 @@ public class Triangle implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Point2D.Double A;
-	private Point2D.Double B;
-	private Point2D.Double C;
+	public Point2D.Float A;
+	public Point2D.Float B;
+	public Point2D.Float C;
 	
-	public Point2D.Double getA() {
+	public Point2D.Float getA() {
 		return A;
 	}
 
-	public void setA(Point2D.Double a) {
+	public void setA(Point2D.Float a) {
 		A = a;
 	}
 
-	public Point2D.Double getB() {
+	public Point2D.Float getB() {
 		return B;
 	}
 
-	public void setB(Point2D.Double b) {
+	public void setB(Point2D.Float b) {
 		B = b;
 	}
 
-	public Point2D.Double getC() {
+	public Point2D.Float getC() {
 		return C;
 	}
 
-	public void setC(Point2D.Double c) {
+	public void setC(Point2D.Float c) {
 		C = c;
 	}
 
 	public Triangle(){
-		A = new Point2D.Double();
-		B = new Point2D.Double();
-		C = new Point2D.Double();
+		A = new Point2D.Float();
+		B = new Point2D.Float();
+		C = new Point2D.Float();
 	}
 	
-	public Triangle(Point2D.Double a,Point2D.Double b, Point2D.Double c) {
+	public Triangle(Point2D.Float a,Point2D.Float b, Point2D.Float c) {
 		A = a;
 		B = b;
 		C = c;

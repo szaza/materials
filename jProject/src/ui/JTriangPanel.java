@@ -99,20 +99,20 @@ public class JTriangPanel extends JPanel {
 	}
 	
 	public Triangle getTriangSettings() {
-		Point2D.Double a = new Point2D.Double(Double.parseDouble(axField.getText()),Double.parseDouble(ayField.getText()));
-		Point2D.Double b = new Point2D.Double(Double.parseDouble(bxField.getText()),Double.parseDouble(byField.getText()));
-		Point2D.Double c = new Point2D.Double(Double.parseDouble(cxField.getText()),Double.parseDouble(cyField.getText()));
+		Point2D.Float a = new Point2D.Float(Float.parseFloat(axField.getText()),Float.parseFloat(ayField.getText()));
+		Point2D.Float b = new Point2D.Float(Float.parseFloat(bxField.getText()),Float.parseFloat(byField.getText()));
+		Point2D.Float c = new Point2D.Float(Float.parseFloat(cxField.getText()),Float.parseFloat(cyField.getText()));
 		Triangle triang = new Triangle(a,b,c);
 		return triang;
 	}
 	
-	public void setFields(Point2D.Double A,Point2D.Double B,Point2D.Double C) {
-		axField.setText(Double.toString(A.x));
-		ayField.setText(Double.toString(A.y));
-		bxField.setText(Double.toString(B.x));
-		byField.setText(Double.toString(B.y));
-		cxField.setText(Double.toString(C.x));
-		cyField.setText(Double.toString(C.y));		
+	public void setFields(Point2D.Float A,Point2D.Float B,Point2D.Float C) {
+		axField.setText(Float.toString(A.x));
+		ayField.setText(Float.toString(A.y));
+		bxField.setText(Float.toString(B.x));
+		byField.setText(Float.toString(B.y));
+		cxField.setText(Float.toString(C.x));
+		cyField.setText(Float.toString(C.y));		
 	}
 	
 	@Override

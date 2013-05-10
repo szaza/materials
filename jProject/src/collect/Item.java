@@ -14,6 +14,13 @@ public class Item implements Serializable {
 		setPrev(null);
 	}
 	
+	public Polygon2D getPolygon(float offsetX,float offsetY,float scale) {
+		float x[] = {triang.A.x * scale + offsetX,triang.B.x * scale + offsetX,triang.C.x * scale + offsetX};
+		float y[] = {-triang.A.y * scale + offsetY,-triang.B.y * scale + offsetY,-triang.C.y * scale + offsetY};
+		
+		return new Polygon2D(x,y,3);
+	}
+	
 	public Triangle getTriang() {
 		return triang;
 	}

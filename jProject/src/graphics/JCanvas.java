@@ -4,15 +4,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.renderable.RenderableImage;
-
 import javax.swing.JPanel;
+
+import collect.Item;
+import collect.Polygon2D;
+import collect.TriangleList;
 
 public class JCanvas extends JPanel {
 
@@ -23,9 +23,8 @@ public class JCanvas extends JPanel {
 	private double offsetY;
 	private double scale;
 	private BufferedImage img;
-	private Graphics gr;
-	private Graphics2D gr2D;
 	private AffineTransform transform;
+	private TriangleList tList;
 	
 	public JCanvas() {
 		width=700;
@@ -56,6 +55,7 @@ public class JCanvas extends JPanel {
 	}
 	
 	public void init() {
+		Graphics gr;
 		img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
 		gr = img.getGraphics();
 		
@@ -77,7 +77,23 @@ public class JCanvas extends JPanel {
 		gr.setColor(Color.RED);
 		gr.drawLine(0, height/2, width, height/2);		
 	}
+	
+	public void addTriangle(Graphics2D g) {
+		Item current = tList.first;
+		Polygon2D p;
 		
+		while (current != null) {
+			p = current.getPolygon(width/2,height/2,50);
+			g.setColor(Color.CYAN);
+			g.draw(p);
+			current = current.getNext();
+		}
+	}
+	
+	public void setTList(TriangleList tList) {
+		this.tList = tList;
+		repaint();
+	}
 	
 	@Override 
 	public void paint(Graphics g) {				
@@ -91,6 +107,8 @@ public class JCanvas extends JPanel {
 		transform.translate(offsetX,offsetY);
 		gr2D.setTransform(transform);
 		
-		gr2D.drawRenderedImage(img, transform);
+		gr2D.drawImage(img,0,0,null);
+		addTriangle(gr2D);
+		
 	}	
 }

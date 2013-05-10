@@ -27,13 +27,13 @@ public class UIFrame extends JFrame {
 	private JMenu fileMenu;
 	private JMenuItem saveMenu;
 	private JMenuItem exitMenu;
-	private JCanvas canvas;
 	private JButton addTriang;
 	private JButton removeTriang;
 	private JComboBox<String> selectTriangle;
 	private JLabel triangSettings;
 	private JAddTriangFrame addFrame;
-
+	public static JCanvas canvas;
+	
 	TriangleList tList = new TriangleList();
 
 	public UIFrame() {
@@ -116,15 +116,16 @@ public class UIFrame extends JFrame {
 	}
 
 	public void init() {
-		Point2D.Double A = new Point2D.Double(0.0d,0.0d);
-		Point2D.Double B = new Point2D.Double(-1.0d,0.0d);
-		Point2D.Double C = new Point2D.Double(0.0d,-1.0d);
+		Point2D.Float A = new Point2D.Float(0.0f,0.0f);
+		Point2D.Float B = new Point2D.Float(1.0f,0.0f);
+		Point2D.Float C = new Point2D.Float(0.0f,1.0f);
 
 		tList.insertItem(new Triangle(A, B, C));
 		selectTriangle.addItem("1");
 		innerPanel.setFields(A, B, C);
 		innerPanel.addFocusListener(new fieldListener());
 		setRemoveTriangButtonState();
+		canvas.setTList(tList);
 	}
 
 	public void setRemoveTriangButtonState() {
