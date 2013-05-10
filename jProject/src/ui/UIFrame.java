@@ -155,7 +155,7 @@ public class UIFrame extends JFrame {
 				}
 			}
 			setRemoveTriangButtonState();
-
+			canvas.setTList(tList);
 		}
 	}
 
