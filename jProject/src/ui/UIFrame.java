@@ -3,19 +3,14 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
+import java.awt.geom.Point2D;
 import javax.swing.*;
-import javax.vecmath.Point3f;
-
-import com.sun.j3d.utils.universe.SimpleUniverse;
-
 import collect.Triangle;
 import collect.TriangleList;
 import graphics.JCanvas;
@@ -53,8 +48,7 @@ public class UIFrame extends JFrame {
 		fileMenu = new JMenu("File");
 		saveMenu = new JMenuItem("Save");
 		exitMenu = new JMenuItem("Exit");
-		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
-		canvas = new JCanvas(config);
+		canvas = new JCanvas();
 		selectTriangle = new JComboBox<String>();
 		triangSettings = new JLabel("A Háromszög adatai:");
 		addTriang = new JButton("Új háromszög");
@@ -122,16 +116,15 @@ public class UIFrame extends JFrame {
 	}
 
 	public void init() {
-		Point3f A = new Point3f(0.0f,0.0f,0.0f);
-		Point3f B = new Point3f(-1.0f,0.0f,0.0f);
-		Point3f C = new Point3f(0.0f,-1.0f,0.0f);
+		Point2D.Double A = new Point2D.Double(0.0d,0.0d);
+		Point2D.Double B = new Point2D.Double(-1.0d,0.0d);
+		Point2D.Double C = new Point2D.Double(0.0d,-1.0d);
 
 		tList.insertItem(new Triangle(A, B, C));
 		selectTriangle.addItem("1");
 		innerPanel.setFields(A, B, C);
 		innerPanel.addFocusListener(new fieldListener());
 		setRemoveTriangButtonState();
-		canvas.drawTList(tList);
 	}
 
 	public void setRemoveTriangButtonState() {

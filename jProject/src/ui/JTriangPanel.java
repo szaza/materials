@@ -4,11 +4,10 @@ import collect.Triangle;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.FocusListener;
-
+import java.awt.geom.Point2D;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
-import javax.vecmath.Point3f;
 
 import layout.SpringUtilities;
 
@@ -100,14 +99,14 @@ public class JTriangPanel extends JPanel {
 	}
 	
 	public Triangle getTriangSettings() {
-		Point3f a = new Point3f(Float.parseFloat(axField.getText()),Float.parseFloat(ayField.getText()),0.0f);
-		Point3f b = new Point3f(Float.parseFloat(bxField.getText()),Float.parseFloat(byField.getText()),0.0f);
-		Point3f c = new Point3f(Float.parseFloat(cxField.getText()),Float.parseFloat(cyField.getText()),0.0f);
+		Point2D.Double a = new Point2D.Double(Double.parseDouble(axField.getText()),Double.parseDouble(ayField.getText()));
+		Point2D.Double b = new Point2D.Double(Double.parseDouble(bxField.getText()),Double.parseDouble(byField.getText()));
+		Point2D.Double c = new Point2D.Double(Double.parseDouble(cxField.getText()),Double.parseDouble(cyField.getText()));
 		Triangle triang = new Triangle(a,b,c);
 		return triang;
 	}
 	
-	public void setFields(Point3f A,Point3f B,Point3f C) {
+	public void setFields(Point2D.Double A,Point2D.Double B,Point2D.Double C) {
 		axField.setText(Double.toString(A.x));
 		ayField.setText(Double.toString(A.y));
 		bxField.setText(Double.toString(B.x));
