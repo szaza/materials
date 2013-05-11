@@ -15,6 +15,7 @@ import javax.swing.*;
 import collect.Triangle;
 import collect.TriangleList;
 import graphics.JCanvas;
+import graphics.JRenderCanvas;
 
 public class UIFrame extends JFrame {
 
@@ -37,6 +38,7 @@ public class UIFrame extends JFrame {
 	private JAddTriangFrame addFrame;
 	private AffineTransform transform;
 	public static JCanvas canvas;
+	public static JRenderCanvas rCanvas;
 	public static Triangle defTriangle;
 	
 	TriangleList tList = new TriangleList();
@@ -56,6 +58,7 @@ public class UIFrame extends JFrame {
 		saveMenu = new JMenuItem("Save");
 		exitMenu = new JMenuItem("Exit");
 		canvas = new JCanvas();
+		rCanvas = new JRenderCanvas();
 		selectTriangle = new JComboBox<String>();
 		triangSettings = new JLabel("A Háromszög adatai:");
 		addTriang = new JButton("Új háromszög");
@@ -80,8 +83,8 @@ public class UIFrame extends JFrame {
 		editPanel.add(tabPane);
 		editPanel.add(addTriang);
 		editPanel.add(removeTriang);
-
-		editPanel.setPreferredSize(new Dimension(300, 400));
+		editPanel.add(rCanvas);
+		editPanel.setPreferredSize(new Dimension(300, 500));
 
 		contentPanel.setLayout(new BorderLayout());
 		contentPanel.add(controlPanel, BorderLayout.NORTH);
