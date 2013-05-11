@@ -29,6 +29,7 @@ public class UIFrame extends JFrame {
 	private JTabbedPane tabPane;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
+	private JMenuItem viewMenu;
 	private JMenuItem saveMenu;
 	private JMenuItem exitMenu;
 	private JButton addTriang;
@@ -46,6 +47,7 @@ public class UIFrame extends JFrame {
 	public UIFrame() {
 		this.setTitle("Fractal");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
 
 		contentPanel = new JPanel();
 		controlPanel = new JPanel();
@@ -56,6 +58,7 @@ public class UIFrame extends JFrame {
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
 		saveMenu = new JMenuItem("Save");
+		viewMenu = new JMenuItem("View");
 		exitMenu = new JMenuItem("Exit");
 		canvas = new JCanvas();
 		rCanvas = new JRenderCanvas();
@@ -66,6 +69,7 @@ public class UIFrame extends JFrame {
 		defTriangle = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
 
 		fileMenu.add(saveMenu);
+		fileMenu.add(viewMenu);
 		fileMenu.add(exitMenu);
 
 		menuBar.add(fileMenu);
@@ -95,6 +99,22 @@ public class UIFrame extends JFrame {
 
 		this.setContentPane(contentPanel);
 
+		viewMenu.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JDialog frame = new JDialog();
+				JRenderCanvas rCanv = new JRenderCanvas(600,600);
+				
+				frame.setSize(new Dimension(600,600));
+				rCanv.setDefTriang(defTriangle);
+				rCanv.setTransform(transform);
+				frame.add(rCanv);
+				frame.setVisible(true);
+				frame.setResizable(false);
+			}
+		});
+		
 		addTriang.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -120,9 +140,9 @@ public class UIFrame extends JFrame {
 				tList.deleteItem(index);
 
 				selectTriangle.removeItemAt(selectTriangle.getItemCount() - 1);
-				refreshPanels();
 				setRemoveTriangButtonState();
 				canvas.setTList(tList);
+				refreshPanels();
 			}
 		});
 
@@ -130,10 +150,15 @@ public class UIFrame extends JFrame {
 
 	public void init() {
 		//Hozzaadom az elso transzformaciot
-		Point2D.Float A = new Point2D.Float(1.0f,1.0f);
+		//0.3,-0.2,0.9,0.2,-0.2,0.7
+		/*Point2D.Float A = new Point2D.Float(1.0f,1.0f);
 		Point2D.Float B = new Point2D.Float(2.0f,1.0f);
-		Point2D.Float C = new Point2D.Float(1.0f,2.0f);
+		Point2D.Float C = new Point2D.Float(1.0f,2.0f);*/
 
+		Point2D.Float A = new Point2D.Float(0.3f,-0.2f);
+		Point2D.Float B = new Point2D.Float(0.9f,0.2f);
+		Point2D.Float C = new Point2D.Float(-0.2f,0.6f);		
+		
 		tList.insertItem(new Triangle(A, B, C));
 		triangPanel.setFields(A, B, C);
 		
@@ -174,6 +199,8 @@ public class UIFrame extends JFrame {
 										triang.C.x-triang.A.x,triang.C.y-triang.A.y);
 		//0.3,-0.2,0.9,0.2,-0.2,0.7
 		transformPanel.setFields(triang.A.x,triang.A.y,triang.B.x-triang.A.x,triang.B.y-triang.A.y,triang.C.x-triang.A.x,triang.C.y-triang.A.y);
+		rCanvas.setDefTriang(defTriangle);
+		rCanvas.setTransform(transform);
 	}
 
 	//Uj haromszog hozzaadasa

@@ -2,10 +2,13 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
+import collect.Polygon2D;
 import collect.Triangle;
 
 public class JRenderCanvas extends JPanel {
@@ -14,6 +17,7 @@ public class JRenderCanvas extends JPanel {
 	
 	private int width;
 	private int height;
+	private int scale;
 	private Color color;
 	private Triangle defTriang;
 	private AffineTransform transform;
@@ -26,6 +30,7 @@ public class JRenderCanvas extends JPanel {
 		this.width = width;
 		this.height = height;
 		this.color = Color.black;
+		this.scale = width/10;
 		this.setBackground(color);
 		this.setPreferredSize(new Dimension(width,height));
 	}
@@ -60,5 +65,24 @@ public class JRenderCanvas extends JPanel {
 
 	public void setTransform(AffineTransform transform) {
 		this.transform = transform;
-	}	
+		repaint();
+	}
+	
+	@Override
+	public void paint(Graphics g) {
+		Polygon2D p;
+		Graphics2D gr = (Graphics2D) g;
+		
+		gr.setColor(color);
+		gr.fillRect(0, 0, width, height);
+		
+		p = defTriang.getPolygon(width/2,height/2,scale);
+		gr.setColor(Color.red);
+		gr.draw(p);
+		
+		for (int i=0; i<10; i++) {
+			gr.transform(transform);
+			gr.draw(p);
+		}
+	}
 }
