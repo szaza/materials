@@ -10,30 +10,6 @@ public class Triangle implements Serializable {
 	public Point2D.Float A;
 	public Point2D.Float B;
 	public Point2D.Float C;
-	
-	public Point2D.Float getA() {
-		return A;
-	}
-
-	public void setA(Point2D.Float a) {
-		A = a;
-	}
-
-	public Point2D.Float getB() {
-		return B;
-	}
-
-	public void setB(Point2D.Float b) {
-		B = b;
-	}
-
-	public Point2D.Float getC() {
-		return C;
-	}
-
-	public void setC(Point2D.Float c) {
-		C = c;
-	}
 
 	public Triangle(){
 		A = new Point2D.Float();
@@ -46,6 +22,19 @@ public class Triangle implements Serializable {
 		B = b;
 		C = c;
 	}
+	
+	public Triangle(float ax,float ay,float bx, float by, float cx, float cy) {
+		A = new Point2D.Float(ax,ay);
+		B = new Point2D.Float(bx,by);;
+		C = new Point2D.Float(cx,cy);
+	}	
+	
+	public Polygon2D getPolygon(float offsetX,float offsetY,float scale) {
+		float x[] = {A.x * scale + offsetX,B.x * scale + offsetX,C.x * scale + offsetX};
+		float y[] = {-A.y * scale + offsetY,-B.y * scale + offsetY,-C.y * scale + offsetY};
+		
+		return new Polygon2D(x,y,3);
+	}	
 	
 	@Override
 	public String toString() {

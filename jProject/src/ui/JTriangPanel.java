@@ -113,7 +113,16 @@ public class JTriangPanel extends JPanel {
 		byField.setText(Float.toString(B.y));
 		cxField.setText(Float.toString(C.x));
 		cyField.setText(Float.toString(C.y));		
-	}
+	}	
+	
+	public void setFields(double ax,double ay,double bx,double by, double cx, double cy) {
+		axField.setText(Double.toString(ax));
+		ayField.setText(Double.toString(ay));
+		bxField.setText(Double.toString(bx));
+		byField.setText(Double.toString(by));
+		cxField.setText(Double.toString(cx));
+		cyField.setText(Double.toString(cy));		
+	}		
 	
 	@Override
 	public void addFocusListener(FocusListener action) {

@@ -9,6 +9,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import javax.swing.*;
 import collect.Triangle;
@@ -22,7 +23,9 @@ public class UIFrame extends JFrame {
 	private JPanel controlPanel;
 	private JPanel contentPanel;
 	private JPanel editPanel;
-	private JTriangPanel innerPanel;
+	private JTriangPanel triangPanel;
+	private JTriangPanel transformPanel;
+	private JTabbedPane tabPane;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenuItem saveMenu;
@@ -32,7 +35,9 @@ public class UIFrame extends JFrame {
 	private JComboBox<String> selectTriangle;
 	private JLabel triangSettings;
 	private JAddTriangFrame addFrame;
+	private AffineTransform transform;
 	public static JCanvas canvas;
+	public static Triangle defTriangle;
 	
 	TriangleList tList = new TriangleList();
 
@@ -43,7 +48,9 @@ public class UIFrame extends JFrame {
 		contentPanel = new JPanel();
 		controlPanel = new JPanel();
 		editPanel = new JPanel();
-		innerPanel = new JTriangPanel();
+		triangPanel = new JTriangPanel();
+		transformPanel = new JTriangPanel();
+		tabPane = new JTabbedPane();
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
 		saveMenu = new JMenuItem("Save");
@@ -53,7 +60,7 @@ public class UIFrame extends JFrame {
 		triangSettings = new JLabel("A Háromszög adatai:");
 		addTriang = new JButton("Új háromszög");
 		removeTriang = new JButton("Törlés");
-
+		defTriangle = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
 
 		fileMenu.add(saveMenu);
 		fileMenu.add(exitMenu);
@@ -65,9 +72,12 @@ public class UIFrame extends JFrame {
 		controlPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		controlPanel.add(menuBar);
 
+		tabPane.addTab("Háromsz.", triangPanel);
+		tabPane.addTab("Transform.", transformPanel);
+		
 		editPanel.add(triangSettings);
 		editPanel.add(selectTriangle);
-		editPanel.add(innerPanel);
+		editPanel.add(tabPane);
 		editPanel.add(addTriang);
 		editPanel.add(removeTriang);
 
@@ -95,8 +105,7 @@ public class UIFrame extends JFrame {
 		selectTriangle.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
-				refreshInnerPanel();
-
+				refreshPanels();
 			}
 		});
 
@@ -108,26 +117,34 @@ public class UIFrame extends JFrame {
 				tList.deleteItem(index);
 
 				selectTriangle.removeItemAt(selectTriangle.getItemCount() - 1);
-				refreshInnerPanel();
+				refreshPanels();
 				setRemoveTriangButtonState();
+				canvas.setTList(tList);
 			}
 		});
 
 	}
 
 	public void init() {
-		Point2D.Float A = new Point2D.Float(0.0f,0.0f);
-		Point2D.Float B = new Point2D.Float(1.0f,0.0f);
-		Point2D.Float C = new Point2D.Float(0.0f,1.0f);
+		//Hozzaadom az elso transzformaciot
+		Point2D.Float A = new Point2D.Float(1.0f,1.0f);
+		Point2D.Float B = new Point2D.Float(2.0f,1.0f);
+		Point2D.Float C = new Point2D.Float(1.0f,2.0f);
 
 		tList.insertItem(new Triangle(A, B, C));
+		triangPanel.setFields(A, B, C);
+		
+		//A lista elemszamat novelem 1-el
 		selectTriangle.addItem("1");
-		innerPanel.setFields(A, B, C);
-		innerPanel.addFocusListener(new fieldListener());
+		//A mezokre figyelot teszek
+		triangPanel.addFocusListener(new fieldListener());
+		//A torles gomb allapotat frissitem
 		setRemoveTriangButtonState();
+		//Frissitem a canvas listajat
 		canvas.setTList(tList);
 	}
 
+	//Beallitom a torles gomb allapotat
 	public void setRemoveTriangButtonState() {
 		if (selectTriangle.getItemCount() > 1)
 			removeTriang.setEnabled(true);
@@ -135,13 +152,23 @@ public class UIFrame extends JFrame {
 			removeTriang.setEnabled(false);
 	}
 
-	public void refreshInnerPanel() {
+	//Frissitem a transzformacio adatait tarolo panelt
+	public void refreshPanels() {
 		int index = selectTriangle.getSelectedIndex();
 		Triangle triang;
 		triang = tList.getValue(index);
-		innerPanel.setFields(triang.getA(), triang.getB(), triang.getC());
+		
+		//Frissiti a haromszog panel adatait 
+		triangPanel.setFields(triang.A, triang.B, triang.C);
+		
+		//Frissiti a transzformacio panelt
+		transform = new AffineTransform(defTriangle.A.x/triang.A.x,defTriangle.A.y/triang.A.y,
+										defTriangle.B.x/triang.B.x,defTriangle.B.y/triang.B.y,
+										defTriangle.C.x/triang.C.x,defTriangle.C.y/triang.C.y);
+		transformPanel.setFields(transform.getScaleX(),transform.getScaleY(),transform.getShearX(),transform.getShearY(),transform.getTranslateX(),transform.getTranslateY());
 	}
 
+	//Uj haromszog hozzaadasa
 	class okPressed implements ActionListener {
 
 		@Override
@@ -159,6 +186,7 @@ public class UIFrame extends JFrame {
 		}
 	}
 
+	//Kilep a haromszog hozzaadas dialogusbol
 	class exitDialog implements ActionListener {
 
 		@Override
@@ -175,11 +203,12 @@ public class UIFrame extends JFrame {
 
 		}
 
+		//Amikor egy mezo elveszti a fokuszt, akkor frissul a lista
 		@Override
 		public void focusLost(FocusEvent e) {
 			int index = selectTriangle.getSelectedIndex();
 			Triangle triang;
-			triang = innerPanel.getTriangSettings();
+			triang = triangPanel.getTriangSettings();
 			tList.updateValue(triang, index);
 		}
 

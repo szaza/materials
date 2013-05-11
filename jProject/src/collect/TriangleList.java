@@ -13,9 +13,9 @@ public class TriangleList implements Serializable {
 		first = new Item();
 		length = 0;
 
-		first.setPrev(null);
+		first.prev = null;
 		last = first;
-		last.setNext(null);
+		last.next = null;
 	}
 
 	// Beszúrom az első elemet
@@ -28,9 +28,9 @@ public class TriangleList implements Serializable {
 	public void insertItemAsLast(Triangle triang) {
 		Item q = new Item();
 		q.setTriang(triang);
-		last.setNext(q);
-		q.setPrev(last);
-		q.setNext(null);
+		last.next = q;
+		q.prev = last;
+		q.next = null;
 		last = q;
 		length++;
 	}
@@ -49,18 +49,18 @@ public class TriangleList implements Serializable {
 		Item p = first;
 
 		while ((p != null) && (count < index)) {
-			p = p.getNext();
+			p = p.next;
 			count++;
 		}
 
 		if (p != first)
-			p.getPrev().setNext(p.getNext());
+			p.prev.next = p.next;
 		if (p != last)
-			p.getNext().setPrev(p.getPrev());
+			p.next.prev = p.prev;
 		if (p == last)
-			last = p.getPrev();	
+			last = p.prev;	
 		if (p==first)
-			first = p.getNext();
+			first = p.next;
 		
 		length--;
 	}
@@ -72,7 +72,7 @@ public class TriangleList implements Serializable {
 		tmp = first;
 
 		while ((tmp != null) && (count < n)) {
-			tmp = tmp.getNext();
+			tmp = tmp.next;
 			count++;
 		}
 
@@ -86,7 +86,7 @@ public class TriangleList implements Serializable {
 		tmp = first;
 
 		while ((tmp != null) && (count < n)) {
-			tmp = tmp.getNext();
+			tmp = tmp.next;
 			count++;
 		}
 		tmp.setTriang(triang);

@@ -10,8 +10,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
+import ui.UIFrame;
+
 import collect.Item;
 import collect.Polygon2D;
+import collect.Triangle;
 import collect.TriangleList;
 
 public class JCanvas extends JPanel {
@@ -25,17 +28,19 @@ public class JCanvas extends JPanel {
 	private BufferedImage img;
 	private AffineTransform transform;
 	private TriangleList tList;
+	public Triangle defTriang;
 	
 	public JCanvas() {
 		width=700;
 		height=600;
 		scale = 1.0f;
 		transform = new AffineTransform();
+		defTriang = UIFrame.defTriangle;
 		
 		setPreferredSize(new Dimension(width,height));
 		
 		this.addMouseWheelListener(new MouseWheelListener() {
-			
+			//Scroll eseten skalazast vegez el
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				float mod = e.getUnitsToScroll() / 3;
@@ -56,40 +61,54 @@ public class JCanvas extends JPanel {
 	
 	public void init() {
 		Graphics gr;
+		//Egy image canvasra rajzol
 		img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
 		gr = img.getGraphics();
 		
+		//Hatterszin beallitasa
 		gr.setColor(Color.DARK_GRAY);
 		gr.fillRect(0, 0,width,height);
 		
+		//Fuggoleges vonalak
 		gr.setColor(Color.gray);
 		for (int i=0; i<width; i=i+10) {
 			gr.drawLine(i,0,i,height);
 		}
 		
+		//Vizszintes vonalak
 		for (int j=0; j<width; j=j+10) {
 			gr.drawLine(0,j,width,j);
 		}		
 		
+		//Fuggoleges kozepvonal
 		gr.setColor(Color.BLUE);
 		gr.drawLine(width/2, 0, width/2, height);
 		
+		//Vizszintes kozepvonal
 		gr.setColor(Color.RED);
 		gr.drawLine(0, height/2, width, height/2);		
 	}
 	
-	public void addTriangle(Graphics2D g) {
+	public void drawTriangles(Graphics2D g) {
 		Item current = tList.first;
 		Polygon2D p;
 		
+		//Alap haromszog kirajzolasa
+		defTriang = UIFrame.defTriangle;
+		p = defTriang.getPolygon(width/2,height/2,50);
+		g.setColor(Color.WHITE);
+		g.draw(p);
+		
+		//A megadott haromszogek kirajzolasa
 		while (current != null) {
-			p = current.getPolygon(width/2,height/2,50);
+			p = current.triang.getPolygon(width/2,height/2,50);
 			g.setColor(Color.CYAN);
 			g.draw(p);
-			current = current.getNext();
+			current = current.next;
 		}
 	}
 	
+	//Frissiti a canvas listajat
 	public void setTList(TriangleList tList) {
 		this.tList = tList;
 		repaint();
@@ -108,7 +127,7 @@ public class JCanvas extends JPanel {
 		gr2D.setTransform(transform);
 		
 		gr2D.drawImage(img,0,0,null);
-		addTriangle(gr2D);
+		drawTriangles(gr2D);
 		
 	}	
 }
