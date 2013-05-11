@@ -116,12 +116,12 @@ public class JTriangPanel extends JPanel {
 	}	
 	
 	public void setFields(double ax,double ay,double bx,double by, double cx, double cy) {
-		axField.setText(Double.toString(ax));
-		ayField.setText(Double.toString(ay));
-		bxField.setText(Double.toString(bx));
-		byField.setText(Double.toString(by));
-		cxField.setText(Double.toString(cx));
-		cyField.setText(Double.toString(cy));		
+		axField.setText(String.format("%.3f",ax));
+		ayField.setText(String.format("%.3f",ay));
+		bxField.setText(String.format("%.3f",bx));
+		byField.setText(String.format("%.3f",by));
+		cxField.setText(String.format("%.3f",cx));
+		cyField.setText(String.format("%.3f",cy));		
 	}		
 	
 	@Override

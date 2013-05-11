@@ -73,7 +73,7 @@ public class UIFrame extends JFrame {
 		controlPanel.add(menuBar);
 
 		tabPane.addTab("Háromsz.", triangPanel);
-		tabPane.addTab("Transform.", transformPanel);
+		tabPane.addTab("Transzform.", transformPanel);
 		
 		editPanel.add(triangSettings);
 		editPanel.add(selectTriangle);
@@ -136,12 +136,16 @@ public class UIFrame extends JFrame {
 		
 		//A lista elemszamat novelem 1-el
 		selectTriangle.addItem("1");
-		//A mezokre figyelot teszek
-		triangPanel.addFocusListener(new fieldListener());
+		//A haromszoget beallito mezokre figyelot teszek
+		triangPanel.addFocusListener(new triangListener());
+		//A transzformaciokat beallito mezokre figyelot teszek
+		transformPanel.addFocusListener(new transformListener());		
 		//A torles gomb allapotat frissitem
 		setRemoveTriangButtonState();
 		//Frissitem a canvas listajat
 		canvas.setTList(tList);
+		//Frissitem a paneleket
+		refreshPanels();
 	}
 
 	//Beallitom a torles gomb allapotat
@@ -162,10 +166,11 @@ public class UIFrame extends JFrame {
 		triangPanel.setFields(triang.A, triang.B, triang.C);
 		
 		//Frissiti a transzformacio panelt
-		transform = new AffineTransform(defTriangle.A.x/triang.A.x,defTriangle.A.y/triang.A.y,
-										defTriangle.B.x/triang.B.x,defTriangle.B.y/triang.B.y,
-										defTriangle.C.x/triang.C.x,defTriangle.C.y/triang.C.y);
-		transformPanel.setFields(transform.getScaleX(),transform.getScaleY(),transform.getShearX(),transform.getShearY(),transform.getTranslateX(),transform.getTranslateY());
+		transform = new AffineTransform(triang.A.x,triang.A.y,
+										triang.B.x-triang.A.x,triang.B.y-triang.A.y,
+										triang.C.x-triang.A.x,triang.C.y-triang.A.y);
+		//0.3,-0.2,0.9,0.2,-0.2,0.7
+		transformPanel.setFields(triang.A.x,triang.A.y,triang.B.x-triang.A.x,triang.B.y-triang.A.y,triang.C.x-triang.A.x,triang.C.y-triang.A.y);
 	}
 
 	//Uj haromszog hozzaadasa
@@ -196,7 +201,7 @@ public class UIFrame extends JFrame {
 
 	}
 
-	class fieldListener implements FocusListener {
+	class triangListener implements FocusListener {
 
 		@Override
 		public void focusGained(FocusEvent e) {
@@ -210,8 +215,35 @@ public class UIFrame extends JFrame {
 			Triangle triang;
 			triang = triangPanel.getTriangSettings();
 			tList.updateValue(triang, index);
+			refreshPanels();
 		}
 
 	}
+	
+	class transformListener implements FocusListener {
+
+		@Override
+		public void focusGained(FocusEvent e) {
+
+		}
+
+		//Amikor egy mezo elveszti a fokuszt, akkor frissul a lista
+		@Override
+		public void focusLost(FocusEvent e) {
+			int index = selectTriangle.getSelectedIndex();
+			Triangle triang;
+			triang = transformPanel.getTriangSettings();
+			
+			triang.B.x += triang.A.x;
+			triang.B.y += triang.A.y;
+			
+			triang.C.x += triang.A.x;
+			triang.C.y += triang.A.y;			
+			
+			tList.updateValue(triang, index);
+			refreshPanels();
+		}
+
+	}	
 }
 
