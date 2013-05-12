@@ -194,10 +194,10 @@ public class UIFrame extends JFrame {
 		triangPanel.setFields(triang.A, triang.B, triang.C);
 		
 		//Frissiti a transzformacio panelt
-		transform = new AffineTransform(triang.A.x,triang.A.y,
-										triang.B.x-triang.A.x,triang.B.y-triang.A.y,
-										triang.C.x-triang.A.x,triang.C.y-triang.A.y);
-		//0.3,-0.2,0.9,0.2,-0.2,0.7
+		transform = new AffineTransform(triang.B.x-triang.A.x,triang.B.y-triang.A.y,
+										triang.C.x-triang.A.x,triang.C.y-triang.A.y,
+										triang.A.x,triang.A.y);
+		
 		transformPanel.setFields(triang.A.x,triang.A.y,triang.B.x-triang.A.x,triang.B.y-triang.A.y,triang.C.x-triang.A.x,triang.C.y-triang.A.y);
 		rCanvas.setDefTriang(defTriangle);
 		rCanvas.setTransform(transform);

@@ -72,18 +72,17 @@ public class JRenderCanvas extends JPanel {
 		Shape shape;
 		Graphics2D gr = (Graphics2D) g;
 		
-		System.out.println(transform);
-		
 		gr.setColor(color);
 		gr.fillRect(0, 0, width, height);
 		gr.translate(width/2,height/2);
-		gr.scale(10, 10);
+		//gr.scale(scale,scale);
 		
-		shape = defTriang.getPolygon(0,0,1);
+		shape = defTriang.getPolygon(0,0,scale);
 		gr.setColor(Color.red);
-		gr.draw(shape);
-		
-		shape = transform.createTransformedShape(shape);
-		gr.draw(shape);
+				
+		for (int i=0; i<100; i++) {
+			shape = transform.createTransformedShape(shape);
+			gr.draw(shape);
+		}
 	}
 }

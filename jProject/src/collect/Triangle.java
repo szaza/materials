@@ -1,6 +1,5 @@
 package collect;
 
-import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
@@ -38,7 +37,7 @@ public class Triangle implements Serializable {
 	
 	public Polygon2D getPolygon(float offsetX,float offsetY,float scale) {
 		float x[] = {A.x * scale + offsetX,B.x * scale + offsetX,C.x * scale + offsetX};
-		float y[] = {-A.y * scale + offsetY,-B.y * scale + offsetY,-C.y * scale + offsetY};
+		float y[] = {A.y * scale + offsetY,B.y * scale + offsetY,C.y * scale + offsetY};
 		
 		return new Polygon2D(x,y,3);
 	}		
