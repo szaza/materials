@@ -4,11 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
-
-import collect.Polygon2D;
 import collect.Triangle;
 
 public class JRenderCanvas extends JPanel {
@@ -70,19 +69,21 @@ public class JRenderCanvas extends JPanel {
 	
 	@Override
 	public void paint(Graphics g) {
-		Polygon2D p;
+		Shape shape;
 		Graphics2D gr = (Graphics2D) g;
+		
+		System.out.println(transform);
 		
 		gr.setColor(color);
 		gr.fillRect(0, 0, width, height);
+		gr.translate(width/2,height/2);
+		gr.scale(10, 10);
 		
-		p = defTriang.getPolygon(width/2,height/2,scale);
+		shape = defTriang.getPolygon(0,0,1);
 		gr.setColor(Color.red);
-		gr.draw(p);
+		gr.draw(shape);
 		
-		for (int i=0; i<10; i++) {
-			gr.transform(transform);
-			gr.draw(p);
-		}
+		shape = transform.createTransformedShape(shape);
+		gr.draw(shape);
 	}
 }

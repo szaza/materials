@@ -95,13 +95,13 @@ public class JCanvas extends JPanel {
 		
 		//Alap haromszog kirajzolasa
 		defTriang = UIFrame.defTriangle;
-		p = defTriang.getPolygon(width/2,height/2,50);
+		p = defTriang.getPolygon(width/2,height/2,width/10);
 		g.setColor(Color.WHITE);
 		g.draw(p);
 		
 		//A megadott haromszogek kirajzolasa
 		while (current != null) {
-			p = current.triang.getPolygon(width/2,height/2,50);
+			p = current.triang.getPolygon(width/2,height/2,width/10);
 			g.setColor(Color.CYAN);
 			g.draw(p);
 			current = current.next;
