@@ -1,8 +1,6 @@
 package collect;
 
-import collect.Item;
-
-public interface TriangleListIterator {
+public interface TListIterator {
 	boolean hasMoreElements();
 	Item nextElement();
 }

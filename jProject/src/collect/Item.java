@@ -21,7 +21,7 @@ public class Item implements Serializable {
 	public void setTriang(Triangle triang) {
 		this.triang = triang;
 	}
-
+	
 	public String toString() {
 		return triang.toString();
 	}

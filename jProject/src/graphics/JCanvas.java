@@ -11,9 +11,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import ui.UIFrame;
-
-import collect.Item;
 import collect.Polygon2D;
+import collect.TListIterator;
 import collect.Triangle;
 import collect.TriangleList;
 
@@ -90,7 +89,6 @@ public class JCanvas extends JPanel {
 	}
 	
 	public void drawTriangles(Graphics2D g) {
-		Item current = tList.first;
 		Polygon2D p;
 		
 		//Alap haromszog kirajzolasa
@@ -100,12 +98,12 @@ public class JCanvas extends JPanel {
 		g.draw(p);
 		
 		//A megadott haromszogek kirajzolasa
-		while (current != null) {
-			p = current.triang.getPolygon(width/2,height/2,width/10);
+		for (TListIterator it = tList.getIterator(); it.hasMoreElements();) {
+			p = it.nextElement().getTriang().getPolygon(width/2,height/2,width/10);
 			g.setColor(Color.CYAN);
-			g.draw(p);
-			current = current.next;
-		}
+			g.draw(p);			
+		}		
+		
 	}
 	
 	//Frissiti a canvas listajat
@@ -128,6 +126,5 @@ public class JCanvas extends JPanel {
 		
 		gr2D.drawImage(img,0,0,null);
 		drawTriangles(gr2D);
-		
 	}	
 }

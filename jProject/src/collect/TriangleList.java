@@ -95,4 +95,32 @@ public class TriangleList implements Serializable {
 	public int getLength() {
 		return length;
 	}
+	
+	public TListIterator getIterator() {
+		return new TListIteratorImpl();
+	}
+	
+	class TListIteratorImpl implements TListIterator {
+
+		private Item current;
+		private Item tmp;
+		
+		public TListIteratorImpl() {
+			current = first;
+			tmp = null;
+		}
+		
+		@Override
+		public boolean hasMoreElements() {
+			return (current != null);
+		}
+
+		@Override
+		public Item nextElement() {
+			tmp = current;
+			current = current.next;
+			return tmp;
+		}		
+		
+	}	
 }

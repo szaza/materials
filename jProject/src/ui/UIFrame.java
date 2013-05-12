@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import javax.swing.*;
+import collect.TransformList;
 import collect.Triangle;
 import collect.TriangleList;
 import graphics.JCanvas;
@@ -37,17 +38,19 @@ public class UIFrame extends JFrame {
 	private JComboBox<String> selectTriangle;
 	private JLabel triangSettings;
 	private JAddTriangFrame addFrame;
-	private AffineTransform transform;
+	private TriangleList tList;
+	private TransformList trList;
 	public static JCanvas canvas;
 	public static JRenderCanvas rCanvas;
-	public static Triangle defTriangle;
+	public static Triangle defTriangle;	
 	
-	TriangleList tList = new TriangleList();
-
 	public UIFrame() {
 		this.setTitle("Fractal");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
+		
+		tList = new TriangleList();
+		trList = new TransformList();
 
 		contentPanel = new JPanel();
 		controlPanel = new JPanel();
@@ -108,7 +111,7 @@ public class UIFrame extends JFrame {
 				
 				frame.setSize(new Dimension(600,600));
 				rCanv.setDefTriang(defTriangle);
-				rCanv.setTransform(transform);
+				rCanv.setTransformList(trList);
 				frame.add(rCanv);
 				frame.setVisible(true);
 				frame.setResizable(false);
@@ -122,6 +125,8 @@ public class UIFrame extends JFrame {
 				addFrame.ok.addActionListener(new okPressed());
 				addFrame.ok.addActionListener(new exitDialog());
 				addFrame.cancel.addActionListener(new exitDialog());
+				//Atadom a trList pointert az addFrame-nek
+				addFrame.setTrList(trList);
 			}
 		});
 
@@ -137,11 +142,21 @@ public class UIFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int index = selectTriangle.getSelectedIndex();
+				
+				//Torlom a listabol a megfelelo elemet 
 				tList.deleteItem(index);
+				trList.deleteItem(index);
 
+				//Torlom a lenyillo menubol az elem sorszamat
 				selectTriangle.removeItemAt(selectTriangle.getItemCount() - 1);
+				
+				//Beallitom a torles gomb erteket
 				setRemoveTriangButtonState();
+				
+				//Atadom a canvasnak a tList-et
 				canvas.setTList(tList);
+				
+				//Frissitem az ablakokat
 				refreshPanels();
 			}
 		});
@@ -149,18 +164,20 @@ public class UIFrame extends JFrame {
 	}
 
 	public void init() {
+		AffineTransform transform;
+		
 		//Hozzaadom az elso transzformaciot
-		//0.3,-0.2,0.9,0.2,-0.2,0.7
-		/*Point2D.Float A = new Point2D.Float(1.0f,1.0f);
-		Point2D.Float B = new Point2D.Float(2.0f,1.0f);
-		Point2D.Float C = new Point2D.Float(1.0f,2.0f);*/
-
 		Point2D.Float A = new Point2D.Float(0.3f,-0.2f);
 		Point2D.Float B = new Point2D.Float(0.9f,0.2f);
 		Point2D.Float C = new Point2D.Float(-0.2f,0.6f);		
 		
-		tList.insertItem(new Triangle(A, B, C));
+		//Beszurom a listaba az elso elemet
+		Triangle triang = new Triangle(A, B, C); 
+		tList.insertItem(triang);
 		triangPanel.setFields(A, B, C);
+		
+		transform = triang.toTransform();
+		trList.insertItem(transform);
 		
 		//A lista elemszamat novelem 1-el
 		selectTriangle.addItem("1");
@@ -190,25 +207,22 @@ public class UIFrame extends JFrame {
 		Triangle triang;
 		triang = tList.getValue(index);
 		
-		//Frissiti a haromszog panel adatait 
+		//Frissiti a haromszog panelek adatait 
 		triangPanel.setFields(triang.A, triang.B, triang.C);
-		
-		//Frissiti a transzformacio panelt
-		transform = new AffineTransform(triang.B.x-triang.A.x,triang.B.y-triang.A.y,
-										triang.C.x-triang.A.x,triang.C.y-triang.A.y,
-										triang.A.x,triang.A.y);
-		
 		transformPanel.setFields(triang.A.x,triang.A.y,triang.B.x-triang.A.x,triang.B.y-triang.A.y,triang.C.x-triang.A.x,triang.C.y-triang.A.y);
+			
 		rCanvas.setDefTriang(defTriangle);
-		rCanvas.setTransform(transform);
+		rCanvas.setTransformList(trList);
 	}
-
+	
 	//Uj haromszog hozzaadasa
 	class okPressed implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//Lementi a beallitasokat, es kiszamolja az uj transformaciot
 			addFrame.saveSettings();
+			//Beteszi a lennyilo menube az uj elem sorszamat
 			tList = addFrame.gettList();
 			if (selectTriangle.getItemCount() < tList.getLength()) {
 				for (int i = selectTriangle.getItemCount() + 1; i <= tList
@@ -243,8 +257,17 @@ public class UIFrame extends JFrame {
 		public void focusLost(FocusEvent e) {
 			int index = selectTriangle.getSelectedIndex();
 			Triangle triang;
+			AffineTransform transform;
+			
+			//Frissitem a kijelolt haromszog erteket
 			triang = triangPanel.getTriangSettings();
 			tList.updateValue(triang, index);
+			
+			//Ujraszamolom a transformaciot
+			transform = triang.toTransform();
+			trList.updateValue(transform, index);
+			
+			//Frissitem a paneleket
 			refreshPanels();
 		}
 
@@ -263,6 +286,8 @@ public class UIFrame extends JFrame {
 			int index = selectTriangle.getSelectedIndex();
 			Triangle triang;
 			triang = transformPanel.getTriangSettings();
+			
+			//!!!!Itt meg kell frissiteni a transformacios listat			
 			
 			triang.B.x += triang.A.x;
 			triang.B.y += triang.A.y;

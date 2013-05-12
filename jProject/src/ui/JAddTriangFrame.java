@@ -3,9 +3,14 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.geom.AffineTransform;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+
+import collect.TransformList;
+import collect.Triangle;
 import collect.TriangleList;
 
 public class JAddTriangFrame extends JDialog {
@@ -18,6 +23,7 @@ public class JAddTriangFrame extends JDialog {
 	private String title;
 	
 	private TriangleList tList;
+	private TransformList trList;
 	private JPanel buttonContainer;
 	public JButton ok;
 	public JButton cancel;
@@ -103,8 +109,20 @@ public class JAddTriangFrame extends JDialog {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+		
+	public TransformList getTrList() {
+		return trList;
+	}
+
+	public void setTrList(TransformList trList) {
+		this.trList = trList;
+	}
+
 	public void saveSettings() {
-		tList.insertItem(triangSettings.getTriangSettings());
+		Triangle triang = triangSettings.getTriangSettings();
+		AffineTransform transform = triang.toTransform();
+		
+		tList.insertItem(triang);
+		trList.insertItem(transform);
 	}
 }
