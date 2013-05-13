@@ -12,9 +12,9 @@ import javax.swing.JPanel;
 
 import ui.UIFrame;
 import collect.Polygon2D;
-import collect.TListIterator;
+import collect.FListIterator;
 import collect.Triangle;
-import collect.TriangleList;
+import collect.FractalComponentList;
 
 public class JCanvas extends JPanel {
 
@@ -26,7 +26,7 @@ public class JCanvas extends JPanel {
 	private double scale;
 	private BufferedImage img;
 	private AffineTransform transform;
-	private TriangleList tList;
+	private FractalComponentList componentList;
 	public Triangle defTriang;
 	
 	public JCanvas() {
@@ -98,7 +98,7 @@ public class JCanvas extends JPanel {
 		g.draw(p);
 		
 		//A megadott haromszogek kirajzolasa
-		for (TListIterator it = tList.getIterator(); it.hasMoreElements();) {
+		for (FListIterator it = componentList.getIterator(); it.hasMoreElements();) {
 			p = it.nextElement().getTriang().getPolygon(width/2,height/2,width/10);
 			g.setColor(Color.CYAN);
 			g.draw(p);			
@@ -107,8 +107,8 @@ public class JCanvas extends JPanel {
 	}
 	
 	//Frissiti a canvas listajat
-	public void setTList(TriangleList tList) {
-		this.tList = tList;
+	public void setComponentList(FractalComponentList componentList) {
+		this.componentList = componentList;
 		repaint();
 	}
 	

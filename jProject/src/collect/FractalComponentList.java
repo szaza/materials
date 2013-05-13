@@ -1,16 +1,16 @@
 package collect;
 
 import java.io.Serializable;
-import collect.Item;
+import collect.FractalComponent;
 
-public class TriangleList implements Serializable {
+public class FractalComponentList implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int length;
-	public Item last, first;
+	public FractalComponent last, first;
 
-	public TriangleList() {
-		first = new Item();
+	public FractalComponentList() {
+		first = new FractalComponent();
 		length = 0;
 
 		first.prev = null;
@@ -19,15 +19,15 @@ public class TriangleList implements Serializable {
 	}
 
 	// Beszúrom az első elemet
-	public void insertItemAsFirst(Triangle triang) {
-		first.setTriang(triang);
+	public void insertItemAsFirst(FractalComponent component) {
+		first.setComponent(component);
 		length++;
 	}
 
 	// Beszúrom az új elemet a lista végére
-	public void insertItemAsLast(Triangle triang) {
-		Item q = new Item();
-		q.setTriang(triang);
+	public void insertItemAsLast(FractalComponent component) {
+		FractalComponent q = new FractalComponent();
+		q.setComponent(component);
 		last.next = q;
 		q.prev = last;
 		q.next = null;
@@ -36,17 +36,17 @@ public class TriangleList implements Serializable {
 	}
 
 	// Beszúrom az új elemet
-	public void insertItem(Triangle triang) {
+	public void insertItem(FractalComponent component) {
 		if (length == 0)
-			this.insertItemAsFirst(triang);
+			this.insertItemAsFirst(component);
 		else
-			this.insertItemAsLast(triang);
+			this.insertItemAsLast(component);
 	}
 
 	// Töröl egy elemet a listabol
 	public void deleteItem(int index) {
 		int count = 0;
-		Item p = first;
+		FractalComponent p = first;
 
 		while ((p != null) && (count < index)) {
 			p = p.next;
@@ -66,9 +66,9 @@ public class TriangleList implements Serializable {
 	}
 
 	// Lekerem az n-ik elem erteket
-	public Triangle getValue(int n) {
+	public FractalComponent getValue(int n) {
 		int count = 0;
-		Item tmp;
+		FractalComponent tmp;
 		tmp = first;
 
 		while ((tmp != null) && (count < n)) {
@@ -76,34 +76,34 @@ public class TriangleList implements Serializable {
 			count++;
 		}
 
-		return tmp.getTriang();
+		return tmp;
 	}
 
 	// Felulirom egy elem erteket
-	public void updateValue(Triangle triang, int n) {
+	public void updateValue(FractalComponent component, int n) {
 		int count = 0;
-		Item tmp;
+		FractalComponent tmp;
 		tmp = first;
 
 		while ((tmp != null) && (count < n)) {
 			tmp = tmp.next;
 			count++;
 		}
-		tmp.setTriang(triang);
+		tmp.setComponent(component);
 	}
 
 	public int getLength() {
 		return length;
 	}
 	
-	public TListIterator getIterator() {
+	public FListIterator getIterator() {
 		return new TListIteratorImpl();
 	}
 	
-	class TListIteratorImpl implements TListIterator {
+	class TListIteratorImpl implements FListIterator {
 
-		private Item current;
-		private Item tmp;
+		private FractalComponent current;
+		private FractalComponent tmp;
 		
 		public TListIteratorImpl() {
 			current = first;
@@ -116,7 +116,7 @@ public class TriangleList implements Serializable {
 		}
 
 		@Override
-		public Item nextElement() {
+		public FractalComponent nextElement() {
 			tmp = current;
 			current = current.next;
 			return tmp;

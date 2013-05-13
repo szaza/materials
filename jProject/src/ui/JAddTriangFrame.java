@@ -9,9 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import collect.TransformList;
+import collect.FractalComponent;
 import collect.Triangle;
-import collect.TriangleList;
+import collect.FractalComponentList;
 
 public class JAddTriangFrame extends JDialog {
 
@@ -22,8 +22,7 @@ public class JAddTriangFrame extends JDialog {
 	private int height;
 	private String title;
 	
-	private TriangleList tList;
-	private TransformList trList;
+	private FractalComponentList componentList;
 	private JPanel buttonContainer;
 	public JButton ok;
 	public JButton cancel;
@@ -33,11 +32,11 @@ public class JAddTriangFrame extends JDialog {
 		this("Háromszög hozzáadása", 30, 30, 300, 300,null);
 	}
 	
-	public JAddTriangFrame(TriangleList tList) {
-		this("Háromszög hozzáadása", 30, 30, 300, 300,tList);
+	public JAddTriangFrame(FractalComponentList componentList) {
+		this("Háromszög hozzáadása", 30, 30, 300, 300,componentList);
 	}
 
-	public JAddTriangFrame(String title, int x, int y, int width, int height,TriangleList tList)
+	public JAddTriangFrame(String title, int x, int y, int width, int height,FractalComponentList componentList)
 			throws HeadlessException {
 		super();
 		this.title = title;
@@ -45,7 +44,7 @@ public class JAddTriangFrame extends JDialog {
 		this.setY(y);
 		this.setWidth(width);
 		this.setHeight(height);
-		this.tList = tList;
+		this.componentList = componentList;
 		
 		setBounds(x, y, width, height);
 		setTitle(title);
@@ -98,8 +97,8 @@ public class JAddTriangFrame extends JDialog {
 		this.y = y;
 	}
 	
-	public TriangleList gettList() {
-		return tList;
+	public FractalComponentList getList() {
+		return componentList;
 	}
 	
 	public String getTitle() {
@@ -109,20 +108,15 @@ public class JAddTriangFrame extends JDialog {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-		
-	public TransformList getTrList() {
-		return trList;
-	}
-
-	public void setTrList(TransformList trList) {
-		this.trList = trList;
-	}
 
 	public void saveSettings() {
 		Triangle triang = triangSettings.getTriangSettings();
 		AffineTransform transform = triang.toTransform();
+		FractalComponent component = new FractalComponent();
 		
-		tList.insertItem(triang);
-		trList.insertItem(transform);
+		component.setTriang(triang);
+		component.setTransform(transform);
+		
+		componentList.insertItem(component);
 	}
 }

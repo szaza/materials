@@ -5,12 +5,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
-import collect.TransformList;
+import collect.FractalComponent;
+import collect.FractalComponentList;
 import collect.Triangle;
 
 public class JRenderCanvas extends JPanel {
@@ -22,8 +22,7 @@ public class JRenderCanvas extends JPanel {
 	private int scale;
 	private Color color;
 	private Triangle defTriang;
-	private TransformList trList;
-	private AffineTransform transform;
+	private FractalComponentList componentList;
 	
 	public JRenderCanvas() {
 		this (200,150);
@@ -62,12 +61,12 @@ public class JRenderCanvas extends JPanel {
 		this.defTriang = defTriang;
 	}
 
-	public TransformList getTransform() {
-		return trList;
+	public FractalComponentList getTransform() {
+		return componentList;
 	}
 
-	public void setTransformList(TransformList trList) {
-		this.trList = trList;
+	public void setComponentList(FractalComponentList componentList) {
+		this.componentList = componentList;
 		repaint();
 	}
 	
@@ -76,6 +75,7 @@ public class JRenderCanvas extends JPanel {
 		Random rnb = new Random();
 		Shape shape;
 		Graphics2D gr = (Graphics2D) g;
+		FractalComponent component;
 		int index;
 		
 		gr.setColor(color);
@@ -86,9 +86,10 @@ public class JRenderCanvas extends JPanel {
 		gr.setColor(Color.red);
 		
 		for (int i=0; i<100; i++) {		
-			index = rnb.nextInt(trList.getLength());
-			transform = trList.getValue(index);
-			shape = transform.createTransformedShape(shape);
+			index = rnb.nextInt(componentList.getLength());
+			component = componentList.getValue(index);
+			System.out.println(component.toString());
+			shape = component.transform.createTransformedShape(shape);
 			gr.draw(shape);
 		}
 	}
