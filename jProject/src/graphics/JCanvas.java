@@ -26,7 +26,8 @@ public class JCanvas extends JPanel {
 	private double scale;
 	private BufferedImage img;
 	private AffineTransform transform;
-	private FractalComponentList componentList;
+	private FractalComponentList fComponentList;
+	private FractalComponentList gComponentList;
 	public Triangle defTriang;
 	
 	public JCanvas() {
@@ -97,20 +98,38 @@ public class JCanvas extends JPanel {
 		g.setColor(Color.WHITE);
 		g.draw(p);
 		
-		//A megadott haromszogek kirajzolasa
-		for (FListIterator it = componentList.getIterator(); it.hasMoreElements();) {
-			p = it.nextElement().getTriang().getPolygon(width/2,height/2,width/10);
+		if (!fComponentList.empty()) {
 			g.setColor(Color.CYAN);
-			g.draw(p);			
-		}		
+			
+			//A megadott haromszogek kirajzolasa
+			for (FListIterator it = fComponentList.getIterator(); it.hasMoreElements();) {
+				p = it.nextElement().getTriang().getPolygon(width/2,height/2,width/10);
+				g.draw(p);			
+			}		
+		}
+
 		
+		if (!gComponentList.empty()) {
+			g.setColor(Color.orange);
+			
+			//A megadott haromszogek kirajzolasa
+			for (FListIterator it = gComponentList.getIterator(); it.hasMoreElements();) {
+				p = it.nextElement().getTriang().getPolygon(width/2,height/2,width/10);
+				g.draw(p);			
+			}		
+		}		
 	}
 	
 	//Frissiti a canvas listajat
-	public void setComponentList(FractalComponentList componentList) {
-		this.componentList = componentList;
+	public void setFComponentList(FractalComponentList fComponentList) {
+		this.fComponentList = fComponentList;
 		repaint();
 	}
+
+	public void setGComponentList(FractalComponentList gComponentList) {
+		this.gComponentList = gComponentList;
+		repaint();
+	}	
 	
 	@Override 
 	public void paint(Graphics g) {				

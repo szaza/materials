@@ -96,34 +96,37 @@ public class JRenderCanvas extends JPanel {
 		g.setColor(color);
 		g.fillRect(0, 0, width, height);
 		
-		gr2D.translate(width/2,height/2);		
-		
-		/*
-		deft = defTriang.getPolygon(0,0,scale);
-		g.setColor(Color.green);
-		gr2D.draw(deft);
-		*/
-		pont = new Point2D.Double(1,0);
-		
-		for (int i=0; i<1000; i++) {
-			index = rnb.nextInt(componentList.getLength());
+		if (componentList != null) {
 			
-			if (index == 0) {
-				gr2D.setColor(Color.red);
-			}
-			else if(index == 1) {
-				gr2D.setColor(Color.green);
-			}
-			else if (index == 2) {
-				gr2D.setColor(Color.blue);
+			gr2D.translate(width/2,height/2);		
+			
+			/*
+			deft = defTriang.getPolygon(0,0,scale);
+			g.setColor(Color.green);
+			gr2D.draw(deft);
+			*/
+			pont = new Point2D.Double(1,0);
+			
+			for (int i=0; i<1000; i++) {
+				index = rnb.nextInt(componentList.getLength());
+				
+				if (index == 0) {
+					gr2D.setColor(Color.red);
+				}
+				else if(index == 1) {
+					gr2D.setColor(Color.green);
+				}
+				else if (index == 2) {
+					gr2D.setColor(Color.blue);
+				}
+				
+				
+				component = componentList.getValue(index);
+				pont = component.transform.transform(pont);
+				drawEllipse(pont,gr2D,scale);								
 			}
 			
-			
-			component = componentList.getValue(index);
-			pont = component.transform.transform(pont);
-			drawEllipse(pont,gr2D,scale);								
+			g.drawImage(img,0,0,null);
 		}
-		
-		g.drawImage(img,0,0,null);
 	}
 }

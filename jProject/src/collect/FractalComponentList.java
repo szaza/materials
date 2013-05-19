@@ -96,6 +96,10 @@ public class FractalComponentList implements Serializable {
 		return length;
 	}
 	
+	public boolean empty() {
+		return (first == null) ? true : false;
+	}
+	
 	public FListIterator getIterator() {
 		return new TListIteratorImpl();
 	}
