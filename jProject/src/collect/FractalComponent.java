@@ -1,13 +1,12 @@
 package collect;
 
-import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 
 public class FractalComponent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public Triangle triang;
-	public AffineTransform transform;
+	public Transform transform;
 	public FractalComponent next;
 	public FractalComponent prev;
 
@@ -24,11 +23,11 @@ public class FractalComponent implements Serializable {
 		this.triang = triang;
 	}	
 	
-	public AffineTransform getTransform() {
+	public Transform getTransform() {
 		return transform;
 	}
 
-	public void setTransform(AffineTransform transform) {
+	public void setTransform(Transform transform) {
 		this.transform = transform;
 	}
 	
@@ -38,6 +37,6 @@ public class FractalComponent implements Serializable {
 	}
 
 	public String toString() {
-		return triang.toString()+transform.toString();
+		return triang.toString() + " " + transform.toString();
 	}
 };

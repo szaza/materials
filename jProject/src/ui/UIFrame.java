@@ -9,11 +9,11 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import javax.swing.*;
 
 import collect.FractalComponent;
+import collect.Transform;
 import collect.Triangle;
 import collect.FractalComponentList;
 import graphics.JCanvas;
@@ -161,16 +161,26 @@ public class UIFrame extends JFrame {
 	}
 
 	public void init() {
-		AffineTransform transform;
+		Transform transform;
 		FractalComponent component = new FractalComponent();
 		
 		//Hozzaadom az elso transzformaciot
-		Point2D.Float A = new Point2D.Float(0.3f,-0.2f);
+		/*Point2D.Float A = new Point2D.Float(0.3f,-0.2f);
 		Point2D.Float B = new Point2D.Float(0.9f,0.2f);
-		Point2D.Float C = new Point2D.Float(-0.2f,0.6f);		
+		Point2D.Float C = new Point2D.Float(-0.2f,0.6f);*/
+		
+		Point2D.Float A;
+		Point2D.Float B; 
+		Point2D.Float C;
+		
+		Triangle triang;
+		
+		A = new Point2D.Float(0.0f,0.0f);
+		B = new Point2D.Float(0.0f,0.5f);
+		C = new Point2D.Float(0.5f,0.0f);
 		
 		//Beszurom a listaba az elso elemet
-		Triangle triang = new Triangle(A, B, C); 
+		triang = new Triangle(A, B, C); 
 		
 		triangPanel.setFields(A, B, C);
 		transform = triang.toTransform();
@@ -180,8 +190,40 @@ public class UIFrame extends JFrame {
 		
 		fList.insertItem(component);
 		
+		A = new Point2D.Float(0.5f,0.0f);
+		B = new Point2D.Float(0.5f,0.5f);
+		C = new Point2D.Float(1.0f,0.0f);
+		
+		//Beszurom a listaba az elso elemet
+		triang = new Triangle(A, B, C); 
+		
+		triangPanel.setFields(A, B, C);
+		transform = triang.toTransform();
+			
+		component.setTriang(triang);
+		component.setTransform(transform);
+		
+		fList.insertItem(component);	
+		
+		A = new Point2D.Float(0.0f,0.5f);
+		B = new Point2D.Float(0.0f,1.0f);
+		C = new Point2D.Float(0.5f,0.5f);
+		
+		//Beszurom a listaba az elso elemet
+		triang = new Triangle(A, B, C); 
+		
+		triangPanel.setFields(A, B, C);
+		transform = triang.toTransform();
+			
+		component.setTriang(triang);
+		component.setTransform(transform);
+		
+		fList.insertItem(component);	
+		
 		//A lista elemszamat novelem 1-el
 		selectTriangle.addItem("1");
+		selectTriangle.addItem("2");
+		selectTriangle.addItem("3");
 		//A haromszoget beallito mezokre figyelot teszek
 		triangPanel.addFocusListener(new triangListener());
 		//A transzformaciokat beallito mezokre figyelot teszek
@@ -210,7 +252,9 @@ public class UIFrame extends JFrame {
 		
 		//Frissiti a haromszog panelek adatait 
 		triangPanel.setFields(component.triang.A, component.triang.B, component.triang.C);
-		transformPanel.setFields(component.transform.getTranslateX(),component.transform.getTranslateY(),component.transform.getScaleX(),component.transform.getShearY(),component.transform.getShearX(),component.transform.getScaleY());
+		transformPanel.setFields(component.transform.getValue(0,0),component.transform.getValue(1,0),
+								component.transform.getValue(0,1),component.transform.getValue(1,1),
+								component.transform.getValue(0,2),component.transform.getValue(1,2));
 			
 		rCanvas.setDefTriang(defTriangle);
 		rCanvas.setComponentList(fList);
@@ -257,7 +301,7 @@ public class UIFrame extends JFrame {
 		@Override
 		public void focusLost(FocusEvent e) {
 			Triangle triang;
-			AffineTransform transform;
+			Transform transform;
 			FractalComponent component = new FractalComponent();
 			int index = selectTriangle.getSelectedIndex();
 			
@@ -288,7 +332,7 @@ public class UIFrame extends JFrame {
 		@Override
 		public void focusLost(FocusEvent e) {
 			Triangle triang;
-			AffineTransform transform;
+			Transform transform;
 			FractalComponent component = new FractalComponent();
 			triang = transformPanel.getTriangSettings();
 			int index = selectTriangle.getSelectedIndex();			

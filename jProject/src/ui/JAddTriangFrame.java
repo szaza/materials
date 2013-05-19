@@ -3,13 +3,13 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
-import java.awt.geom.AffineTransform;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import collect.FractalComponent;
+import collect.Transform;
 import collect.Triangle;
 import collect.FractalComponentList;
 
@@ -111,7 +111,7 @@ public class JAddTriangFrame extends JDialog {
 
 	public void saveSettings() {
 		Triangle triang = triangSettings.getTriangSettings();
-		AffineTransform transform = triang.toTransform();
+		Transform transform = triang.toTransform();
 		FractalComponent component = new FractalComponent();
 		
 		component.setTriang(triang);

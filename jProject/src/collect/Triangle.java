@@ -1,6 +1,5 @@
 package collect;
 
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
@@ -67,8 +66,8 @@ public class Triangle implements Serializable {
 		C = c;
 	}
 	
-	public AffineTransform toTransform() {
-		return new AffineTransform(B.x-A.x,B.y-A.y,C.x-A.x,C.y-A.y,A.x,A.y);		
+	public Transform toTransform() {
+		return new Transform(A,B,C);
 	}
 
 	@Override

@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -23,6 +26,7 @@ public class JRenderCanvas extends JPanel {
 	private Color color;
 	private Triangle defTriang;
 	private FractalComponentList componentList;
+	private BufferedImage img;
 	
 	public JRenderCanvas() {
 		this (200,150);
@@ -32,7 +36,7 @@ public class JRenderCanvas extends JPanel {
 		this.width = width;
 		this.height = height;
 		this.color = Color.black;
-		this.scale = width/10;
+		this.scale = width/6;
 		this.setBackground(color);
 		this.setPreferredSize(new Dimension(width,height));
 	}
@@ -70,27 +74,58 @@ public class JRenderCanvas extends JPanel {
 		repaint();
 	}
 	
+	public void drawEllipse(Point2D.Double pont,Graphics2D gr2D,double scale){
+		Shape shape;		
+		shape = new Ellipse2D.Float((float)(pont.x * scale),(float)(pont.y*scale), 1.0f, 1.0f);
+		gr2D.draw(shape);
+	}
+	
 	@Override
 	public void paint(Graphics g) {
-		Random rnb = new Random();
-		Shape shape;
-		Graphics2D gr = (Graphics2D) g;
-		FractalComponent component;
 		int index;
+		Random rnb = new Random();
+		Shape deft;
+		Graphics2D  gr2D = null;
+		FractalComponent component;
+		Point2D.Double pont;
 		
-		gr.setColor(color);
-		gr.fillRect(0, 0, width, height);
-		gr.translate(width/2,height/2);
+		if (img == null) {
+			img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
+		}	
 		
-		shape = defTriang.getPolygon(0,0,scale);
-		gr.setColor(Color.red);
+		gr2D = (Graphics2D) img.getGraphics();
 		
-		for (int i=0; i<100; i++) {		
+		g.setColor(color);
+		g.fillRect(0, 0, width, height);
+		
+		gr2D.translate(width/2,height/2);		
+		
+		/*
+		deft = defTriang.getPolygon(0,0,scale);
+		g.setColor(Color.green);
+		gr2D.draw(deft);
+		*/
+		pont = new Point2D.Double(1,0);
+		
+		for (int i=0; i<1000; i++) {
 			index = rnb.nextInt(componentList.getLength());
+			
+			if (index == 0) {
+				gr2D.setColor(Color.red);
+			}
+			else if(index == 1) {
+				gr2D.setColor(Color.green);
+			}
+			else if (index == 2) {
+				gr2D.setColor(Color.blue);
+			}
+			
+			
 			component = componentList.getValue(index);
-			System.out.println(component.toString());
-			shape = component.transform.createTransformedShape(shape);
-			gr.draw(shape);
+			pont = component.transform.transform(pont);
+			drawEllipse(pont,gr2D,scale);								
 		}
+		
+		g.drawImage(img,0,0,null);
 	}
 }
