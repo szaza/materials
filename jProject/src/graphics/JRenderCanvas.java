@@ -84,14 +84,12 @@ public class JRenderCanvas extends JPanel {
 	public void paint(Graphics g) {
 		int index;
 		Random rnb = new Random();
-		Shape deft;
+		//Shape deft;
 		Graphics2D  gr2D = null;
 		FractalComponent component;
 		Point2D.Double pont;
 		
-		if (img == null) {
-			img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
-		}	
+		img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);	
 		
 		gr2D = (Graphics2D) img.getGraphics();
 		

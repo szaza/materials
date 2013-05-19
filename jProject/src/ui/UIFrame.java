@@ -252,9 +252,9 @@ public class UIFrame extends JFrame {
 		
 		//Frissiti a haromszog panelek adatait 
 		triangPanel.setFields(component.triang.A, component.triang.B, component.triang.C);
-		transformPanel.setFields(component.transform.getValue(0,0),component.transform.getValue(1,0),
+		transformPanel.setFields(component.transform.getValue(0,2),component.transform.getValue(1,2),
 								component.transform.getValue(0,1),component.transform.getValue(1,1),
-								component.transform.getValue(0,2),component.transform.getValue(1,2));
+								component.transform.getValue(0,0),component.transform.getValue(1,0));
 			
 		rCanvas.setDefTriang(defTriangle);
 		rCanvas.setComponentList(fList);
