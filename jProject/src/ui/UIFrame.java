@@ -60,9 +60,11 @@ public class UIFrame extends JFrame {
 		canvas = new JCanvas();
 
 		defTriangle = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
-
-		fFractal = new FractalPanel(this);
-		gFractal = new FractalPanel(this);
+		Triangle gTriangle = new Triangle(2.0f,2.0f,3.0f,2.0f,2.0f,3.0f);
+		
+		
+		fFractal = new FractalPanel(this,defTriangle);
+		gFractal = new FractalPanel(this,gTriangle);
 		fractalTab = new JTabbedPane();
 		
 		fileMenu.add(saveMenu);

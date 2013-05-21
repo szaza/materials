@@ -1,13 +1,13 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import collect.FractalComponent;
@@ -24,10 +24,14 @@ public class JAddTriangFrame extends JDialog {
 	private String title;
 	
 	private LinkedList <FractalComponent> componentList;
-	private JPanel buttonContainer;
 	public JButton ok;
-	public JButton cancel;
+	public JButton cancel;	
+	private JLabel colorLabel;
+	private JPanel colorContainer;
+	private JPanel buttonContainer;
 	private JTriangPanel triangSettings;
+	
+	private ColorSelector colorChooser;
 
 	public JAddTriangFrame() {
 		this("Háromszög hozzáadása", 30, 30, 300, 300,null);
@@ -53,15 +57,22 @@ public class JAddTriangFrame extends JDialog {
 		setLayout(new BorderLayout());
 		ok = new JButton("Ok");
 		cancel = new JButton("Mégse");		
-		buttonContainer = new JPanel();		
+		buttonContainer = new JPanel();
+		colorLabel = new JLabel("Válasszon színt: ");
+		colorContainer = new JPanel();
 		triangSettings = new JTriangPanel();
 		triangSettings.setSize(new Dimension(getWidth(), getHeight()));
+		colorChooser = new ColorSelector();
 		
 		buttonContainer.add(ok);	
 		buttonContainer.add(cancel);
+		
+		colorContainer.add(colorLabel);
+		colorContainer.add(colorChooser);
 
 		add(buttonContainer,BorderLayout.SOUTH);
-		add(triangSettings, BorderLayout.NORTH);
+		add(triangSettings, BorderLayout.CENTER);
+		add(colorContainer,BorderLayout.NORTH);
 		setResizable(false);
 		setVisible(true);
 	}
@@ -113,7 +124,7 @@ public class JAddTriangFrame extends JDialog {
 	public void saveSettings() {
 		Triangle triang = triangSettings.getTriangSettings();
 		Transform transform = triang.toTransform();
-		FractalComponent component = new FractalComponent(triang,transform,Color.CYAN);	
+		FractalComponent component = new FractalComponent(triang,transform,colorChooser.getColor());	
 		componentList.add(component);
 	}
 }

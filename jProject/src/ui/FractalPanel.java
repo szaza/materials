@@ -2,7 +2,6 @@ package ui;
 
 import graphics.JRenderCanvas;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +9,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -41,10 +39,12 @@ public class FractalPanel extends JPanel {
 	private LinkedList <FractalComponent> fList;
 	private UIFrame uiFrame;
 	private JRenderCanvas rCanvas;
+	private Triangle triangle;
 	
-	public FractalPanel(UIFrame ui) {
+	public FractalPanel(UIFrame ui,Triangle triang) {
 		
 		uiFrame = ui;
+		triangle = triang;
 		
 		fList = new LinkedList <FractalComponent>();		
 		
@@ -125,67 +125,13 @@ public class FractalPanel extends JPanel {
 	
 	public void init() {
 		Transform transform;
-		Triangle triang;
+			
+		triangPanel.setFields(triangle.A, triangle.B, triangle.C);
+		transform = triangle.toTransform();
 		
-		/*
-		//Hozzaadom az elso transzformaciot
-		Point2D.Float A = new Point2D.Float(0f,0f);
-		Point2D.Float B = new Point2D.Float(0f,1f);
-		Point2D.Float C = new Point2D.Float(1f,0f);
+		fList.add(new FractalComponent(triangle,transform,colorChooser.getColor()));		
 		
-		//Beszurom a listaba az elso elemet
-		triang = new Triangle(A, B, C); 
-		
-		triangPanel.setFields(A, B, C);
-		transform = triang.toTransform();
-		
-		fList.add(new FractalComponent(triang,transform,Color.RED));		
-		*/
-		
-		Point2D.Float A;
-		Point2D.Float B; 
-		Point2D.Float C;
-		
-		A = new Point2D.Float(0.0f,0.0f);
-		B = new Point2D.Float(0.0f,0.5f);
-		C = new Point2D.Float(0.5f,0.0f);
-		
-		//Beszurom a listaba az elso elemet
-		triang = new Triangle(A, B, C); 
-		
-		triangPanel.setFields(A, B, C);
-		transform = triang.toTransform();
-		
-		fList.add(new FractalComponent(triang,transform,Color.CYAN));
-		
-		A = new Point2D.Float(0.5f,0.0f);
-		B = new Point2D.Float(0.5f,0.5f);
-		C = new Point2D.Float(1.0f,0.0f);
-		
-		//Beszurom a listaba az elso elemet
-		triang = new Triangle(A, B, C); 
-		
-		triangPanel.setFields(A, B, C);
-		transform = triang.toTransform();
-		
-		fList.add(new FractalComponent(triang,transform,Color.CYAN));	
-		
-		A = new Point2D.Float(0.0f,0.5f);
-		B = new Point2D.Float(0.0f,1.0f);
-		C = new Point2D.Float(0.5f,0.5f);
-		
-		//Beszurom a listaba az elso elemet
-		triang = new Triangle(A, B, C); 
-		
-		triangPanel.setFields(A, B, C);
-		transform = triang.toTransform();
-		
-		fList.add(new FractalComponent(triang,transform,Color.CYAN));
-		
-		//A lista elemszamat novelem 1-el
-		selectTriangle.addItem("1");
-		selectTriangle.addItem("2");
-		selectTriangle.addItem("3");
+		selectTriangle.addItem("1");	//A lista elemszamat novelem 1-el
 		
 		triangPanel.addFocusListener(new triangListener());			//A haromszoget beallito mezokre figyelot teszek
 		transformPanel.addFocusListener(new transformListener());	//A transzformaciokat beallito mezokre figyelot teszek
@@ -241,16 +187,20 @@ public class FractalPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			
 			//Lementi a beallitasokat, es kiszamolja az uj transformaciot
 			addFrame.saveSettings();
+			
 			//Beteszi a lennyilo menube az uj elem sorszamat
 			fList = addFrame.getList();
+			
 			if (selectTriangle.getItemCount() < fList.size()) {
 				for (int i = selectTriangle.getItemCount() + 1; i <= fList
 						.size(); i++) {
 					selectTriangle.addItem(Integer.toString(i));
 				}
 			}
+			
 			setRemoveTriangButtonState();
 			refresh();
 		}

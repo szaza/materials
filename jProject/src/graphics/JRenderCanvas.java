@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -90,6 +91,7 @@ public class JRenderCanvas extends JPanel {
 		FractalComponent component;
 		Point2D.Double pont;
 		Color color;
+		AffineTransform transform;
 		
 		img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);	
 		
@@ -97,6 +99,11 @@ public class JRenderCanvas extends JPanel {
 		
 		g.setColor(bgColor);
 		g.fillRect(0, 0, width, height);
+		
+		transform = gr2D.getTransform();
+		transform.scale(1,-1);
+		transform.translate(0,-height);
+		gr2D.setTransform(transform);
 		
 		if (componentList != null) {			
 			gr2D.translate(width/2,height/2);		

@@ -90,15 +90,31 @@ public class JCanvas extends JPanel {
 		gr.drawLine(0, height/2, width, height/2);		
 	}
 	
+	public void drawTexts(Graphics2D g,Triangle triang,String label,float scalex,float scaley) {
+		float x3;
+		float y3;
+		
+		g.drawString("A",(float)(triang.A.x *scalex -10),(float)(triang.A.y *scaley +10));
+		g.drawString("B",(float)(triang.B.x *scalex +10),(float)(triang.B.y *scaley +10));
+		g.drawString("C",(float)(triang.C.x *scalex -10),(float)(triang.C.y *scaley -5));
+		
+		//Haromszog sulypontja
+		x3 = ((triang.A.x * scalex + triang.B.x * scalex + triang.C.x * scalex) / 3);
+		y3 = ((triang.A.y * scaley + triang.B.y * scaley + triang.C.y * scaley) / 3);
+		
+		g.drawString(label,x3,y3);
+	}
+	
 	public void drawTriangles(Graphics2D g) {
 		Polygon2D p;
-		float scale = width / 10;
+		float scalex = width / 10;
+		float scaley = -scalex;
 		
 		g.translate(width/2,height/2);
 		
 		//Alap haromszog kirajzolasa
 		defTriang = UIFrame.defTriangle;
-		p = defTriang.getPolygon(scale);
+		p = defTriang.getPolygon(scalex,scaley);
 		g.setColor(Color.WHITE);
 		g.draw(p);
 		
@@ -106,11 +122,9 @@ public class JCanvas extends JPanel {
 			//A megadott haromszogek kirajzolasa
 			for (FractalComponent component: fComponentList) {
 				g.setColor(component.getColor());
-				p = component.getTriang().getPolygon(scale);
+				drawTexts(g,component.getTriang(),"F",scalex,scaley);
+				p = component.getTriang().getPolygon(scalex,scaley);
 				g.draw(p);
-				g.drawString("A",component.getTriang().A.x *scale -10,component.getTriang().A.y *scale -5);
-				g.drawString("B",component.getTriang().B.x *scale -10,component.getTriang().B.y *scale +5);
-				g.drawString("C",component.getTriang().C.x *scale +5,component.getTriang().C.y *scale -5);
 			}		
 		}
 
@@ -121,7 +135,8 @@ public class JCanvas extends JPanel {
 			//A megadott haromszogek kirajzolasa
 			for (FractalComponent component: gComponentList) {
 				g.setColor(component.getColor());
-				p = component.getTriang().getPolygon(scale);
+				drawTexts(g,component.getTriang(),"G",scalex,scaley);
+				p = component.getTriang().getPolygon(scalex,scaley);
 				g.draw(p);			
 			}		
 		}		

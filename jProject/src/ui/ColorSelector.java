@@ -102,7 +102,7 @@ public class ColorSelector extends JButton {
    * The constructor.
    */
   public ColorSelector() {
-    this(Color.RED, getDefaultColors());
+    this(Color.GREEN, getDefaultColors());
     width = 50;
     height = 26;
   }
