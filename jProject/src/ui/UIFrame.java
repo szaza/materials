@@ -11,13 +11,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.*;
 
 import collect.FractalComponent;
 import collect.Triangle;
+import collect.WrappingObj;
 import graphics.JCanvas;
 import graphics.JRenderCanvas;
 
@@ -28,6 +28,9 @@ public class UIFrame extends JFrame {
 	private JPanel controlPanel;
 	private JPanel contentPanel;
 	private JPanel editPanel;
+	
+	private	 boolean fVisible;
+	private boolean gVisible;
 	
 	private static FractalPanel fFractal;
 	private static FractalPanel gFractal;
@@ -52,6 +55,9 @@ public class UIFrame extends JFrame {
 		this.setTitle("Fractal");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
+		
+		this.fVisible = true;
+		this.gVisible = true;
 		
 		contentPanel = new JPanel();
 		controlPanel = new JPanel();
@@ -92,9 +98,6 @@ public class UIFrame extends JFrame {
 		
 		editPanel.add(fractalTab);
 		editPanel.setPreferredSize(new Dimension(300, 500));
-		
-		canvas.setFComponentList(fList);
-		canvas.setGComponentList(gList);
 		
 		contentPanel.setLayout(new BorderLayout());
 		contentPanel.add(controlPanel, BorderLayout.NORTH);
@@ -138,7 +141,7 @@ public class UIFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				FileOutputStream fileOutput;
 				ObjectOutputStream out;
-				ArrayList <FractalComponent> object;
+				WrappingObj wrapObject;
 				String fileName;
 				String directory;
 				JFileChooser fileChooser = new JFileChooser();
@@ -152,9 +155,9 @@ public class UIFrame extends JFrame {
 						fileOutput = new FileOutputStream(directory + "/" + fileName);
 						out = new ObjectOutputStream(fileOutput);
 						
-						object = new ArrayList<FractalComponent>(fList);
+						wrapObject = new WrappingObj(fList,gList);
 												
-						out.writeObject(object);
+						out.writeObject(wrapObject);
 					
 						out.close();
 						fileOutput.close();
@@ -171,11 +174,10 @@ public class UIFrame extends JFrame {
 		
 		loadMenu.addActionListener(new ActionListener(){
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fileChooser = new JFileChooser();
-				ArrayList <FractalComponent> object;
+				WrappingObj wrapObject;
 				FileInputStream fileInput;
 				ObjectInputStream in;
 				String fileName;
@@ -191,12 +193,17 @@ public class UIFrame extends JFrame {
 						fileInput = new FileInputStream(directory + "/" + fileName);
 						in = new ObjectInputStream(fileInput);
 						
-						object = new ArrayList<FractalComponent>();
-						object = (ArrayList<FractalComponent>) in.readObject();
+						wrapObject = new WrappingObj();
+						wrapObject = (WrappingObj) in.readObject();
 						
 						fList.clear();
-						fList.addAll(object);
+						gList.clear();
+						
+						fList.addAll(wrapObject.getfFractal());
+						gList.addAll(wrapObject.getgFractal());
+						
 						fFractal.setFractalComponentList(fList);
+						gFractal.setFractalComponentList(gList);
 						
 						in.close();
 						fileInput.close();
@@ -219,8 +226,14 @@ public class UIFrame extends JFrame {
 	public void refreshCanvas() {
 		fList = fFractal.getFractalComponentList();
 		gList = gFractal.getFractalComponentList();
+		
+		fVisible = fFractal.isfVisible();
+		gVisible = gFractal.isfVisible();
+		
 		canvas.setFComponentList(fList);
 		canvas.setGComponentList(gList);
+		canvas.setfVisible(fVisible);
+		canvas.setgVisible(gVisible);		
 	}
 }
 

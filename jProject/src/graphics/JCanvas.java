@@ -25,6 +25,8 @@ public class JCanvas extends JPanel {
 	private double offsetX;
 	private double offsetY;
 	private double scale;
+	private boolean fVisible;
+	private boolean gVisible;
 	private BufferedImage img;
 	private AffineTransform transform;
 	private LinkedList <FractalComponent> fComponentList;
@@ -35,9 +37,11 @@ public class JCanvas extends JPanel {
 		width=700;
 		height=600;
 		scale = 1.0f;
-		transform = new AffineTransform();
 		defTriang = UIFrame.defTriangle;
+		fVisible = true;
+		gVisible = false;
 		
+		transform = new AffineTransform();
 		setPreferredSize(new Dimension(width,height));
 		
 		this.addMouseWheelListener(new MouseWheelListener() {
@@ -118,7 +122,7 @@ public class JCanvas extends JPanel {
 		g.setColor(Color.WHITE);
 		g.draw(p);
 		
-		if (!fComponentList.isEmpty()) {			
+		if (!fComponentList.isEmpty() && fVisible) {			
 			//A megadott haromszogek kirajzolasa
 			for (FractalComponent component: fComponentList) {
 				g.setColor(component.getColor());
@@ -129,7 +133,7 @@ public class JCanvas extends JPanel {
 		}
 
 		
-		if (!gComponentList.isEmpty()) {
+		if (!gComponentList.isEmpty() && gVisible) {
 			g.setColor(Color.orange);
 			
 			//A megadott haromszogek kirajzolasa
@@ -140,17 +144,6 @@ public class JCanvas extends JPanel {
 				g.draw(p);			
 			}		
 		}		
-	}
-	
-	//Frissiti a canvas listajat
-	public void setFComponentList(LinkedList <FractalComponent> fComponentList) {
-		this.fComponentList = fComponentList;
-		repaint();
-	}
-
-	public void setGComponentList(LinkedList <FractalComponent> gComponentList) {
-		this.gComponentList = gComponentList;
-		repaint();
 	}	
 	
 	@Override 
@@ -167,5 +160,26 @@ public class JCanvas extends JPanel {
 		
 		gr2D.drawImage(img,0,0,null);
 		drawTriangles(gr2D);
-	}	
+	}
+	
+	//Frissiti a canvas listajat
+	public void setFComponentList(LinkedList <FractalComponent> fComponentList) {
+		this.fComponentList = fComponentList;
+		repaint();
+	}
+
+	public void setGComponentList(LinkedList <FractalComponent> gComponentList) {
+		this.gComponentList = gComponentList;
+		repaint();
+	}
+
+	public void setfVisible(boolean fVisible) {
+		this.fVisible = fVisible;
+		repaint();
+	}
+
+	public void setgVisible(boolean gVisible) {
+		this.gVisible = gVisible;
+		repaint();
+	}		
 }

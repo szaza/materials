@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,6 +28,7 @@ public class FractalPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel editPanel;
+	private JPanel visiblePanel;
 	private JTriangPanel triangPanel;
 	private JTriangPanel transformPanel;
 	private JTabbedPane tabPane;
@@ -35,19 +37,24 @@ public class FractalPanel extends JPanel {
 	private JComboBox<String> selectTriangle;
 	private ColorSelector colorChooser;
 	private JLabel triangSettings;
+	private JLabel visibleLabel;
+	private JCheckBox visibleCheck;
 	private JAddTriangFrame addFrame;
 	private LinkedList <FractalComponent> fList;
 	private UIFrame uiFrame;
 	private JRenderCanvas rCanvas;
 	private Triangle triangle;
+	private boolean fVisible;
 	
 	public FractalPanel(UIFrame ui,Triangle triang) {
 		
 		uiFrame = ui;
 		triangle = triang;
+		fVisible = true;
 		
 		fList = new LinkedList <FractalComponent>();		
 		
+		visiblePanel = new JPanel();
 		editPanel = new JPanel();
 		triangPanel = new JTriangPanel();
 		transformPanel = new JTriangPanel();
@@ -55,20 +62,28 @@ public class FractalPanel extends JPanel {
 		selectTriangle = new JComboBox<String>();
 		colorChooser = new ColorSelector();
 		triangSettings = new JLabel("A Háromszög adatai:");
+		visibleLabel = new JLabel("Látható:");
+		visibleCheck = new JCheckBox();
 		addTriang = new JButton("Új háromszög");
 		removeTriang = new JButton("Törlés");		
 		rCanvas = new JRenderCanvas();
 		
 		rCanvas.setComponentList(fList);
 		selectTriangle.setPreferredSize(new Dimension(150, 26));
+		visiblePanel.setPreferredSize(new Dimension(300,26));
 		
 		tabPane.addTab("Háromsz.", triangPanel);
 		tabPane.addTab("Transzform.", transformPanel);
+		
+		visibleCheck.setSelected(true);
+		visiblePanel.add(visibleLabel);
+		visiblePanel.add(visibleCheck);
 		
 		editPanel.add(triangSettings);
 		editPanel.add(selectTriangle);
 		editPanel.add(colorChooser);
 		editPanel.add(tabPane);
+		editPanel.add(visiblePanel);
 		editPanel.add(addTriang);
 		editPanel.add(removeTriang);
 		editPanel.add(rCanvas);
@@ -118,6 +133,22 @@ public class FractalPanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				setComponents();			
+			}
+			
+		});
+		
+		visibleCheck.addItemListener(new ItemListener(){
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					fVisible = true;	
+					refresh();
+				}
+				else {
+					fVisible = false;
+					refresh();
+				}
 			}
 			
 		});
@@ -270,10 +301,12 @@ public class FractalPanel extends JPanel {
 		this.fList = fList;
 		for (int i=selectTriangle.getItemCount(); i<fList.size(); i++) {
 			selectTriangle.addItem(Integer.toString(i+1));
-			refresh();
 		}
+		refresh();
 	}
-	
-	
+
+	public boolean isfVisible() {
+		return fVisible;
+	}
 
 }
