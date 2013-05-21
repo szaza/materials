@@ -24,7 +24,7 @@ public class JRenderCanvas extends JPanel {
 	private int height;
 	private int scale;
 	private int iterationNumber;
-	private Color color;
+	private Color bgColor;
 	private Triangle defTriang;
 	private LinkedList <FractalComponent> componentList;
 	private BufferedImage img;
@@ -36,10 +36,10 @@ public class JRenderCanvas extends JPanel {
 	public JRenderCanvas(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.color = Color.black;
+		this.bgColor = Color.black;
 		this.scale = width/6;
-		this.iterationNumber = 5000;
-		this.setBackground(color);
+		this.iterationNumber = 30000;
+		this.setBackground(bgColor);
 		this.setPreferredSize(new Dimension(width,height));
 	}
 
@@ -89,23 +89,26 @@ public class JRenderCanvas extends JPanel {
 		Graphics2D  gr2D = null;
 		FractalComponent component;
 		Point2D.Double pont;
+		Color color;
 		
 		img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);	
 		
 		gr2D = (Graphics2D) img.getGraphics();
 		
-		g.setColor(color);
+		g.setColor(bgColor);
 		g.fillRect(0, 0, width, height);
 		
 		if (componentList != null) {			
 			gr2D.translate(width/2,height/2);		
 			
 			pont = new Point2D.Double(1,0);
+			color = componentList.get(0).getColor();
 			
 			for (int i=0; i<iterationNumber; i++) {
 				index = rnb.nextInt(componentList.size());				
 				component = componentList.get(index);
-				gr2D.setColor(component.getColor());
+				color = new Color((color.getRed() + component.getColor().getRed()) / 2,(color.getGreen() + component.getColor().getGreen()) / 2,(color.getBlue() + component.getColor().getBlue()) / 2);
+				gr2D.setColor(color);
 				pont = component.transform.transform(pont);
 				drawEllipse(pont,gr2D,scale);								
 			}
