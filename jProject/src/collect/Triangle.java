@@ -35,9 +35,9 @@ public class Triangle implements Serializable {
 		C = triang.getC();
 	}
 	
-	public Polygon2D getPolygon(float offsetX,float offsetY,float scale) {
-		float x[] = {A.x * scale + offsetX,B.x * scale + offsetX,C.x * scale + offsetX};
-		float y[] = {A.y * scale + offsetY,B.y * scale + offsetY,C.y * scale + offsetY};
+	public Polygon2D getPolygon(float scale) {
+		float x[] = {A.x * scale ,B.x * scale,C.x * scale};
+		float y[] = {A.y * scale ,B.y * scale,C.y * scale};
 		
 		return new Polygon2D(x,y,3);
 	}		

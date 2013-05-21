@@ -1,8 +1,10 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -11,7 +13,6 @@ import javax.swing.JPanel;
 import collect.FractalComponent;
 import collect.Transform;
 import collect.Triangle;
-import collect.FractalComponentList;
 
 public class JAddTriangFrame extends JDialog {
 
@@ -22,7 +23,7 @@ public class JAddTriangFrame extends JDialog {
 	private int height;
 	private String title;
 	
-	private FractalComponentList componentList;
+	private LinkedList <FractalComponent> componentList;
 	private JPanel buttonContainer;
 	public JButton ok;
 	public JButton cancel;
@@ -32,12 +33,12 @@ public class JAddTriangFrame extends JDialog {
 		this("Háromszög hozzáadása", 30, 30, 300, 300,null);
 	}
 	
-	public JAddTriangFrame(FractalComponentList componentList) {
+	public JAddTriangFrame(LinkedList <FractalComponent> componentList) {
 		this("Háromszög hozzáadása", 30, 30, 300, 300,componentList);
 	}
 
-	public JAddTriangFrame(String title, int x, int y, int width, int height,FractalComponentList componentList)
-			throws HeadlessException {
+	public JAddTriangFrame(String title, int x, int y, int width, int height,LinkedList <FractalComponent> componentList)
+		throws HeadlessException {
 		super();
 		this.title = title;
 		this.setX(x);
@@ -97,7 +98,7 @@ public class JAddTriangFrame extends JDialog {
 		this.y = y;
 	}
 	
-	public FractalComponentList getList() {
+	public LinkedList <FractalComponent> getList() {
 		return componentList;
 	}
 	
@@ -112,11 +113,7 @@ public class JAddTriangFrame extends JDialog {
 	public void saveSettings() {
 		Triangle triang = triangSettings.getTriangSettings();
 		Transform transform = triang.toTransform();
-		FractalComponent component = new FractalComponent();
-		
-		component.setTriang(triang);
-		component.setTransform(transform);
-		
-		componentList.insertItem(component);
+		FractalComponent component = new FractalComponent(triang,transform,Color.CYAN);	
+		componentList.add(component);
 	}
 }

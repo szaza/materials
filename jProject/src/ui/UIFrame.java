@@ -5,10 +5,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
+
 import javax.swing.*;
 
+import collect.FractalComponent;
 import collect.Triangle;
-import collect.FractalComponentList;
 import graphics.JCanvas;
 import graphics.JRenderCanvas;
 
@@ -31,11 +33,10 @@ public class UIFrame extends JFrame {
 	private JMenuItem saveMenu;
 	private JMenuItem exitMenu;
 	
-	private FractalComponentList fList;
-	private FractalComponentList gList;
+	private LinkedList<FractalComponent> fList;
+	private LinkedList<FractalComponent> gList;
 	
 	public static JCanvas canvas;
-	public static JRenderCanvas rCanvas;
 	public static Triangle defTriangle;	
 	
 	
@@ -48,15 +49,15 @@ public class UIFrame extends JFrame {
 		controlPanel = new JPanel();
 		editPanel = new JPanel();
 		
-		fList = new FractalComponentList();
-				
+		fList = new LinkedList<FractalComponent>();
+		gList = new LinkedList<FractalComponent>();
+		
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
 		saveMenu = new JMenuItem("Save");
 		viewMenu = new JMenuItem("View");
 		exitMenu = new JMenuItem("Exit");
 		canvas = new JCanvas();
-		rCanvas = new JRenderCanvas();
 
 		defTriangle = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
 
@@ -77,7 +78,6 @@ public class UIFrame extends JFrame {
 		fractalTab.addTab("G-fractal", gFractal);
 		
 		editPanel.add(fractalTab);
-		editPanel.add(rCanvas);
 		editPanel.setPreferredSize(new Dimension(300, 500));
 		
 		canvas.setFComponentList(fList);
@@ -100,7 +100,6 @@ public class UIFrame extends JFrame {
 				JRenderCanvas rCanv = new JRenderCanvas(600,600);
 				
 				fList = fFractal.getFractalComponentList();
-				//gList = gFractal.getFractalComponentList();
 				rCanv.setComponentList(fList);				
 				
 				frame.setTitle("Rendered frame");
@@ -117,7 +116,6 @@ public class UIFrame extends JFrame {
 		gList = gFractal.getFractalComponentList();
 		canvas.setFComponentList(fList);
 		canvas.setGComponentList(gList);
-		rCanvas.setComponentList(fList);
 	}
 }
 

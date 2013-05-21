@@ -8,13 +8,14 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+
 import javax.swing.JPanel;
 
 import ui.UIFrame;
+import collect.FractalComponent;
 import collect.Polygon2D;
-import collect.FListIterator;
 import collect.Triangle;
-import collect.FractalComponentList;
 
 public class JCanvas extends JPanel {
 
@@ -26,9 +27,9 @@ public class JCanvas extends JPanel {
 	private double scale;
 	private BufferedImage img;
 	private AffineTransform transform;
-	private FractalComponentList fComponentList;
-	private FractalComponentList gComponentList;
-	public Triangle defTriang;
+	private LinkedList <FractalComponent> fComponentList;
+	private LinkedList <FractalComponent> gComponentList;
+	private Triangle defTriang;	
 	
 	public JCanvas() {
 		width=700;
@@ -91,42 +92,48 @@ public class JCanvas extends JPanel {
 	
 	public void drawTriangles(Graphics2D g) {
 		Polygon2D p;
+		float scale = width / 10;
+		
+		g.translate(width/2,height/2);
 		
 		//Alap haromszog kirajzolasa
 		defTriang = UIFrame.defTriangle;
-		p = defTriang.getPolygon(width/2,height/2,width/10);
+		p = defTriang.getPolygon(scale);
 		g.setColor(Color.WHITE);
 		g.draw(p);
 		
-		if (!fComponentList.empty()) {
-			g.setColor(Color.CYAN);
-			
+		if (!fComponentList.isEmpty()) {			
 			//A megadott haromszogek kirajzolasa
-			for (FListIterator it = fComponentList.getIterator(); it.hasMoreElements();) {
-				p = it.nextElement().getTriang().getPolygon(width/2,height/2,width/10);
-				g.draw(p);			
+			for (FractalComponent component: fComponentList) {
+				g.setColor(component.getColor());
+				p = component.getTriang().getPolygon(scale);
+				g.draw(p);
+				g.drawString("A",component.getTriang().A.x *scale -10,component.getTriang().A.y *scale -5);
+				g.drawString("B",component.getTriang().B.x *scale -10,component.getTriang().B.y *scale +5);
+				g.drawString("C",component.getTriang().C.x *scale +5,component.getTriang().C.y *scale -5);
 			}		
 		}
 
 		
-		if (!gComponentList.empty()) {
+		if (!gComponentList.isEmpty()) {
 			g.setColor(Color.orange);
 			
 			//A megadott haromszogek kirajzolasa
-			for (FListIterator it = gComponentList.getIterator(); it.hasMoreElements();) {
-				p = it.nextElement().getTriang().getPolygon(width/2,height/2,width/10);
+			for (FractalComponent component: gComponentList) {
+				g.setColor(component.getColor());
+				p = component.getTriang().getPolygon(scale);
 				g.draw(p);			
 			}		
 		}		
 	}
 	
 	//Frissiti a canvas listajat
-	public void setFComponentList(FractalComponentList fComponentList) {
+	public void setFComponentList(LinkedList <FractalComponent> fComponentList) {
 		this.fComponentList = fComponentList;
 		repaint();
 	}
 
-	public void setGComponentList(FractalComponentList gComponentList) {
+	public void setGComponentList(LinkedList <FractalComponent> gComponentList) {
 		this.gComponentList = gComponentList;
 		repaint();
 	}	

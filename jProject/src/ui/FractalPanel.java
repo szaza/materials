@@ -1,5 +1,8 @@
 package ui;
 
+import graphics.JRenderCanvas;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,15 +11,17 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import collect.FractalComponent;
-import collect.FractalComponentList;
 import collect.Transform;
 import collect.Triangle;
 
@@ -30,43 +35,48 @@ public class FractalPanel extends JPanel {
 	private JButton addTriang;
 	private JButton removeTriang;
 	private JComboBox<String> selectTriangle;
+	private ColorSelector colorChooser;
 	private JLabel triangSettings;
 	private JAddTriangFrame addFrame;
-	private FractalComponentList fList;
+	private LinkedList <FractalComponent> fList;
 	private UIFrame uiFrame;
+	private JRenderCanvas rCanvas;
 	
 	public FractalPanel(UIFrame ui) {
 		
 		uiFrame = ui;
 		
-		fList = new FractalComponentList();		
+		fList = new LinkedList <FractalComponent>();		
 		
 		editPanel = new JPanel();
 		triangPanel = new JTriangPanel();
 		transformPanel = new JTriangPanel();
 		tabPane = new JTabbedPane();	
 		selectTriangle = new JComboBox<String>();
+		colorChooser = new ColorSelector();
 		triangSettings = new JLabel("A Háromszög adatai:");
 		addTriang = new JButton("Új háromszög");
 		removeTriang = new JButton("Törlés");		
+		rCanvas = new JRenderCanvas();
 		
+		rCanvas.setComponentList(fList);
 		selectTriangle.setPreferredSize(new Dimension(150, 26));
 		
 		tabPane.addTab("Háromsz.", triangPanel);
-		tabPane.addTab("Transzform.", transformPanel);		
+		tabPane.addTab("Transzform.", transformPanel);
 		
 		editPanel.add(triangSettings);
 		editPanel.add(selectTriangle);
+		editPanel.add(colorChooser);
 		editPanel.add(tabPane);
 		editPanel.add(addTriang);
 		editPanel.add(removeTriang);
-		editPanel.setPreferredSize(new Dimension(300, 335));	
+		editPanel.add(rCanvas);
+		editPanel.setPreferredSize(new Dimension(300,500));	
 		
 		this.add(editPanel);
 		
 		init();
-		
-		this.setVisible(true);
 		
 		addTriang.addActionListener(new ActionListener() {
 			@Override
@@ -80,7 +90,13 @@ public class FractalPanel extends JPanel {
 
 		selectTriangle.addItemListener(new ItemListener() {
 			@Override
-			public void itemStateChanged(ItemEvent arg0) {
+			public void itemStateChanged(ItemEvent e) {
+				FractalComponent component;
+				int index = selectTriangle.getSelectedIndex();
+				
+				component = fList.get(index);
+				colorChooser.setColor(component.getColor());
+				
 				refresh();
 			}
 		});
@@ -90,36 +106,45 @@ public class FractalPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int index = selectTriangle.getSelectedIndex();
-				
-				//Torlom a listabol a megfelelo elemet 
-				fList.deleteItem(index);
-
-				//Torlom a lenyillo menubol az elem sorszamat
-				selectTriangle.removeItemAt(selectTriangle.getItemCount() - 1);
-				
-				//Beallitom a torles gomb erteket
-				setRemoveTriangButtonState();
-				
-				//Frissitem az ablakokat
-				refresh();
+				fList.remove(index);											//Torlom a listabol a megfelelo elemet
+				selectTriangle.removeItemAt(selectTriangle.getItemCount() - 1);	//Torlom a lenyillo menubol az elem sorszamat
+				setRemoveTriangButtonState();									//Beallitom a torles gomb erteket
+				refresh();														//Frissitem az ablakokat
 			}
+		});
+		
+		colorChooser.addColorListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				setComponents();			
+			}
+			
 		});
 	}
 	
 	public void init() {
 		Transform transform;
-		FractalComponent component = new FractalComponent();
+		Triangle triang;
 		
+		/*
 		//Hozzaadom az elso transzformaciot
-		/*Point2D.Float A = new Point2D.Float(0.3f,-0.2f);
-		Point2D.Float B = new Point2D.Float(0.9f,0.2f);
-		Point2D.Float C = new Point2D.Float(-0.2f,0.6f);*/
+		Point2D.Float A = new Point2D.Float(0f,0f);
+		Point2D.Float B = new Point2D.Float(0f,1f);
+		Point2D.Float C = new Point2D.Float(1f,0f);
+		
+		//Beszurom a listaba az elso elemet
+		triang = new Triangle(A, B, C); 
+		
+		triangPanel.setFields(A, B, C);
+		transform = triang.toTransform();
+		
+		fList.add(new FractalComponent(triang,transform,Color.RED));		
+		*/
 		
 		Point2D.Float A;
 		Point2D.Float B; 
 		Point2D.Float C;
-		
-		Triangle triang;
 		
 		A = new Point2D.Float(0.0f,0.0f);
 		B = new Point2D.Float(0.0f,0.5f);
@@ -130,11 +155,8 @@ public class FractalPanel extends JPanel {
 		
 		triangPanel.setFields(A, B, C);
 		transform = triang.toTransform();
-			
-		component.setTriang(triang);
-		component.setTransform(transform);
 		
-		fList.insertItem(component);
+		fList.add(new FractalComponent(triang,transform,Color.CYAN));
 		
 		A = new Point2D.Float(0.5f,0.0f);
 		B = new Point2D.Float(0.5f,0.5f);
@@ -145,11 +167,8 @@ public class FractalPanel extends JPanel {
 		
 		triangPanel.setFields(A, B, C);
 		transform = triang.toTransform();
-			
-		component.setTriang(triang);
-		component.setTransform(transform);
 		
-		fList.insertItem(component);	
+		fList.add(new FractalComponent(triang,transform,Color.CYAN));	
 		
 		A = new Point2D.Float(0.0f,0.5f);
 		B = new Point2D.Float(0.0f,1.0f);
@@ -160,25 +179,19 @@ public class FractalPanel extends JPanel {
 		
 		triangPanel.setFields(A, B, C);
 		transform = triang.toTransform();
-			
-		component.setTriang(triang);
-		component.setTransform(transform);
 		
-		fList.insertItem(component);	
+		fList.add(new FractalComponent(triang,transform,Color.CYAN));
 		
 		//A lista elemszamat novelem 1-el
 		selectTriangle.addItem("1");
 		selectTriangle.addItem("2");
 		selectTriangle.addItem("3");
-		//A haromszoget beallito mezokre figyelot teszek
-		triangPanel.addFocusListener(new triangListener());
-		//A transzformaciokat beallito mezokre figyelot teszek
-		transformPanel.addFocusListener(new transformListener());		
-		//A torles gomb allapotat frissitem
-		setRemoveTriangButtonState();
 		
-		//Frissitem a paneleket
-		refreshPanels();
+		triangPanel.addFocusListener(new triangListener());			//A haromszoget beallito mezokre figyelot teszek
+		transformPanel.addFocusListener(new transformListener());	//A transzformaciokat beallito mezokre figyelot teszek
+		
+		setRemoveTriangButtonState();		//A torles gomb allapotat frissitem
+		refreshPanels();					//Frissitem a paneleket
 	}	
 	
 	//Beallitom a torles gomb allapotat
@@ -193,7 +206,7 @@ public class FractalPanel extends JPanel {
 	public void refreshPanels() {
 		FractalComponent component;
 		int index = selectTriangle.getSelectedIndex();
-		component = fList.getValue(index);
+		component = fList.get(index);
 		
 		//Frissiti a haromszog panelek adatait 
 		triangPanel.setFields(component.triang.A, component.triang.B, component.triang.C);
@@ -204,7 +217,23 @@ public class FractalPanel extends JPanel {
 	
 	public void refresh() {
 		refreshPanels();
+		rCanvas.repaint();
 		uiFrame.refreshCanvas();
+	}
+	
+	public void setComponents() {
+		Triangle triang;
+		Transform transform;
+		FractalComponent component;
+		int index = selectTriangle.getSelectedIndex();
+		
+		triang = triangPanel.getTriangSettings();	//Frissitem a kijelolt haromszog erteket
+		transform = triang.toTransform();			//Ujraszamolom a transformaciot
+		
+		component = new FractalComponent(triang,transform,colorChooser.getColor());
+		fList.set(index, component);
+		
+		refresh();	//Frissitem a paneleket		
 	}
 	
 	//Uj haromszog hozzaadasa
@@ -216,14 +245,14 @@ public class FractalPanel extends JPanel {
 			addFrame.saveSettings();
 			//Beteszi a lennyilo menube az uj elem sorszamat
 			fList = addFrame.getList();
-			if (selectTriangle.getItemCount() < fList.getLength()) {
+			if (selectTriangle.getItemCount() < fList.size()) {
 				for (int i = selectTriangle.getItemCount() + 1; i <= fList
-						.getLength(); i++) {
+						.size(); i++) {
 					selectTriangle.addItem(Integer.toString(i));
 				}
 			}
 			setRemoveTriangButtonState();
-			uiFrame.refreshCanvas();
+			refresh();
 		}
 	}
 
@@ -247,23 +276,7 @@ public class FractalPanel extends JPanel {
 		//Amikor egy mezo elveszti a fokuszt, akkor frissul a lista
 		@Override
 		public void focusLost(FocusEvent e) {
-			Triangle triang;
-			Transform transform;
-			FractalComponent component = new FractalComponent();
-			int index = selectTriangle.getSelectedIndex();
-			
-			//Frissitem a kijelolt haromszog erteket
-			triang = triangPanel.getTriangSettings();
-			component.setTriang(triang);
-			
-			//Ujraszamolom a transformaciot
-			transform = triang.toTransform();
-			component.setTransform(transform);
-			
-			fList.updateValue(component, index);
-			
-			//Frissitem a paneleket
-			refresh();
+			setComponents();
 		}
 
 	}
@@ -275,12 +288,13 @@ public class FractalPanel extends JPanel {
 
 		}
 
-		//Amikor egy mezo elveszti a fokuszt, akkor frissul a lista
+		//Amikor egy transform mezo elveszti a fokuszt, akkor frissul a lista
 		@Override
 		public void focusLost(FocusEvent e) {
 			Triangle triang;
 			Transform transform;
-			FractalComponent component = new FractalComponent();
+			FractalComponent component;
+			
 			triang = transformPanel.getTriangSettings();
 			int index = selectTriangle.getSelectedIndex();			
 			
@@ -291,16 +305,14 @@ public class FractalPanel extends JPanel {
 			triang.C.y += triang.A.y;			
 			
 			transform = triang.toTransform();
-			
-			component.setTriang(triang);
-			component.setTransform(transform);
-			
-			fList.updateValue(component, index);
+		
+			component = new FractalComponent(triang,transform,colorChooser.getColor());
+			fList.set(index, component);
 			refresh();
 		}
 	}
 
-	public FractalComponentList getFractalComponentList() {
+	public LinkedList <FractalComponent> getFractalComponentList() {
 		return fList;
 	}
 

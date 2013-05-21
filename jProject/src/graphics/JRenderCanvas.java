@@ -8,12 +8,12 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
 import collect.FractalComponent;
-import collect.FractalComponentList;
 import collect.Triangle;
 
 public class JRenderCanvas extends JPanel {
@@ -23,9 +23,10 @@ public class JRenderCanvas extends JPanel {
 	private int width;
 	private int height;
 	private int scale;
+	private int iterationNumber;
 	private Color color;
 	private Triangle defTriang;
-	private FractalComponentList componentList;
+	private LinkedList <FractalComponent> componentList;
 	private BufferedImage img;
 	
 	public JRenderCanvas() {
@@ -37,6 +38,7 @@ public class JRenderCanvas extends JPanel {
 		this.height = height;
 		this.color = Color.black;
 		this.scale = width/6;
+		this.iterationNumber = 5000;
 		this.setBackground(color);
 		this.setPreferredSize(new Dimension(width,height));
 	}
@@ -65,18 +67,18 @@ public class JRenderCanvas extends JPanel {
 		this.defTriang = defTriang;
 	}
 
-	public FractalComponentList getTransform() {
+	public LinkedList <FractalComponent> getTransform() {
 		return componentList;
 	}
 
-	public void setComponentList(FractalComponentList componentList) {
+	public void setComponentList(LinkedList <FractalComponent> componentList) {
 		this.componentList = componentList;
 		repaint();
 	}
 	
 	public void drawEllipse(Point2D.Double pont,Graphics2D gr2D,double scale){
 		Shape shape;		
-		shape = new Ellipse2D.Float((float)(pont.x * scale),(float)(pont.y*scale), 1.0f, 1.0f);
+		shape = new Ellipse2D.Float((float)(pont.x * scale),(float)(pont.y*scale), 0.1f, 0.0f);
 		gr2D.draw(shape);
 	}
 	
@@ -84,7 +86,6 @@ public class JRenderCanvas extends JPanel {
 	public void paint(Graphics g) {
 		int index;
 		Random rnb = new Random();
-		//Shape deft;
 		Graphics2D  gr2D = null;
 		FractalComponent component;
 		Point2D.Double pont;
@@ -96,32 +97,15 @@ public class JRenderCanvas extends JPanel {
 		g.setColor(color);
 		g.fillRect(0, 0, width, height);
 		
-		if (componentList != null) {
-			
+		if (componentList != null) {			
 			gr2D.translate(width/2,height/2);		
 			
-			/*
-			deft = defTriang.getPolygon(0,0,scale);
-			g.setColor(Color.green);
-			gr2D.draw(deft);
-			*/
 			pont = new Point2D.Double(1,0);
 			
-			for (int i=0; i<1000; i++) {
-				index = rnb.nextInt(componentList.getLength());
-				
-				if (index == 0) {
-					gr2D.setColor(Color.red);
-				}
-				else if(index == 1) {
-					gr2D.setColor(Color.green);
-				}
-				else if (index == 2) {
-					gr2D.setColor(Color.blue);
-				}
-				
-				
-				component = componentList.getValue(index);
+			for (int i=0; i<iterationNumber; i++) {
+				index = rnb.nextInt(componentList.size());				
+				component = componentList.get(index);
+				gr2D.setColor(component.getColor());
 				pont = component.transform.transform(pont);
 				drawEllipse(pont,gr2D,scale);								
 			}

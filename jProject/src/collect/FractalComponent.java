@@ -1,5 +1,6 @@
 package collect;
 
+import java.awt.Color;
 import java.io.Serializable;
 
 public class FractalComponent implements Serializable {
@@ -7,12 +8,12 @@ public class FractalComponent implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public Triangle triang;
 	public Transform transform;
-	public FractalComponent next;
-	public FractalComponent prev;
+	private Color color;
 
-	public FractalComponent() {
-		next = null;
-		prev = null;
+	public FractalComponent(Triangle triang,Transform transform,Color color) {
+		this.triang = triang;
+		this.transform = transform;
+		this.color = color;
 	}
 	
 	public Triangle getTriang() {
@@ -34,6 +35,14 @@ public class FractalComponent implements Serializable {
 	public void setComponent(FractalComponent component) {
 		this.triang = component.triang;
 		this.transform = component.transform;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 	public String toString() {
