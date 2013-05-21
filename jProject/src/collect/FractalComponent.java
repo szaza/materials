@@ -46,6 +46,6 @@ public class FractalComponent implements Serializable {
 	}
 
 	public String toString() {
-		return triang.toString() + " " + transform.toString();
+		return triang.toString() + " " + transform.toString() + "\n";
 	}
 };

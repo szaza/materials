@@ -107,21 +107,21 @@ public class JTriangPanel extends JPanel {
 	}
 	
 	public void setFields(Point2D.Float A,Point2D.Float B,Point2D.Float C) {
-		axField.setText(String.format("%.5f",A.x));
-		ayField.setText(String.format("%.5f",A.y));
-		bxField.setText(String.format("%.5f",B.x));
-		byField.setText(String.format("%.5f",B.y));
-		cxField.setText(String.format("%.5f",C.x));
-		cyField.setText(String.format("%.5f",C.y));		
+		axField.setText(String.format("%.6f",A.x));
+		ayField.setText(String.format("%.6f",A.y));
+		bxField.setText(String.format("%.6f",B.x));
+		byField.setText(String.format("%.6f",B.y));
+		cxField.setText(String.format("%.6f",C.x));
+		cyField.setText(String.format("%.6f",C.y));		
 	}	
 	
 	public void setFields(double ax,double ay,double bx,double by, double cx, double cy) {
-		axField.setText(String.format("%.5f",ax));
-		ayField.setText(String.format("%.5f",ay));
-		bxField.setText(String.format("%.5f",bx));
-		byField.setText(String.format("%.5f",by));
-		cxField.setText(String.format("%.5f",cx));
-		cyField.setText(String.format("%.5f",cy));		
+		axField.setText(String.format("%.6f",ax));
+		ayField.setText(String.format("%.6f",ay));
+		bxField.setText(String.format("%.6f",bx));
+		byField.setText(String.format("%.6f",by));
+		cxField.setText(String.format("%.6f",cx));
+		cyField.setText(String.format("%.6f",cy));		
 	}		
 	
 	@Override

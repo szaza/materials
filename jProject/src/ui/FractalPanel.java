@@ -266,4 +266,14 @@ public class FractalPanel extends JPanel {
 		return fList;
 	}
 
+	public void setFractalComponentList(LinkedList<FractalComponent> fList) {
+		this.fList = fList;
+		for (int i=selectTriangle.getItemCount(); i<fList.size(); i++) {
+			selectTriangle.addItem(Integer.toString(i+1));
+			refresh();
+		}
+	}
+	
+	
+
 }

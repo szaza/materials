@@ -5,6 +5,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -31,6 +38,7 @@ public class UIFrame extends JFrame {
 	private JMenu fileMenu;
 	private JMenuItem viewMenu;
 	private JMenuItem saveMenu;
+	private JMenuItem loadMenu;
 	private JMenuItem exitMenu;
 	
 	private LinkedList<FractalComponent> fList;
@@ -54,7 +62,9 @@ public class UIFrame extends JFrame {
 		
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
+		loadMenu = new JMenuItem("Load");
 		saveMenu = new JMenuItem("Save");
+		
 		viewMenu = new JMenuItem("View");
 		exitMenu = new JMenuItem("Exit");
 		canvas = new JCanvas();
@@ -67,6 +77,7 @@ public class UIFrame extends JFrame {
 		gFractal = new FractalPanel(this,gTriangle);
 		fractalTab = new JTabbedPane();
 		
+		fileMenu.add(loadMenu);
 		fileMenu.add(saveMenu);
 		fileMenu.add(viewMenu);
 		fileMenu.add(exitMenu);
@@ -110,6 +121,98 @@ public class UIFrame extends JFrame {
 				frame.setVisible(true);
 				frame.setResizable(false);
 			}
+		});
+		
+		exitMenu.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);			
+			}
+			
+		});
+		
+		saveMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileOutputStream fileOutput;
+				ObjectOutputStream out;
+				ArrayList <FractalComponent> object;
+				String fileName;
+				String directory;
+				JFileChooser fileChooser = new JFileChooser();
+				int rVal = fileChooser.showSaveDialog(UIFrame.this);
+
+				if (rVal == JFileChooser.APPROVE_OPTION) {
+					fileName = fileChooser.getSelectedFile().getName();
+					directory = fileChooser.getCurrentDirectory().toString();
+					
+					try {
+						fileOutput = new FileOutputStream(directory + "/" + fileName);
+						out = new ObjectOutputStream(fileOutput);
+						
+						object = new ArrayList<FractalComponent>(fList);
+												
+						out.writeObject(object);
+					
+						out.close();
+						fileOutput.close();
+						
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}				
+			}
+			
+		});
+		
+		loadMenu.addActionListener(new ActionListener(){
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileChooser = new JFileChooser();
+				ArrayList <FractalComponent> object;
+				FileInputStream fileInput;
+				ObjectInputStream in;
+				String fileName;
+				String directory;
+				
+				 int rVal = fileChooser.showOpenDialog(UIFrame.this);
+			      if (rVal == JFileChooser.APPROVE_OPTION) {
+					fileName = fileChooser.getSelectedFile().getName();
+					directory = fileChooser.getCurrentDirectory().toString();	
+					
+			    	try {
+			    		  
+						fileInput = new FileInputStream(directory + "/" + fileName);
+						in = new ObjectInputStream(fileInput);
+						
+						object = new ArrayList<FractalComponent>();
+						object = (ArrayList<FractalComponent>) in.readObject();
+						
+						fList.clear();
+						fList.addAll(object);
+						fFractal.setFractalComponentList(fList);
+						
+						in.close();
+						fileInput.close();
+						
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+			    	  
+			      }				
+				
+			}
+			
 		});
 	}
 	

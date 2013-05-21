@@ -1,9 +1,11 @@
 package collect;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
-public class Transform {
+public class Transform implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private double[][] transform;
 	
 	public Transform() {
