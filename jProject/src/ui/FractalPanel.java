@@ -44,6 +44,7 @@ public class FractalPanel extends JPanel {
 	private UIFrame uiFrame;
 	private JRenderCanvas rCanvas;
 	private Triangle triangle;
+	private int itNumber;
 	private boolean fVisible;
 	
 	public FractalPanel(UIFrame ui,Triangle triang) {
@@ -69,6 +70,7 @@ public class FractalPanel extends JPanel {
 		rCanvas = new JRenderCanvas();
 		
 		rCanvas.setComponentList(fList);
+		rCanvas.setItNumber(itNumber);
 		selectTriangle.setPreferredSize(new Dimension(150, 26));
 		visiblePanel.setPreferredSize(new Dimension(300,26));
 		
@@ -166,6 +168,8 @@ public class FractalPanel extends JPanel {
 		
 		triangPanel.addFocusListener(new triangListener());			//A haromszoget beallito mezokre figyelot teszek
 		transformPanel.addFocusListener(new transformListener());	//A transzformaciokat beallito mezokre figyelot teszek
+		
+		rCanvas.setItNumber(itNumber);
 		
 		setRemoveTriangButtonState();		//A torles gomb allapotat frissitem
 		refreshPanels();					//Frissitem a paneleket
@@ -307,6 +311,16 @@ public class FractalPanel extends JPanel {
 
 	public boolean isfVisible() {
 		return fVisible;
+	}
+
+	public int getItNumber() {
+		return itNumber;
+	}
+
+	public void setItNumber(int itNumber) {
+		this.itNumber = itNumber;
+		rCanvas.setItNumber(itNumber);
+		refresh();
 	}
 
 }

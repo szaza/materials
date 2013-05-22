@@ -24,7 +24,7 @@ public class JRenderCanvas extends JPanel {
 	private int width;
 	private int height;
 	private int scale;
-	private int iterationNumber;
+	private int itNumber;
 	private Color bgColor;
 	private Triangle defTriang;
 	private LinkedList <FractalComponent> componentList;
@@ -39,42 +39,9 @@ public class JRenderCanvas extends JPanel {
 		this.height = height;
 		this.bgColor = Color.black;
 		this.scale = width/6;
-		this.iterationNumber = 30000;
+		this.itNumber = 30000;
 		this.setBackground(bgColor);
 		this.setPreferredSize(new Dimension(width,height));
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public Triangle getDefTriang() {
-		return defTriang;
-	}
-
-	public void setDefTriang(Triangle defTriang) {
-		this.defTriang = defTriang;
-	}
-
-	public LinkedList <FractalComponent> getTransform() {
-		return componentList;
-	}
-
-	public void setComponentList(LinkedList <FractalComponent> componentList) {
-		this.componentList = componentList;
-		repaint();
 	}
 	
 	public void drawEllipse(Point2D.Double pont,Graphics2D gr2D,double scale){
@@ -111,7 +78,7 @@ public class JRenderCanvas extends JPanel {
 			pont = new Point2D.Double(1,0);
 			color = componentList.get(0).getColor();
 			
-			for (int i=0; i<iterationNumber; i++) {
+			for (int i=0; i<itNumber; i++) {
 				index = rnb.nextInt(componentList.size());				
 				component = componentList.get(index);
 				color = new Color((color.getRed() + component.getColor().getRed()) / 2,(color.getGreen() + component.getColor().getGreen()) / 2,(color.getBlue() + component.getColor().getBlue()) / 2);
@@ -123,4 +90,46 @@ public class JRenderCanvas extends JPanel {
 			g.drawImage(img,0,0,null);
 		}
 	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public Triangle getDefTriang() {
+		return defTriang;
+	}
+
+	public void setDefTriang(Triangle defTriang) {
+		this.defTriang = defTriang;
+	}
+
+	public LinkedList <FractalComponent> getTransform() {
+		return componentList;
+	}
+
+	public void setComponentList(LinkedList <FractalComponent> componentList) {
+		this.componentList = componentList;
+		repaint();
+	}
+
+	public int getItNumber() {
+		return itNumber;
+	}
+
+	public void setItNumber(int itNumber) {
+		this.itNumber = itNumber;
+	}
+	
 }

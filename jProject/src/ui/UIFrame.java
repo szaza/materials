@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -39,25 +41,34 @@ public class UIFrame extends JFrame {
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
+	private JMenu editMenu;
+	
 	private JMenuItem viewMenu;
 	private JMenuItem saveMenu;
 	private JMenuItem loadMenu;
 	private JMenuItem exitMenu;
 	
+	private JMenuItem curveMenu;
+	private JMenuItem settingsMenu;
+	
 	private LinkedList<FractalComponent> fList;
 	private LinkedList<FractalComponent> gList;
 	
 	public static JCanvas canvas;
-	public static Triangle defTriangle;	
+	public static Triangle defTriangle;
+	
+	private int itNumber;
 	
 	
 	public UIFrame() {
-		this.setTitle("Fractal");
+		this.setTitle("Fraktál deformáció");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		
 		this.fVisible = true;
 		this.gVisible = true;
+		
+		this.itNumber = 30000;
 		
 		contentPanel = new JPanel();
 		controlPanel = new JPanel();
@@ -67,12 +78,17 @@ public class UIFrame extends JFrame {
 		gList = new LinkedList<FractalComponent>();
 		
 		menuBar = new JMenuBar();
-		fileMenu = new JMenu("File");
-		loadMenu = new JMenuItem("Load");
-		saveMenu = new JMenuItem("Save");
+		fileMenu = new JMenu("Fájl");
+		editMenu = new JMenu("Szerkesztés");
 		
-		viewMenu = new JMenuItem("View");
-		exitMenu = new JMenuItem("Exit");
+		loadMenu = new JMenuItem("Betöltés");
+		saveMenu = new JMenuItem("Mentés");
+		viewMenu = new JMenuItem("Előnézet");
+		exitMenu = new JMenuItem("Kilépés");
+		
+		curveMenu = new JMenuItem("Görbék");
+		settingsMenu = new JMenuItem("Beállítás");
+		
 		canvas = new JCanvas();
 
 		defTriangle = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
@@ -87,8 +103,12 @@ public class UIFrame extends JFrame {
 		fileMenu.add(saveMenu);
 		fileMenu.add(viewMenu);
 		fileMenu.add(exitMenu);
+		
+		editMenu.add(curveMenu);
+		editMenu.add(settingsMenu);
 
 		menuBar.add(fileMenu);
+		menuBar.add(editMenu);
 
 		controlPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		controlPanel.add(menuBar);
@@ -106,6 +126,9 @@ public class UIFrame extends JFrame {
 
 		this.setContentPane(contentPanel);
 		
+		fFractal.setItNumber(itNumber);
+		gFractal.setItNumber(itNumber);
+		
 		refreshCanvas();
 
 		viewMenu.addActionListener(new ActionListener(){
@@ -116,7 +139,8 @@ public class UIFrame extends JFrame {
 				JRenderCanvas rCanv = new JRenderCanvas(600,600);
 				
 				fList = fFractal.getFractalComponentList();
-				rCanv.setComponentList(fList);				
+				rCanv.setComponentList(fList);		
+				rCanv.setItNumber(itNumber);
 				
 				frame.setTitle("Rendered frame");
 				frame.setSize(new Dimension(600,600));
@@ -168,8 +192,7 @@ public class UIFrame extends JFrame {
 						e1.printStackTrace();
 					}
 				}				
-			}
-			
+			}			
 		});
 		
 		loadMenu.addActionListener(new ActionListener(){
@@ -216,11 +239,30 @@ public class UIFrame extends JFrame {
 						e.printStackTrace();
 					}
 			    	  
-			      }				
+			      }					
+			}
+		});
+		
+		settingsMenu.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog settingsDialog = new JSettingsPanel(itNumber);
+				settingsDialog.setVisible(true);
+				settingsDialog.setBounds(150,150,200,130);
 				
+				settingsDialog.addWindowListener(new WindowAdapter(){
+					
+					@Override
+					public void windowClosed(WindowEvent e){
+						setIterationNumber(((JSettingsPanel)e.getSource()).getItNumber());
+					}
+					
+				});
 			}
 			
-		});
+		});		
+		
 	}
 	
 	public void refreshCanvas() {
@@ -234,6 +276,16 @@ public class UIFrame extends JFrame {
 		canvas.setGComponentList(gList);
 		canvas.setfVisible(fVisible);
 		canvas.setgVisible(gVisible);		
+	}
+
+	public void setIterationNumber(int itNumber) {
+		this.itNumber = itNumber;
+		fFractal.setItNumber(itNumber);
+		gFractal.setItNumber(itNumber);
+	}
+
+	public int getItNumber() {
+		return itNumber;
 	}
 }
 
