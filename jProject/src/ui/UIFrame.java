@@ -31,12 +31,6 @@ public class UIFrame extends JFrame {
 	private JPanel contentPanel;
 	private JPanel editPanel;
 	
-	private	 boolean fVisible;
-	private boolean gVisible;
-	
-	private static FractalPanel fFractal;
-	private static FractalPanel gFractal;
-	
 	private JTabbedPane fractalTab;
 	
 	private JMenuBar menuBar;
@@ -50,6 +44,12 @@ public class UIFrame extends JFrame {
 	
 	private JMenuItem curveMenu;
 	private JMenuItem settingsMenu;
+	
+	private	 boolean fVisible;
+	private boolean gVisible;
+	
+	private static FractalPanel fFractal;
+	private static FractalPanel gFractal;	
 	
 	private LinkedList<FractalComponent> fList;
 	private LinkedList<FractalComponent> gList;
@@ -249,7 +249,8 @@ public class UIFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JDialog settingsDialog = new JSettingsPanel(itNumber);
 				settingsDialog.setVisible(true);
-				settingsDialog.setBounds(150,150,200,130);
+				settingsDialog.setBounds(200,200,200,130);
+				settingsDialog.setResizable(false);
 				
 				settingsDialog.addWindowListener(new WindowAdapter(){
 					
@@ -260,8 +261,18 @@ public class UIFrame extends JFrame {
 					
 				});
 			}
+		});	
+		
+		curveMenu.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JDialog curvesDialog = new JCurvesPanel(fList,gList);
+				curvesDialog.setBounds(200,200,400,200);
+				curvesDialog.setVisible(true);
+			}
 			
-		});		
+		});
 		
 	}
 	
