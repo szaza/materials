@@ -44,12 +44,12 @@ public class JCurvesPanel extends JDialog {
 	private LinkedList<FractalComponent> gList;
 	private LinkedList<Curves> cList;
 
-	public JCurvesPanel(LinkedList<FractalComponent> fL,
+	public JCurvesPanel(LinkedList<Curves> cL,LinkedList<FractalComponent> fL,
 			LinkedList<FractalComponent> gL) {
 		setTitle("Görbék");
 		this.fList = fL;
 		this.gList = gL;
-		cList = new LinkedList<Curves>();
+		this.cList = cL;
 
 		ok = new JButton("Ok");
 		cancel = new JButton("Mégse");
@@ -159,14 +159,39 @@ public class JCurvesPanel extends JDialog {
 		for (int i = 0; i < min; i++) {
 			selectConnection.addItem("f(" + (i + 1) + ") - g(" + (i + 1) + ")");
 		}
+		
+		refreshFields();
 	}
 
-	public LinkedList<Curves> getcList() {
-		return cList;
+	public void setFieldText(JTextField textField,Point2D.Float[] points) {
+		String s = new String("");
+		
+		for (int i=1; i<points.length-1; i++) {
+			s += points[i].x + "," + points[i].y + ",";
+		}
+		
+		if (s.length()>0) textField.setText(s.substring(0,s.length()-1));		
 	}
-
-	public void setcList(LinkedList<Curves> cList) {
-		this.cList = cList;
+	
+	public void refreshFields() {
+		int index;
+		Curves curves;
+		Point2D.Float[] points;
+				
+		index = selectConnection.getSelectedIndex();
+	
+		if (!cList.isEmpty()) {
+			curves = cList.get(index);
+			
+			points = curves.getaCurve();
+			setFieldText(aPointField,points);
+			
+			points = curves.getbCurve();
+			setFieldText(bPointField,points);
+			
+			points = curves.getcCurve();
+			setFieldText(cPointField,points);	
+		}
 	}
 	
 	//Kontrol pontok szerkesztese
@@ -196,4 +221,12 @@ public class JCurvesPanel extends JDialog {
 		
 		return points;
 	}
+	
+	public LinkedList<Curves> getcList() {
+		return cList;
+	}
+
+	public void setcList(LinkedList<Curves> cList) {
+		this.cList = cList;
+	}	
 }

@@ -270,7 +270,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JDialog curvesDialog = new JCurvesPanel(fList,gList);
+				JDialog curvesDialog = new JCurvesPanel(cList,fList,gList);
 				curvesDialog.setBounds(200,200,400,200);
 				curvesDialog.setResizable(false);
 				curvesDialog.setVisible(true);

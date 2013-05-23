@@ -5,11 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-import java.awt.Shape;
+//import java.awt.Shape;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
+//import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -162,15 +162,18 @@ public class JCanvas extends JPanel {
 	public void drawCurve(Graphics2D g, Point2D.Float[] points) {
 
 		Polygon poly = new Polygon();
-		Shape shape;
+		//Shape shape;
 
 		g.setColor(Color.CYAN);
 
+		//Kontrol pont megjelenitese
+		/*
 		for (Point2D.Float point : points) {
 			shape = new Ellipse2D.Float((float) (point.x * scalex - 3),
 					(float) (point.y * scaley - 3), 6f, 6f);
 			g.draw(shape);
 		}
+		*/
 
 		Point2D.Float point;
 
