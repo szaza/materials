@@ -17,6 +17,7 @@ import java.util.LinkedList;
 
 import javax.swing.*;
 
+import collect.Curves;
 import collect.FractalComponent;
 import collect.Triangle;
 import collect.WrappingObj;
@@ -53,6 +54,7 @@ public class UIFrame extends JFrame {
 	
 	private LinkedList<FractalComponent> fList;
 	private LinkedList<FractalComponent> gList;
+	private LinkedList<Curves> cList;
 	
 	public static JCanvas canvas;
 	public static Triangle defTriangle;
@@ -76,6 +78,7 @@ public class UIFrame extends JFrame {
 		
 		fList = new LinkedList<FractalComponent>();
 		gList = new LinkedList<FractalComponent>();
+		cList = new LinkedList<Curves>();
 		
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("Fájl");
@@ -269,7 +272,15 @@ public class UIFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				JDialog curvesDialog = new JCurvesPanel(fList,gList);
 				curvesDialog.setBounds(200,200,400,200);
+				curvesDialog.setResizable(false);
 				curvesDialog.setVisible(true);
+				
+				curvesDialog.addWindowListener(new WindowAdapter(){
+					@Override
+					public void windowClosed(WindowEvent e){
+						setcList(((JCurvesPanel) e.getSource()).getcList());
+					}
+				});
 			}
 			
 		});
@@ -286,7 +297,9 @@ public class UIFrame extends JFrame {
 		canvas.setFComponentList(fList);
 		canvas.setGComponentList(gList);
 		canvas.setfVisible(fVisible);
-		canvas.setgVisible(gVisible);		
+		canvas.setgVisible(gVisible);
+		cList = Curves.updateCurves(cList,fList,gList);
+		canvas.setCurves(cList);
 	}
 
 	public void setIterationNumber(int itNumber) {
@@ -297,6 +310,15 @@ public class UIFrame extends JFrame {
 
 	public int getItNumber() {
 		return itNumber;
+	}
+
+	public LinkedList<Curves> getcList() {
+		return cList;
+	}
+
+	public void setcList(LinkedList<Curves> cList) {
+		this.cList = cList;
+		canvas.setCurves(cList);
 	}
 }
 
