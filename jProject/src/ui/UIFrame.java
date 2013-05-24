@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,7 @@ import javax.swing.*;
 
 import collect.Curves;
 import collect.FractalComponent;
+import collect.Transform;
 import collect.Triangle;
 import collect.WrappingObj;
 import graphics.JCanvas;
@@ -37,11 +39,13 @@ public class UIFrame extends JFrame {
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenu editMenu;
+	private JMenu viewMenu;
 	
-	private JMenuItem viewMenu;
-	private JMenuItem saveMenu;
-	private JMenuItem loadMenu;
-	private JMenuItem exitMenu;
+	private JMenuItem newMenuItem;
+	private JMenuItem viewMenuItem;
+	private JMenuItem saveMenuItem;
+	private JMenuItem loadMenuItem;
+	private JMenuItem exitMenuItem;
 	
 	private JMenuItem curveMenu;
 	private JMenuItem settingsMenu;
@@ -83,11 +87,13 @@ public class UIFrame extends JFrame {
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("Fájl");
 		editMenu = new JMenu("Szerkesztés");
+		viewMenu = new JMenu("Nézet");
 		
-		loadMenu = new JMenuItem("Betöltés");
-		saveMenu = new JMenuItem("Mentés");
-		viewMenu = new JMenuItem("Előnézet");
-		exitMenu = new JMenuItem("Kilépés");
+		newMenuItem = new JMenuItem("Új");
+		loadMenuItem = new JMenuItem("Betöltés");
+		saveMenuItem = new JMenuItem("Mentés");
+		viewMenuItem = new JMenuItem("Előnézet");
+		exitMenuItem = new JMenuItem("Kilépés");
 		
 		curveMenu = new JMenuItem("Görbék");
 		settingsMenu = new JMenuItem("Beállítás");
@@ -102,16 +108,19 @@ public class UIFrame extends JFrame {
 		gFractal = new FractalPanel(this,gTriangle);
 		fractalTab = new JTabbedPane();
 		
-		fileMenu.add(loadMenu);
-		fileMenu.add(saveMenu);
-		fileMenu.add(viewMenu);
-		fileMenu.add(exitMenu);
+		fileMenu.add(newMenuItem);
+		fileMenu.add(loadMenuItem);
+		fileMenu.add(saveMenuItem);
+		fileMenu.add(exitMenuItem);
 		
 		editMenu.add(curveMenu);
 		editMenu.add(settingsMenu);
 
+		viewMenu.add(viewMenuItem);
+		
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
+		menuBar.add(viewMenu);
 
 		controlPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		controlPanel.add(menuBar);
@@ -134,7 +143,7 @@ public class UIFrame extends JFrame {
 		
 		refreshCanvas();
 
-		viewMenu.addActionListener(new ActionListener(){
+		viewMenuItem.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -153,7 +162,7 @@ public class UIFrame extends JFrame {
 			}
 		});
 		
-		exitMenu.addActionListener(new ActionListener(){
+		exitMenuItem.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -162,7 +171,7 @@ public class UIFrame extends JFrame {
 			
 		});
 		
-		saveMenu.addActionListener(new ActionListener() {
+		saveMenuItem.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -182,7 +191,7 @@ public class UIFrame extends JFrame {
 						fileOutput = new FileOutputStream(directory + "/" + fileName);
 						out = new ObjectOutputStream(fileOutput);
 						
-						wrapObject = new WrappingObj(fList,gList);
+						wrapObject = new WrappingObj(cList,fList,gList);
 												
 						out.writeObject(wrapObject);
 					
@@ -198,7 +207,7 @@ public class UIFrame extends JFrame {
 			}			
 		});
 		
-		loadMenu.addActionListener(new ActionListener(){
+		loadMenuItem.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -224,9 +233,11 @@ public class UIFrame extends JFrame {
 						
 						fList.clear();
 						gList.clear();
+						cList.clear();
 						
 						fList.addAll(wrapObject.getfFractal());
 						gList.addAll(wrapObject.getgFractal());
+						cList.addAll(wrapObject.getcList());
 						
 						fFractal.setFractalComponentList(fList);
 						gFractal.setFractalComponentList(gList);
@@ -283,6 +294,31 @@ public class UIFrame extends JFrame {
 				});
 			}
 			
+		});
+		
+		newMenuItem.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				fList.clear();
+				gList.clear();
+				cList.clear();
+				
+				Triangle triangle1 = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
+				Triangle triangle2 = new Triangle(2.0f,2.0f,3.0f,2.0f,2.0f,3.0f);				
+				
+				Transform transform1 = triangle1.toTransform();
+				Transform transform2 = triangle2.toTransform();
+				
+				FractalComponent comp1 = new FractalComponent(triangle1,transform1,Color.GREEN);
+				FractalComponent comp2 = new FractalComponent(triangle2,transform2,Color.GREEN);
+				
+				fList.add(comp1);
+				gList.add(comp2);
+				
+				fFractal.setFractalComponentList(fList);
+				gFractal.setFractalComponentList(gList);
+			}
 		});
 		
 	}

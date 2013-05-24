@@ -9,9 +9,6 @@ import javax.swing.JTextField;
 
 public class JCustomField extends JTextField {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private int width = 150;

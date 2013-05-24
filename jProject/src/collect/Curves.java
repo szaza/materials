@@ -1,10 +1,12 @@
 package collect;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Curves {
+public class Curves implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private int parentId;
 	private Point2D.Float[] aCurve;
 	private Point2D.Float[] bCurve;

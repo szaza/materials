@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
@@ -103,25 +105,32 @@ public class JCurvesPanel extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				Triangle triang1;
 				Triangle triang2;
+				int index;
 				FractalComponent component;	
 				
 				Point2D.Float[] aCurve = null;
 				Point2D.Float[] bCurve = null;
 				Point2D.Float[] cCurve = null;
 				
-				component = fList.get(selectConnection.getSelectedIndex());
+				index = selectConnection.getSelectedIndex();
+				
+				component = fList.get(index);
 				triang1 = component.getTriang();
 
-				component = gList.get(selectConnection.getSelectedIndex());
+				component = gList.get(index);
 				triang2 = component.getTriang();				
 				
 				aCurve = addControlPoint(aPointField.getText(),aCurve,triang1.A,triang2.A);
 				bCurve = addControlPoint(bPointField.getText(),bCurve,triang1.B,triang2.B);
 				cCurve = addControlPoint(cPointField.getText(),cCurve,triang1.C,triang2.C);
 				
-				Curves curves = new Curves(selectConnection.getSelectedIndex(),
-						aCurve, bCurve, cCurve);
-				cList.add(curves);
+				Curves curves = new Curves(index,aCurve, bCurve, cCurve);
+			
+				if (cList.size() > index) {
+					cList.set(index, curves);
+				} else {
+					cList.add(curves);					
+				}
 
 				dispose();
 			}
@@ -148,6 +157,15 @@ public class JCurvesPanel extends JDialog {
 								"Tipp", JOptionPane.INFORMATION_MESSAGE);
 			}
 
+		});
+		
+		selectConnection.addItemListener(new ItemListener(){
+
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				refreshFields();				
+			}
+			
 		});
 	}
 
@@ -179,8 +197,12 @@ public class JCurvesPanel extends JDialog {
 		Point2D.Float[] points;
 				
 		index = selectConnection.getSelectedIndex();
-	
-		if (!cList.isEmpty()) {
+
+		aPointField.setText("");
+		bPointField.setText("");
+		cPointField.setText("");		
+		
+		if (!cList.isEmpty() && (cList.size() > index)) {
 			curves = cList.get(index);
 			
 			points = curves.getaCurve();
