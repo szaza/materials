@@ -51,6 +51,8 @@ public class Curves implements Serializable {
 		this.cCurve = cCurve;
 	}
 	
+	//Kiszamitja egy gorbe pontjat egy adott t idopillanatban
+	//t->[0,1] kozott van
 	public static Point2D.Float getCurvePoint(float t,Point2D.Float[] points) {
 		float x=0;
 		float y=0;
@@ -68,6 +70,7 @@ public class Curves implements Serializable {
 		return new Point2D.Float(x,y);
 	}
 
+	//Frissiti a lista minden elemet a fraktalok fuggvenyeben
 	public static LinkedList<Curves> updateCurves(LinkedList<Curves> cList,
 			LinkedList<FractalComponent> fList,
 			LinkedList<FractalComponent> gList) {
@@ -79,15 +82,18 @@ public class Curves implements Serializable {
 		Point2D.Float[] bCurve;
 		Point2D.Float[] cCurve;
 		
+		//Bejarom a listat
 		for (int i=0; i<cList.size(); i++) {
 			fComponent = fList.get(i);
 			gComponent = gList.get(i);
 			curves = cList.get(i);
 			
+			//Lekerem egy adott fraktalh komponenshez tartozo harom gorbet
 			aCurve = curves.getaCurve();
 			bCurve = curves.getbCurve();
 			cCurve = curves.getcCurve();
 			
+			//Az a gorbek elso es utolso pontja a fraktal komponensek egy-egy pontja lesz
 			aCurve[0].x = fComponent.getTriang().A.x;
 			aCurve[0].y = fComponent.getTriang().A.y;
 			aCurve[aCurve.length-1].x = gComponent.getTriang().A.x;

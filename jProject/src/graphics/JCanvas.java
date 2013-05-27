@@ -5,10 +5,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Shape;
 //import java.awt.Shape;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 //import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -34,10 +36,12 @@ public class JCanvas extends JPanel {
 	private float scaley;
 	private boolean fVisible;
 	private boolean gVisible;
+	private boolean cVisible;
 	private BufferedImage img;
 	private AffineTransform transform;
 	private LinkedList<FractalComponent> fComponentList;
 	private LinkedList<FractalComponent> gComponentList;
+	private LinkedList<FractalComponent> hComponentList;
 	private LinkedList<Curves> cList;
 	private Triangle defTriang;
 
@@ -46,9 +50,11 @@ public class JCanvas extends JPanel {
 		height = 600;
 		scale = 1.0f;
 		fVisible = true;
-		gVisible = false;
+		gVisible = true;
+		cVisible = false;
 		defTriang = UIFrame.defTriangle;
-
+		hComponentList = null;
+		
 		scalex = width / 10;
 		scaley = -scalex;
 
@@ -107,6 +113,7 @@ public class JCanvas extends JPanel {
 		gr.drawLine(0, height / 2, width, height / 2);
 	}
 
+	//Kiralyzolom a haromszogek pontjaihoz a megfelelo betuket
 	public void drawTexts(Graphics2D g, Triangle triang, String label) {
 		float x3;
 		float y3;
@@ -125,6 +132,7 @@ public class JCanvas extends JPanel {
 		g.drawString(label, x3, y3);
 	}
 
+	//Kirajzolom a haromszogeket
 	public void drawTriangles(Graphics2D g) {
 		Polygon2D p;
 
@@ -136,8 +144,8 @@ public class JCanvas extends JPanel {
 		g.setColor(Color.WHITE);
 		g.draw(p);
 
+		//Az f fraktalhoz tartozo haromszogek kirajzolasa
 		if (!fComponentList.isEmpty() && fVisible) {
-			// A megadott haromszogek kirajzolasa
 			for (FractalComponent component : fComponentList) {
 				g.setColor(component.getColor());
 				drawTexts(g, component.getTriang(), "F");
@@ -146,8 +154,8 @@ public class JCanvas extends JPanel {
 			}
 		}
 
+		//Az g fraktalhoz tartozo haromszogek kirajzolasa		
 		if (!gComponentList.isEmpty() && gVisible) {
-			g.setColor(Color.orange);
 
 			// A megadott haromszogek kirajzolasa
 			for (FractalComponent component : gComponentList) {
@@ -157,29 +165,44 @@ public class JCanvas extends JPanel {
 				g.draw(p);
 			}
 		}
+		
+		if (hComponentList != null) {
+			//A h koztes fraktalt alkoto haromszog kirajzolasa
+			if (!hComponentList.isEmpty()) {
+				
+				// A megadott haromszogek kirajzolasa
+				for (FractalComponent component : hComponentList) {
+					g.setColor(component.getColor());
+					drawTexts(g, component.getTriang(), "H");
+					p = component.getTriang().getPolygon(scalex, scaley);
+					g.draw(p);
+				}
+			}		
+		}
 	}
 
+	//Gorbek kirajzolasa
 	public void drawCurve(Graphics2D g, Point2D.Float[] points) {
-
 		Polygon poly = new Polygon();
-		//Shape shape;
+		Shape shape;
 
 		g.setColor(Color.CYAN);
 
 		//Kontrol pont megjelenitese
-		/*
-		for (Point2D.Float point : points) {
-			shape = new Ellipse2D.Float((float) (point.x * scalex - 3),
-					(float) (point.y * scaley - 3), 6f, 6f);
-			g.draw(shape);
+		if (cVisible) {
+			for (Point2D.Float point : points) {
+				shape = new Ellipse2D.Float((float) (point.x * scalex - 3),
+						(float) (point.y * scaley - 3), 6f, 6f);
+				g.draw(shape);
+			}
 		}
-		*/
 
 		Point2D.Float point;
 
+		//Egy gorbet 100 pont hataroz meg
 		for (int i = 1; i <= 100; i++) {
-			point = Curves.getCurvePoint((float) i / 100, points);
-			poly.addPoint((int) Math.round(point.x * scalex),
+			point = Curves.getCurvePoint((float) i / 100, points); //Kiszamitja a gorbe pontjat egy adott t idopillanatban
+			poly.addPoint((int) Math.round(point.x * scalex),		//Hozzaadom a poligonhoz a kiszamitott pontot
 					(int) Math.round((float) (-point.y * scalex)));
 		}
 
@@ -248,4 +271,21 @@ public class JCanvas extends JPanel {
 		this.cList = cList;
 		repaint();
 	}
+
+	public boolean iscVisible() {
+		return cVisible;
+	}
+
+	public void setcVisible(boolean cVisible) {
+		this.cVisible = cVisible;
+	}
+
+	public LinkedList<FractalComponent> gethComponentList() {
+		return hComponentList;
+	}
+
+	public void sethComponentList(LinkedList<FractalComponent> hComponentList) {
+		this.hComponentList = hComponentList;
+	}
+	
 }

@@ -20,6 +20,7 @@ import javax.swing.*;
 
 import collect.Curves;
 import collect.FractalComponent;
+import collect.HFractal;
 import collect.Transform;
 import collect.Triangle;
 import collect.WrappingObj;
@@ -40,12 +41,15 @@ public class UIFrame extends JFrame {
 	private JMenu fileMenu;
 	private JMenu editMenu;
 	private JMenu viewMenu;
+	private JMenu deformMenu;
 	
 	private JMenuItem newMenuItem;
 	private JMenuItem viewMenuItem;
 	private JMenuItem saveMenuItem;
 	private JMenuItem loadMenuItem;
 	private JMenuItem exitMenuItem;
+	private JMenuItem viewControls;
+	private JMenuItem deformItem;
 	
 	private JMenuItem curveMenu;
 	private JMenuItem settingsMenu;
@@ -88,12 +92,15 @@ public class UIFrame extends JFrame {
 		fileMenu = new JMenu("Fájl");
 		editMenu = new JMenu("Szerkesztés");
 		viewMenu = new JMenu("Nézet");
+		deformMenu = new JMenu("Deformáció");
 		
 		newMenuItem = new JMenuItem("Új");
 		loadMenuItem = new JMenuItem("Betöltés");
 		saveMenuItem = new JMenuItem("Mentés");
 		viewMenuItem = new JMenuItem("Előnézet");
 		exitMenuItem = new JMenuItem("Kilépés");
+		viewControls = new JMenuItem("Kontrol pont");
+		deformItem = new JMenuItem("Deformál");
 		
 		curveMenu = new JMenuItem("Görbék");
 		settingsMenu = new JMenuItem("Beállítás");
@@ -117,10 +124,14 @@ public class UIFrame extends JFrame {
 		editMenu.add(settingsMenu);
 
 		viewMenu.add(viewMenuItem);
+		viewMenu.add(viewControls);
+		
+		deformMenu.add(deformItem);
 		
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		menuBar.add(viewMenu);
+		menuBar.add(deformMenu);
 
 		controlPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		controlPanel.add(menuBar);
@@ -160,6 +171,22 @@ public class UIFrame extends JFrame {
 				frame.setVisible(true);
 				frame.setResizable(false);
 			}
+		});
+		
+		viewControls.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (canvas.iscVisible()) {
+					canvas.setcVisible(false);
+					canvas.repaint();
+				}
+				else {
+					canvas.setcVisible(true);
+					canvas.repaint();
+				}
+			}
+			
 		});
 		
 		exitMenuItem.addActionListener(new ActionListener(){
@@ -318,6 +345,30 @@ public class UIFrame extends JFrame {
 				
 				fFractal.setFractalComponentList(fList);
 				gFractal.setFractalComponentList(gList);
+			}
+		});
+		
+		deformItem.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				boolean valid;
+				Thread thread;
+				
+				//Ki van-e toltve az osszes gorbe
+				valid = true;
+				for (int i=0; i<cList.size(); i++) {
+					if ((cList.get(i).getaCurve().length <=1) || (cList.get(i).getbCurve().length <=1) || (cList.get(i).getcCurve().length <=1)) valid=false;
+				}
+				
+				if (valid) {
+					HFractal hFractal = new HFractal(canvas,cList);
+					thread = new Thread(hFractal);
+					thread.start();
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Kérem ellenőrízze, hogy megadta-e az összes görbét!","Hiba",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
