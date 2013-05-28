@@ -28,19 +28,19 @@ public class Transform implements Serializable {
 	}	
 	
 	public double transformX(double x, double y){
-		return (transform[0][0]*x) + (transform[0][1] * y) + transform[0][2];
+		return (transform[0][1] * x) + (transform[0][0]*y) + transform[0][2];
 	}
 	
 	public double transformY(double x, double y){
-		return (transform[1][0]*x) + (transform[1][1] * y) + transform[1][2];
+		return (transform[1][1] * x) + (transform[1][0]*y) + transform[1][2];
 	}	
 	
 	public Point2D.Double transform(Point2D.Double pont) {
 		double x;
 		double y;
 		
-		x = (transform[0][0]*pont.x) + (transform[0][1] * pont.y) + transform[0][2];
-		y = (transform[1][0]*pont.x) + (transform[1][1] * pont.y) + transform[1][2];
+		x = (transform[0][1]*pont.x) + (transform[0][0] * pont.y) + transform[0][2];
+		y = (transform[1][1]*pont.x) + (transform[1][0] * pont.y) + transform[1][2];
 		
 		return new Point2D.Double(x, y);
 		

@@ -39,7 +39,7 @@ public class HFractal extends JDialog implements Runnable {
 		this.cList = cL;
 		
 		contentPanel = new JPanel();
-		rCanvas = new JRenderCanvas(600,600);
+		rCanvas = new JRenderCanvas(600,620);
 		hList = new LinkedList<FractalComponent>();
 		
 		rCanvas.setComponentList(hList);
@@ -48,6 +48,7 @@ public class HFractal extends JDialog implements Runnable {
 		this.setTitle("Fraktál Deformázió");
 		this.setContentPane(contentPanel);
 		this.setBounds(50,50,600,600);
+		this.setResizable(false);
 		this.setVisible(true);
 	}
 	

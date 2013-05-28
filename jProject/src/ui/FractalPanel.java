@@ -194,6 +194,9 @@ public class FractalPanel extends JPanel {
 		transformPanel.setFields(component.transform.getValue(0,2),component.transform.getValue(1,2),
 								component.transform.getValue(0,1),component.transform.getValue(1,1),
 								component.transform.getValue(0,0),component.transform.getValue(1,0));
+		
+		//Szin valaszto beallitasa
+		colorChooser.setColor(component.getColor());
 	}
 	
 	public void refresh() {
@@ -303,9 +306,17 @@ public class FractalPanel extends JPanel {
 
 	public void setFractalComponentList(LinkedList<FractalComponent> fList) {
 		this.fList = fList;
+		
+		//Ha a lista kissebb mint az elozo, akkor ki kell toroljek elemeket a listabol
+		while (selectTriangle.getItemCount() > fList.size()) {
+			selectTriangle.removeItemAt(selectTriangle.getItemCount()-1);
+		}
+		
+		//Ha uj fraktal komponensek toltottek be akkor novelem a select lista meretet
 		for (int i=selectTriangle.getItemCount(); i<fList.size(); i++) {
 			selectTriangle.addItem(Integer.toString(i+1));
 		}
+		
 		refresh();
 	}
 
@@ -321,6 +332,12 @@ public class FractalPanel extends JPanel {
 		this.itNumber = itNumber;
 		rCanvas.setItNumber(itNumber);
 		refresh();
+	}
+	
+	public void setfVisible(boolean b) {
+		fVisible = b;
+		visibleCheck.setSelected(b);
+		refresh();		
 	}
 
 }

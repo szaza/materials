@@ -36,7 +36,8 @@ public class JCanvas extends JPanel {
 	private float scaley;
 	private boolean fVisible;
 	private boolean gVisible;
-	private boolean cVisible;
+	private boolean controlsVisible;
+	private boolean curvesVisible;
 	private BufferedImage img;
 	private AffineTransform transform;
 	private LinkedList<FractalComponent> fComponentList;
@@ -51,7 +52,8 @@ public class JCanvas extends JPanel {
 		scale = 1.0f;
 		fVisible = true;
 		gVisible = true;
-		cVisible = false;
+		controlsVisible = false;
+		curvesVisible = true;
 		defTriang = UIFrame.defTriangle;
 		hComponentList = null;
 		
@@ -182,10 +184,8 @@ public class JCanvas extends JPanel {
 		Polygon poly = new Polygon();
 		Shape shape;
 
-		g.setColor(Color.CYAN);
-
 		//Kontrol pont megjelenitese
-		if (cVisible) {
+		if (controlsVisible) {
 			for (Point2D.Float point : points) {
 				shape = new Ellipse2D.Float((float) (point.x * scalex - 3),
 						(float) (point.y * scaley - 3), 6f, 6f);
@@ -195,22 +195,26 @@ public class JCanvas extends JPanel {
 
 		Point2D.Float point;
 
-		//Egy gorbet 100 pont hataroz meg
-		for (int i = 1; i <= 100; i++) {
-			point = Curves.getCurvePoint((float) i / 100, points); //Kiszamitja a gorbe pontjat egy adott t idopillanatban
-			poly.addPoint((int) Math.round(point.x * scalex),		//Hozzaadom a poligonhoz a kiszamitott pontot
-					(int) Math.round((float) (-point.y * scalex)));
+		if (curvesVisible) {
+			//Egy gorbet 100 pont hataroz meg
+			for (int i = 1; i <= 100; i++) {
+				point = Curves.getCurvePoint((float) i / 100, points); //Kiszamitja a gorbe pontjat egy adott t idopillanatban
+				poly.addPoint((int) Math.round(point.x * scalex),		//Hozzaadom a poligonhoz a kiszamitott pontot
+						(int) Math.round((float) (-point.y * scalex)));
+			}
+	
+			g.drawPolyline(poly.xpoints, poly.ypoints, poly.npoints);
 		}
-
-		g.drawPolyline(poly.xpoints, poly.ypoints, poly.npoints);
 	}
 
 	public void drawCurves(Graphics2D g) {
 		Point2D.Float[] points;
 
 		if (!cList.isEmpty()) {
-
+			
 			for (Curves c : cList) {
+				
+				g.setColor(c.getColor());
 				
 				points = c.getaCurve();
 				drawCurve(g, points);
@@ -253,10 +257,18 @@ public class JCanvas extends JPanel {
 		repaint();
 	}
 
+	public boolean isfVisible() {
+		return fVisible;
+	}
+
 	public void setfVisible(boolean fVisible) {
 		this.fVisible = fVisible;
 		repaint();
 	}
+	
+	public boolean isgVisible() {
+		return gVisible;
+	}	
 
 	public void setgVisible(boolean gVisible) {
 		this.gVisible = gVisible;
@@ -268,12 +280,20 @@ public class JCanvas extends JPanel {
 		repaint();
 	}
 
-	public boolean iscVisible() {
-		return cVisible;
+	public boolean isControlsVisible() {
+		return controlsVisible;
 	}
 
-	public void setcVisible(boolean cVisible) {
-		this.cVisible = cVisible;
+	public void setControlsVisible(boolean cVisible) {
+		this.controlsVisible = cVisible;
+	}
+
+	public boolean isCurvesVisible() {
+		return curvesVisible;
+	}
+
+	public void setCurvesVisible(boolean curvVisible) {
+		this.curvesVisible = curvVisible;
 	}
 
 	public LinkedList<FractalComponent> gethComponentList() {

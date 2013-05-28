@@ -49,10 +49,15 @@ public class UIFrame extends JFrame {
 	private JMenuItem loadMenuItem;
 	private JMenuItem exitMenuItem;
 	private JMenuItem viewControls;
+	private JMenuItem viewCurves;
+	private JMenuItem viewFComp;
+	private JMenuItem viewGComp;
 	private JMenuItem deformItem;
 	
 	private JMenuItem curveMenu;
 	private JMenuItem settingsMenu;
+	
+	private int itNumber;
 	
 	private	 boolean fVisible;
 	private boolean gVisible;
@@ -63,11 +68,10 @@ public class UIFrame extends JFrame {
 	private LinkedList<FractalComponent> fList;
 	private LinkedList<FractalComponent> gList;
 	private LinkedList<Curves> cList;
+	private HFractal hFractal;
 	
 	public static JCanvas canvas;
 	public static Triangle defTriangle;
-	
-	private int itNumber;
 	
 	
 	public UIFrame() {
@@ -99,7 +103,10 @@ public class UIFrame extends JFrame {
 		saveMenuItem = new JMenuItem("Mentés");
 		viewMenuItem = new JMenuItem("Előnézet");
 		exitMenuItem = new JMenuItem("Kilépés");
-		viewControls = new JMenuItem("Kontrol pont");
+		viewControls = new JMenuItem("Kontrol pontok láthatósága");
+		viewCurves = new JMenuItem("Görbék láthatósága");
+		viewFComp = new JMenuItem("F komp. láthatósága");
+		viewGComp = new JMenuItem("G kom. láthatósága");
 		deformItem = new JMenuItem("Deformál");
 		
 		curveMenu = new JMenuItem("Görbék");
@@ -110,6 +117,7 @@ public class UIFrame extends JFrame {
 		defTriangle = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
 		Triangle gTriangle = new Triangle(2.0f,2.0f,3.0f,2.0f,2.0f,3.0f);
 		
+		hFractal = null;
 		
 		fFractal = new FractalPanel(this,defTriangle);
 		gFractal = new FractalPanel(this,gTriangle);
@@ -125,6 +133,9 @@ public class UIFrame extends JFrame {
 
 		viewMenu.add(viewMenuItem);
 		viewMenu.add(viewControls);
+		viewMenu.add(viewCurves);
+		viewMenu.add(viewFComp);
+		viewMenu.add(viewGComp);
 		
 		deformMenu.add(deformItem);
 		
@@ -161,8 +172,16 @@ public class UIFrame extends JFrame {
 				JDialog frame = new JDialog();
 				JRenderCanvas rCanv = new JRenderCanvas(600,600);
 				
-				fList = fFractal.getFractalComponentList();
-				rCanv.setComponentList(fList);		
+				if (fractalTab.getSelectedIndex() == 0) {
+					fList = fFractal.getFractalComponentList();				
+					rCanv.setComponentList(fList);
+				}
+				else {
+					gList = gFractal.getFractalComponentList();				
+					rCanv.setComponentList(gList);					
+				}
+				
+				
 				rCanv.setItNumber(itNumber);
 				
 				frame.setTitle("Rendered frame");
@@ -177,17 +196,66 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (canvas.iscVisible()) {
-					canvas.setcVisible(false);
+				if (canvas.isControlsVisible()) {
+					canvas.setControlsVisible(false);
 					canvas.repaint();
 				}
 				else {
-					canvas.setcVisible(true);
+					canvas.setControlsVisible(true);
 					canvas.repaint();
 				}
 			}
 			
 		});
+		
+		viewCurves.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (canvas.isCurvesVisible()) {
+					canvas.setCurvesVisible(false);
+					canvas.repaint();
+				}
+				else {
+					canvas.setCurvesVisible(true);
+					canvas.repaint();
+				}
+			}
+		});		
+		
+		viewFComp.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (canvas.isfVisible()) {
+					canvas.setfVisible(false);
+					fFractal.setfVisible(false);
+					canvas.repaint();
+				}
+				else {
+					canvas.setfVisible(true);
+					fFractal.setfVisible(true);
+					canvas.repaint();
+				}
+			}
+		});			
+		
+		viewGComp.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (canvas.isgVisible()) {
+					canvas.setgVisible(false);
+					gFractal.setfVisible(false);
+					canvas.repaint();
+				}
+				else {
+					canvas.setgVisible(true);
+					gFractal.setfVisible(true);
+					canvas.repaint();
+				}
+			}
+		});				
 		
 		exitMenuItem.addActionListener(new ActionListener(){
 
@@ -355,7 +423,7 @@ public class UIFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				boolean valid;
-				Thread thread;
+				Thread thread = null;
 				
 				//Ki van-e toltve az osszes gorbe
 				valid = (!cList.isEmpty());
@@ -364,7 +432,11 @@ public class UIFrame extends JFrame {
 				}
 				
 				if (valid) {
-					HFractal hFractal = new HFractal(canvas,cList);
+					if ((hFractal == null) || (!hFractal.isVisible())) {
+						hFractal = new HFractal(canvas,cList);
+						thread = new Thread(hFractal);
+						thread.start();
+					}
 					thread = new Thread(hFractal);
 					thread.start();
 				}
