@@ -124,7 +124,7 @@ public class JCurvesPanel extends JDialog {
 				bCurve = addControlPoint(bPointField.getText(),bCurve,triang1.B,triang2.B);
 				cCurve = addControlPoint(cPointField.getText(),cCurve,triang1.C,triang2.C);
 				
-				Curves curves = new Curves(index,aCurve, bCurve, cCurve);
+				Curves curves = new Curves(index,aCurve, bCurve, cCurve,component.getColor());
 			
 				if (cList.size() > index) {
 					cList.set(index, curves);

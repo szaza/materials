@@ -345,6 +345,8 @@ public class UIFrame extends JFrame {
 				
 				fFractal.setFractalComponentList(fList);
 				gFractal.setFractalComponentList(gList);
+				
+				canvas.sethComponentList(null);
 			}
 		});
 		
@@ -356,7 +358,7 @@ public class UIFrame extends JFrame {
 				Thread thread;
 				
 				//Ki van-e toltve az osszes gorbe
-				valid = true;
+				valid = (!cList.isEmpty());
 				for (int i=0; i<cList.size(); i++) {
 					if ((cList.get(i).getaCurve().length <=1) || (cList.get(i).getbCurve().length <=1) || (cList.get(i).getcCurve().length <=1)) valid=false;
 				}

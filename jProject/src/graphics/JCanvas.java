@@ -166,19 +166,15 @@ public class JCanvas extends JPanel {
 			}
 		}
 		
-		if (hComponentList != null) {
-			//A h koztes fraktalt alkoto haromszog kirajzolasa
-			if (!hComponentList.isEmpty()) {
-				
-				// A megadott haromszogek kirajzolasa
-				for (FractalComponent component : hComponentList) {
-					g.setColor(component.getColor());
-					drawTexts(g, component.getTriang(), "H");
-					p = component.getTriang().getPolygon(scalex, scaley);
-					g.draw(p);
-				}
-			}		
-		}
+		if ((hComponentList != null) && (!hComponentList.isEmpty())) {
+			//A h koztes fraktalt alkoto haromszog kirajzolasa	
+			for (FractalComponent component : hComponentList) {
+				g.setColor(component.getColor());
+				drawTexts(g, component.getTriang(), "H");
+				p = component.getTriang().getPolygon(scalex, scaley);
+				g.draw(p);
+			}
+		}		
 	}
 
 	//Gorbek kirajzolasa

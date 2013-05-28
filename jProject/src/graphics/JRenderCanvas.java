@@ -27,7 +27,7 @@ public class JRenderCanvas extends JPanel {
 	private int itNumber;
 	private Color bgColor;
 	private Triangle defTriang;
-	private LinkedList <FractalComponent> componentList;
+	private volatile LinkedList <FractalComponent> componentList;
 	private BufferedImage img;
 	
 	public JRenderCanvas() {
@@ -53,7 +53,7 @@ public class JRenderCanvas extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		int index;
-		Random rnb = new Random();
+		Random rnd = new Random();
 		Graphics2D  gr2D = null;
 		FractalComponent component;
 		Point2D.Double pont;
@@ -72,19 +72,29 @@ public class JRenderCanvas extends JPanel {
 		transform.translate(0,-height);
 		gr2D.setTransform(transform);
 		
-		if (componentList != null) {			
+		if ((componentList != null) && (!componentList.isEmpty())) {	
+			
 			gr2D.translate(width/2,height/2);		
 			
 			pont = new Point2D.Double(1,0);
 			color = componentList.get(0).getColor();
 			
 			for (int i=0; i<itNumber; i++) {
-				index = rnb.nextInt(componentList.size());				
-				component = componentList.get(index);
-				color = new Color((color.getRed() + component.getColor().getRed()) / 2,(color.getGreen() + component.getColor().getGreen()) / 2,(color.getBlue() + component.getColor().getBlue()) / 2);
-				gr2D.setColor(color);
-				pont = component.transform.transform(pont);
-				drawEllipse(pont,gr2D,scale);								
+				try {
+					index = rnd.nextInt(componentList.size());
+					
+					try {
+						component = componentList.get(index);
+						color = new Color((color.getRed() + component.getColor().getRed()) / 2,(color.getGreen() + component.getColor().getGreen()) / 2,(color.getBlue() + component.getColor().getBlue()) / 2);
+						gr2D.setColor(color);
+						pont = component.transform.transform(pont);
+						drawEllipse(pont,gr2D,scale);
+					} catch (NullPointerException e) {
+						System.out.println("NullPointer exception: " + index + " - " + componentList.size());
+					}
+				} catch (IllegalArgumentException e) {
+					System.out.println("Illegal Argument EXception: " + componentList.size());
+				}						
 			}
 			
 			g.drawImage(img,0,0,null);
@@ -121,7 +131,7 @@ public class JRenderCanvas extends JPanel {
 
 	public void setComponentList(LinkedList <FractalComponent> componentList) {
 		this.componentList = componentList;
-		repaint();
+			repaint();
 	}
 
 	public int getItNumber() {

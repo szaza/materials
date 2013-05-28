@@ -1,5 +1,6 @@
 package collect;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -11,46 +12,16 @@ public class Curves implements Serializable {
 	private Point2D.Float[] aCurve;
 	private Point2D.Float[] bCurve;
 	private Point2D.Float[] cCurve;
+	private Color color;
 	
-	public Curves(int parentId,Point2D.Float[] aCurves,Point2D.Float[] bCurves,Point2D.Float[] cCurves) {
+	public Curves(int parentId,Point2D.Float[] aCurves,Point2D.Float[] bCurves,Point2D.Float[] cCurves,Color color) {
 		this.parentId = parentId;
 		this.aCurve = aCurves;
 		this.bCurve = bCurves;
 		this.cCurve = cCurves;
+		this.color = color;
 	}
 
-	public int getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(int parentId) {
-		this.parentId = parentId;
-	}
-
-	public Point2D.Float[] getaCurve() {
-		return aCurve;
-	}
-
-	public void setaCurve(Point2D.Float[] aCurve) {
-		this.aCurve = aCurve;
-	}
-
-	public Point2D.Float[] getbCurve() {
-		return bCurve;
-	}
-
-	public void setbCurve(Point2D.Float[] bCurve) {
-		this.bCurve = bCurve;
-	}
-
-	public Point2D.Float[] getcCurve() {
-		return cCurve;
-	}
-
-	public void setcCurve(Point2D.Float[] cCurve) {
-		this.cCurve = cCurve;
-	}
-	
 	//Kiszamitja egy gorbe pontjat egy adott t idopillanatban
 	//t->[0,1] kozott van
 	public static Point2D.Float getCurvePoint(float t,Point2D.Float[] points) {
@@ -113,9 +84,51 @@ public class Curves implements Serializable {
 			curves.setbCurve(bCurve);
 			curves.setcCurve(cCurve);
 			
+			curves.setColor(fComponent.getColor());
+			
 			cList.set(i,curves);			
 		}
 		
 		return cList;
+	}	
+	
+	public int getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
+
+	public Point2D.Float[] getaCurve() {
+		return aCurve;
+	}
+
+	public void setaCurve(Point2D.Float[] aCurve) {
+		this.aCurve = aCurve;
+	}
+
+	public Point2D.Float[] getbCurve() {
+		return bCurve;
+	}
+
+	public void setbCurve(Point2D.Float[] bCurve) {
+		this.bCurve = bCurve;
+	}
+
+	public Point2D.Float[] getcCurve() {
+		return cCurve;
+	}
+
+	public void setcCurve(Point2D.Float[] cCurve) {
+		this.cCurve = cCurve;
+	}
+		
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }
