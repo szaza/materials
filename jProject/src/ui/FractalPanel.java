@@ -38,6 +38,7 @@ public class FractalPanel extends JPanel {
 	private ColorSelector colorChooser;
 	private JLabel triangSettings;
 	private JLabel visibleLabel;
+	private JLabel boxDim;
 	private JCheckBox visibleCheck;
 	private JAddTriangFrame addFrame;
 	private LinkedList <FractalComponent> fList;
@@ -64,6 +65,7 @@ public class FractalPanel extends JPanel {
 		colorChooser = new ColorSelector();
 		triangSettings = new JLabel("A Háromszög adatai:");
 		visibleLabel = new JLabel("Látható:");
+		boxDim = new JLabel("Box dimenzió:");
 		visibleCheck = new JCheckBox();
 		addTriang = new JButton("Új háromszög");
 		removeTriang = new JButton("Törlés");		
@@ -89,7 +91,8 @@ public class FractalPanel extends JPanel {
 		editPanel.add(addTriang);
 		editPanel.add(removeTriang);
 		editPanel.add(rCanvas);
-		editPanel.setPreferredSize(new Dimension(300,500));	
+		editPanel.add(boxDim);
+		editPanel.setPreferredSize(new Dimension(300,600));	
 		
 		this.add(editPanel);
 		
@@ -185,8 +188,9 @@ public class FractalPanel extends JPanel {
 
 	//Frissitem a transzformacio adatait tarolo panelt
 	public void refreshPanels() {
-		FractalComponent component;
 		int index = selectTriangle.getSelectedIndex();
+		
+		FractalComponent component;
 		component = fList.get(index);
 		
 		//Frissiti a haromszog panelek adatait 
@@ -197,11 +201,14 @@ public class FractalPanel extends JPanel {
 		
 		//Szin valaszto beallitasa
 		colorChooser.setColor(component.getColor());
+		
+		//Boxdimenzio kiiratasa
+		boxDim.setText("Box dimenzió: " + String.format("%.6f",rCanvas.getBoxDimension()));
 	}
 	
 	public void refresh() {
+		rCanvas.repaint();		
 		refreshPanels();
-		rCanvas.repaint();
 		uiFrame.refreshCanvas();
 	}
 	

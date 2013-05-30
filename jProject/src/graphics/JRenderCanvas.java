@@ -9,7 +9,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -25,6 +27,7 @@ public class JRenderCanvas extends JPanel {
 	private int height;
 	private int scale;
 	private int itNumber;
+	private double boxDimension;
 	private Color bgColor;
 	private Triangle defTriang;
 	private volatile LinkedList <FractalComponent> componentList;
@@ -37,6 +40,7 @@ public class JRenderCanvas extends JPanel {
 	public JRenderCanvas(int width, int height) {
 		this.width = width;
 		this.height = height;
+		this.boxDimension = 0;
 		this.bgColor = Color.black;
 		this.scale = width/6;
 		this.itNumber = 30000;
@@ -44,7 +48,7 @@ public class JRenderCanvas extends JPanel {
 		this.setPreferredSize(new Dimension(width,height));
 	}
 	
-	public void drawEllipse(Point2D.Double pont,Graphics2D gr2D,double scale){
+	public void drawEllipse(Point2D.Double pont,Graphics2D gr2D){
 		Shape shape;		
 		shape = new Ellipse2D.Float((float)(pont.x * scale),(float)(pont.y*scale), 0.1f, 0.0f);
 		gr2D.draw(shape);
@@ -53,12 +57,18 @@ public class JRenderCanvas extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		int index;
-		Random rnd = new Random();
-		Graphics2D  gr2D = null;
-		FractalComponent component;
-		Point2D.Double pont;
+		int mapKey;
+		int[][] boxMargin = new int[2][2];
+		int xKoord;
+		int yKoord;
+		
 		Color color;
+		Point2D.Double pont;
+		Graphics2D  gr2D = null;
+		Random rnd = new Random();
+		FractalComponent component;
 		AffineTransform transform;
+		Map<Object,Integer> map = new HashMap<Object,Integer>();	//Rogzitem a kirajzolt pontokat a koordinatajuk szerint. (A boxdimenzio szamolasahoz kell)
 		
 		img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);	
 		
@@ -79,6 +89,9 @@ public class JRenderCanvas extends JPanel {
 			pont = new Point2D.Double(1,0);
 			color = componentList.get(0).getColor();
 			
+			boxMargin[0][0] = width;
+			boxMargin[1][0] = height;
+			
 			for (int i=0; i<itNumber; i++) {
 				try {
 					index = rnd.nextInt(componentList.size());
@@ -88,7 +101,20 @@ public class JRenderCanvas extends JPanel {
 						color = new Color((color.getRed() + component.getColor().getRed()) / 2,(color.getGreen() + component.getColor().getGreen()) / 2,(color.getBlue() + component.getColor().getBlue()) / 2);
 						gr2D.setColor(color);
 						pont = component.transform.transform(pont);
-						drawEllipse(pont,gr2D,scale);
+						drawEllipse(pont,gr2D);
+						
+						xKoord = (int)(pont.x * scale);
+						yKoord = (int)(pont.y*scale);
+						
+						mapKey = width * xKoord + yKoord;
+						if (!map.containsKey(mapKey)) map.put(mapKey, 1);
+						
+						if (boxMargin[0][0] > xKoord) boxMargin[0][0] = xKoord; //Bal szele
+						if (boxMargin[0][1] < xKoord) boxMargin[0][1] = xKoord; //Jobb szele
+						
+						if (boxMargin[1][0] > yKoord) boxMargin[1][0] = yKoord; //Teteje
+						if (boxMargin[1][1] < yKoord) boxMargin[1][1] = yKoord; //Alja
+							
 					} catch (NullPointerException e) {
 						System.out.println("NullPointer exception: " + index + " - " + componentList.size());
 					}
@@ -98,6 +124,16 @@ public class JRenderCanvas extends JPanel {
 			}
 			
 			g.drawImage(img,0,0,null);
+		}
+		
+		//Box-dimenzio szamolasa
+		int shapeWidth = boxMargin[0][1] - boxMargin[0][0] + 1;
+		int shapeHeight = boxMargin[1][1] - boxMargin[1][0] + 1;
+		double r = Math.max(shapeWidth,shapeHeight);
+		
+		if (r == 0) boxDimension = 0;
+		else {
+			boxDimension = Math.log10(map.size()) / Math.log10(r);
 		}
 	}
 	
@@ -141,5 +177,8 @@ public class JRenderCanvas extends JPanel {
 	public void setItNumber(int itNumber) {
 		this.itNumber = itNumber;
 	}
-	
+
+	public double getBoxDimension() {
+		return boxDimension;
+	}	
 }
