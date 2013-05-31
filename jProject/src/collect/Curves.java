@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Curves implements Serializable {
 	
@@ -13,6 +14,12 @@ public class Curves implements Serializable {
 	private Point2D.Float[] bCurve;
 	private Point2D.Float[] cCurve;
 	private Color color;
+	
+	public Curves() {
+		aCurve = new Point2D.Float[0];
+		bCurve = new Point2D.Float[0];
+		cCurve = new Point2D.Float[0];
+	}
 	
 	public Curves(int parentId,Point2D.Float[] aCurves,Point2D.Float[] bCurves,Point2D.Float[] cCurves,Color color) {
 		this.parentId = parentId;
@@ -33,7 +40,7 @@ public class Curves implements Serializable {
 		for (int i=0; i<points.length; i++) {
 			coef = (i<points.length/2) ? i * exp : (points.length - (i+1)) * exp;
 			coef = (coef == 0) ? 1 : coef;
-			
+						
 			x += Math.pow(t,i)*Math.pow((1-t),(exp-i))*coef*points[i].x;
 			y += Math.pow(t,i)*Math.pow((1-t),(exp-i))*coef*points[i].y;
 		}
@@ -130,5 +137,43 @@ public class Curves implements Serializable {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	//Veletlenszeru gorbek generalasa
+	public void setRandomCurves(Triangle triang1, Triangle triang2,int kp,int partition,Color color) {
+		float x,y;
+		int partition2 = 2*partition;
+		Random generator = new Random();
+		
+		kp += 2;	//A kezdo es vegpont miatt 
+				
+		aCurve = new Point2D.Float[kp];
+		bCurve = new Point2D.Float[kp];
+		cCurve = new Point2D.Float[kp];		
+		
+		aCurve[0] = triang1.A;							
+		aCurve[kp-1] = triang2.A; 
+		
+		bCurve[0] = triang1.B;							
+		bCurve[kp-1] = triang2.B;
+		
+		cCurve[0] = triang1.C;							
+		cCurve[kp-1] = triang2.C;
+		
+		
+		for (int i=0; i<3; i++) {
+			for (int j=1; j<kp-1; j++) {
+				x = generator.nextInt(partition2) - partition;
+				y = generator.nextInt(partition2) - partition;
+				
+				switch (i) {
+					case 0: aCurve[j] = new Point2D.Float(x,y); break;
+					case 1: bCurve[j] = new Point2D.Float(x,y); break;
+					case 2: cCurve[j] = new Point2D.Float(x,y); break;
+				}
+			}
+		}
+		
+		setColor(color);
 	}
 }

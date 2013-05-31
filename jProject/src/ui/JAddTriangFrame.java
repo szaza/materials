@@ -3,6 +3,8 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -24,8 +26,8 @@ public class JAddTriangFrame extends JDialog {
 	private String title;
 	
 	private LinkedList <FractalComponent> componentList;
-	public JButton ok;
-	public JButton cancel;	
+	private JButton ok;
+	private JButton cancel;	
 	private JLabel colorLabel;
 	private JPanel colorContainer;
 	private JPanel buttonContainer;
@@ -75,6 +77,23 @@ public class JAddTriangFrame extends JDialog {
 		add(colorContainer,BorderLayout.NORTH);
 		setResizable(false);
 		setVisible(true);
+		
+		ok.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveSettings();
+				dispose();
+			}
+		});
+		
+		cancel.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
 	}
 	
 	public int getWidth() {

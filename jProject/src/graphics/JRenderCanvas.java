@@ -9,17 +9,20 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import collect.FractalComponent;
 import collect.Triangle;
 
-public class JRenderCanvas extends JPanel {
+public class JRenderCanvas extends JPanel implements ChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -30,8 +33,9 @@ public class JRenderCanvas extends JPanel {
 	private double boxDimension;
 	private Color bgColor;
 	private Triangle defTriang;
-	private volatile LinkedList <FractalComponent> componentList;
 	private BufferedImage img;
+	private volatile LinkedList <FractalComponent> componentList;
+	private ArrayList<ChangeListener> listenerList;
 	
 	public JRenderCanvas() {
 		this (200,150);
@@ -44,6 +48,8 @@ public class JRenderCanvas extends JPanel {
 		this.bgColor = Color.black;
 		this.scale = width/6;
 		this.itNumber = 30000;
+		
+		listenerList = new ArrayList<ChangeListener>();
 		this.setBackground(bgColor);
 		this.setPreferredSize(new Dimension(width,height));
 	}
@@ -52,6 +58,21 @@ public class JRenderCanvas extends JPanel {
 		Shape shape;		
 		shape = new Ellipse2D.Float((float)(pont.x * scale),(float)(pont.y*scale), 0.1f, 0.0f);
 		gr2D.draw(shape);
+	}
+	
+	public void calculateBoxDimension(int mapSize,int[][] boxMargin) {
+		//Box-dimenzio szamolasa
+		int shapeWidth = boxMargin[0][1] - boxMargin[0][0] + 1;
+		int shapeHeight = boxMargin[1][1] - boxMargin[1][0] + 1;
+		double r = Math.max(shapeWidth,shapeHeight);
+		
+		if (r == 1) boxDimension = 0;
+		else {
+			boxDimension = Math.log10(mapSize) / Math.log10(r);
+		}
+		
+		ChangeEvent e = new ChangeEvent(this);
+		stateChanged(e);		
 	}
 	
 	@Override
@@ -86,7 +107,9 @@ public class JRenderCanvas extends JPanel {
 			
 			gr2D.translate(width/2,height/2);		
 			
-			pont = new Point2D.Double(1,0);
+			component = componentList.get(0);
+			
+			pont = new Point2D.Double(component.triang.A.x,component.triang.A.y);
 			color = componentList.get(0).getColor();
 			
 			boxMargin[0][0] = width;
@@ -109,6 +132,7 @@ public class JRenderCanvas extends JPanel {
 						mapKey = width * xKoord + yKoord;
 						if (!map.containsKey(mapKey)) map.put(mapKey, 1);
 						
+						//Bekeretezi az abrat
 						if (boxMargin[0][0] > xKoord) boxMargin[0][0] = xKoord; //Bal szele
 						if (boxMargin[0][1] < xKoord) boxMargin[0][1] = xKoord; //Jobb szele
 						
@@ -126,16 +150,16 @@ public class JRenderCanvas extends JPanel {
 			g.drawImage(img,0,0,null);
 		}
 		
-		//Box-dimenzio szamolasa
-		int shapeWidth = boxMargin[0][1] - boxMargin[0][0] + 1;
-		int shapeHeight = boxMargin[1][1] - boxMargin[1][0] + 1;
-		double r = Math.max(shapeWidth,shapeHeight);
-		
-		if (r == 0) boxDimension = 0;
-		else {
-			boxDimension = Math.log10(map.size()) / Math.log10(r);
-		}
+		calculateBoxDimension(map.size(),boxMargin);
 	}
+	
+	public synchronized void addChangeListener(ChangeListener listener){
+		listenerList.add(listener);
+	}	
+
+	public synchronized void removeChangeListener(ChangeListener listener){
+		listenerList.remove(listener);
+	}		
 	
 	public int getWidth() {
 		return width;
@@ -181,4 +205,13 @@ public class JRenderCanvas extends JPanel {
 	public double getBoxDimension() {
 		return boxDimension;
 	}	
+	
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		synchronized (this) {
+			for (ChangeListener i : listenerList) {
+				i.stateChanged(e);
+			}
+		}
+	}
 }

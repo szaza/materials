@@ -9,6 +9,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -24,7 +26,7 @@ import collect.FractalComponent;
 import collect.Transform;
 import collect.Triangle;
 
-public class FractalPanel extends JPanel {
+public class FractalPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel editPanel;
@@ -102,9 +104,25 @@ public class FractalPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				addFrame = new JAddTriangFrame(fList);
-				addFrame.ok.addActionListener(new okPressed());
-				addFrame.ok.addActionListener(new exitDialog());
-				addFrame.cancel.addActionListener(new exitDialog());
+				addFrame.addWindowListener(new WindowAdapter(){
+					
+					@Override
+					public void windowClosed(WindowEvent e){
+						//Beteszi a lennyilo menube az uj elem sorszamat
+						fList = addFrame.getList();
+						
+						if (selectTriangle.getItemCount() < fList.size()) {
+							for (int i = selectTriangle.getItemCount() + 1; i <= fList
+									.size(); i++) {
+								selectTriangle.addItem(Integer.toString(i));
+							}
+						}
+						
+						setRemoveTriangButtonState();
+						refresh();						
+					}
+					
+				});
 			}
 		});
 
@@ -157,6 +175,16 @@ public class FractalPanel extends JPanel {
 			}
 			
 		});
+		
+		rCanvas.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				//Boxdimenzio kiiratasa
+				boxDim.setText("Box dimenzió: " + String.format("%.6f",rCanvas.getBoxDimension()));				
+			}
+			
+		});
 	}
 	
 	public void init() {
@@ -201,15 +229,12 @@ public class FractalPanel extends JPanel {
 		
 		//Szin valaszto beallitasa
 		colorChooser.setColor(component.getColor());
-		
-		//Boxdimenzio kiiratasa
-		boxDim.setText("Box dimenzió: " + String.format("%.6f",rCanvas.getBoxDimension()));
 	}
 	
 	public void refresh() {
+		refreshPanels();		
 		rCanvas.repaint();		
-		refreshPanels();
-		uiFrame.refreshCanvas();
+		uiFrame.refreshCanvas();		
 	}
 	
 	public void setComponents() {
@@ -225,40 +250,6 @@ public class FractalPanel extends JPanel {
 		fList.set(index, component);
 		
 		refresh();	//Frissitem a paneleket		
-	}
-	
-	//Uj haromszog hozzaadasa
-	class okPressed implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-			//Lementi a beallitasokat, es kiszamolja az uj transformaciot
-			addFrame.saveSettings();
-			
-			//Beteszi a lennyilo menube az uj elem sorszamat
-			fList = addFrame.getList();
-			
-			if (selectTriangle.getItemCount() < fList.size()) {
-				for (int i = selectTriangle.getItemCount() + 1; i <= fList
-						.size(); i++) {
-					selectTriangle.addItem(Integer.toString(i));
-				}
-			}
-			
-			setRemoveTriangButtonState();
-			refresh();
-		}
-	}
-
-	//Kilep a haromszog hozzaadas dialogusbol
-	class exitDialog implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			addFrame.dispose();
-		}
-
 	}
 
 	class triangListener implements FocusListener {
@@ -306,7 +297,7 @@ public class FractalPanel extends JPanel {
 			refresh();
 		}
 	}
-
+	
 	public LinkedList <FractalComponent> getFractalComponentList() {
 		return fList;
 	}
@@ -346,5 +337,4 @@ public class FractalPanel extends JPanel {
 		visibleCheck.setSelected(b);
 		refresh();		
 	}
-
 }

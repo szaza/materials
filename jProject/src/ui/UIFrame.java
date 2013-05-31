@@ -53,8 +53,10 @@ public class UIFrame extends JFrame {
 	private JMenuItem viewFComp;
 	private JMenuItem viewGComp;
 	private JMenuItem deformItem;
+	private JMenuItem geneticItem;
 	
 	private JMenuItem curveMenu;
+	private JMenuItem randomCurvesMenu;
 	private JMenuItem settingsMenu;
 	
 	private int itNumber;
@@ -108,8 +110,10 @@ public class UIFrame extends JFrame {
 		viewFComp = new JMenuItem("F komp. láthatósága");
 		viewGComp = new JMenuItem("G kom. láthatósága");
 		deformItem = new JMenuItem("Deformál");
+		geneticItem = new JMenuItem("Genetikus");
 		
 		curveMenu = new JMenuItem("Görbék");
+		randomCurvesMenu = new JMenuItem("Random görbék");
 		settingsMenu = new JMenuItem("Beállítás");
 		
 		canvas = new JCanvas();
@@ -129,6 +133,7 @@ public class UIFrame extends JFrame {
 		fileMenu.add(exitMenuItem);
 		
 		editMenu.add(curveMenu);
+		editMenu.add(randomCurvesMenu);
 		editMenu.add(settingsMenu);
 
 		viewMenu.add(viewMenuItem);
@@ -138,6 +143,7 @@ public class UIFrame extends JFrame {
 		viewMenu.add(viewGComp);
 		
 		deformMenu.add(deformItem);
+		deformMenu.add(geneticItem);
 		
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
@@ -330,6 +336,9 @@ public class UIFrame extends JFrame {
 						gList.clear();
 						cList.clear();
 						
+						//Toroljuk a canvasrol is a mar kigeneralt koztes fraktalokat
+						canvas.sethComponentList(new LinkedList<FractalComponent>());
+						
 						fList.addAll(wrapObject.getfFractal());
 						gList.addAll(wrapObject.getgFractal());
 						cList.addAll(wrapObject.getcList());
@@ -342,10 +351,13 @@ public class UIFrame extends JFrame {
 						
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
+						JOptionPane.showMessageDialog(null,"Az állomány nem található!","Hiba",JOptionPane.ERROR_MESSAGE);
 					} catch (IOException e) {
 						e.printStackTrace();
+						JOptionPane.showMessageDialog(null,"Hiba történt az állomány olvasásakor!","Hiba",JOptionPane.ERROR_MESSAGE);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
+						JOptionPane.showMessageDialog(null,"Az állomány nem felel meg a szabványnak!","Hiba",JOptionPane.ERROR_MESSAGE);
 					}
 			    	  
 			      }					
@@ -391,6 +403,24 @@ public class UIFrame extends JFrame {
 			
 		});
 		
+		randomCurvesMenu.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JRandomCurvesPanel randomPanel = new JRandomCurvesPanel(UIFrame.this,fList,gList);				
+				randomPanel.setBounds(100,100,230,200);
+				randomPanel.setVisible(true);
+				
+				randomPanel.addWindowListener(new WindowAdapter(){
+					@Override
+					public void windowClosed(WindowEvent e){
+						setcList(((JRandomCurvesPanel) e.getSource()).getcList());
+					}					
+				});				
+			}
+			
+		});
+		
 		newMenuItem.addActionListener(new ActionListener(){
 
 			@Override
@@ -422,20 +452,12 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				boolean valid;
 				Thread thread = null;
 				
-				//Ki van-e toltve az osszes gorbe
-				valid = (!cList.isEmpty());
-				for (int i=0; i<cList.size(); i++) {
-					if ((cList.get(i).getaCurve().length <=1) || (cList.get(i).getbCurve().length <=1) || (cList.get(i).getcCurve().length <=1)) valid=false;
-				}
-				
-				if (valid) {
+				if (isCurvesValid()) {
 					if ((hFractal == null) || (!hFractal.isVisible())) {
 						hFractal = new HFractal(canvas,cList);
-						thread = new Thread(hFractal);
-						thread.start();
+						hFractal.setVisible(true);
 					}
 					thread = new Thread(hFractal);
 					thread.start();
@@ -446,6 +468,35 @@ public class UIFrame extends JFrame {
 			}
 		});
 		
+		geneticItem.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				if (isCurvesValid()) {
+					JGeneticPanel geneticPanel = new JGeneticPanel(canvas,cList);
+					geneticPanel.setBounds(200,200,300,130);
+					geneticPanel.setResizable(false);		
+					geneticPanel.setVisible(true);						
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Kérem ellenőrízze, hogy megadta-e az összes görbét!","Hiba",JOptionPane.ERROR_MESSAGE);
+				}				
+			}
+			
+		});
+		
+	}
+	
+	public boolean isCurvesValid() {
+		boolean valid;
+		
+		//Ki van-e toltve az osszes gorbe
+		valid = (!cList.isEmpty());
+		for (int i=0; i<cList.size(); i++) {
+			if ((cList.get(i).getaCurve().length <=1) || (cList.get(i).getbCurve().length <=1) || (cList.get(i).getcCurve().length <=1)) valid=false;
+		}		
+		
+		return valid;
 	}
 	
 	public void refreshCanvas() {

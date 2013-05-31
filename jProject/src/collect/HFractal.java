@@ -3,53 +3,91 @@ package collect;
 import graphics.JCanvas;
 import graphics.JRenderCanvas;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class HFractal extends JDialog implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
-	private int deformLength=10;
+	private int deformLength=100;
 	private Curves curves;
 	private Triangle triang;
 	private Transform transform;
 	
 	//Az f es g fraktalokhoz tartozo gorbek
-	private Point2D.Float[] aCurve;
-	private Point2D.Float[] bCurve;
-	private Point2D.Float[] cCurve;
+	protected Point2D.Float[] aCurve;
+	protected Point2D.Float[] bCurve;
+	protected Point2D.Float[] cCurve;
 	
 	//A H fraktalhoz tartozo pontok
 	private Point2D.Float aPoint;
 	private Point2D.Float bPoint;
 	private Point2D.Float cPoint;	
 	
-	private LinkedList <FractalComponent> hList;
-	private LinkedList<Curves> cList;
+	protected LinkedList <FractalComponent> hList;
+	protected LinkedList<Curves> cList;
 	
 	private JPanel contentPanel;
-	private JCanvas canvas;
-	private JRenderCanvas rCanvas;
+	private JPanel controlPanel;
+	private JLabel boxDimension;
+	private JButton restart;
+	protected JCanvas canvas;
+	protected JRenderCanvas rCanvas;
 	
 	public HFractal(JCanvas canvas,LinkedList <Curves> cL) {
 		this.canvas = canvas;
 		this.cList = cL;
 		
 		contentPanel = new JPanel();
-		rCanvas = new JRenderCanvas(600,620);
+		controlPanel = new JPanel();
+		boxDimension = new JLabel("Box-dimenzió: ");
+		restart = new JButton("Újra");
+		rCanvas = new JRenderCanvas(600,600);
 		hList = new LinkedList<FractalComponent>();
 		
+		contentPanel.setLayout(new BorderLayout());
+		controlPanel.setLayout(new BorderLayout());
+		
 		rCanvas.setComponentList(hList);
-		contentPanel.add(rCanvas);
+		
+		controlPanel.add(boxDimension,BorderLayout.WEST);
+		controlPanel.add(restart,BorderLayout.EAST);
+		contentPanel.add(rCanvas,BorderLayout.CENTER);
+		contentPanel.add(controlPanel,BorderLayout.SOUTH);
 		
 		this.setTitle("Fraktál Deformázió");
 		this.setContentPane(contentPanel);
-		this.setBounds(50,50,600,600);
+		this.setBounds(50,50,600,670);
 		this.setResizable(false);
-		this.setVisible(true);
+		
+		restart.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Thread thread = new Thread(HFractal.this);
+				thread.start();
+			}
+			
+		});
+		
+		rCanvas.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				boxDimension.setText("Box-dimenzió: " + String.format("%.6f",rCanvas.getBoxDimension()));			
+			}
+			
+		});
 	}
 	
 	public synchronized LinkedList<FractalComponent> updateHList(int t) {
@@ -79,17 +117,20 @@ public class HFractal extends JDialog implements Runnable {
 	@Override
 	public void run() {
 		
-		if (!cList.isEmpty()) {			//Ha a gorbeket tartalmazo lista nem ures		
+		//Ha a gorbeket tartalmazo lista nem ures
+		if (!cList.isEmpty()) {		
 			for (int j=0; j<=deformLength; j++) {
 				hList = updateHList(j);
 				
+				//A UIFramen levo canvast frissiti
 				canvas.sethComponentList(hList);
 				canvas.repaint();
 				
+				//A render canvast frissiti
 				rCanvas.setComponentList(hList);
 				
 				try {
-					Thread.sleep(100);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
