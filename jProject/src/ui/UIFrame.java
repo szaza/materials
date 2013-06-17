@@ -115,17 +115,18 @@ public class UIFrame extends JFrame {
 		curveMenu = new JMenuItem("Görbék");
 		randomCurvesMenu = new JMenuItem("Random görbék");
 		settingsMenu = new JMenuItem("Beállítás");
-		
-		canvas = new JCanvas();
 
 		defTriangle = new Triangle(0.0f,0.0f,1.0f,0.0f,0.0f,1.0f);
+		Triangle fTriangle = new Triangle(1.0f,-1.0f,2.0f,-1.0f,1.0f,0.0f);
 		Triangle gTriangle = new Triangle(2.0f,2.0f,3.0f,2.0f,2.0f,3.0f);
 		
 		hFractal = null;
 		
-		fFractal = new FractalPanel(this,defTriangle);
+		fFractal = new FractalPanel(this,fTriangle);
 		gFractal = new FractalPanel(this,gTriangle);
 		fractalTab = new JTabbedPane();
+		
+		canvas = new JCanvas(fFractal,gFractal);
 		
 		fileMenu.add(newMenuItem);
 		fileMenu.add(loadMenuItem);

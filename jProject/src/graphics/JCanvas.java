@@ -6,18 +6,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Shape;
-//import java.awt.Shape;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
-//import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
+import ui.FractalPanel;
 import ui.UIFrame;
 import collect.Curves;
 import collect.FractalComponent;
@@ -44,9 +46,23 @@ public class JCanvas extends JPanel {
 	private LinkedList<FractalComponent> gComponentList;
 	private LinkedList<FractalComponent> hComponentList;
 	private LinkedList<Curves> cList;
+	private FractalPanel fFractal;
+	private FractalPanel gFractal;
 	private Triangle defTriang;
+	
+	private int mouseX;
+	private int mouseY;
+	private FractalComponent changeComponent;
+	
+	private float draggableX;
+	private float draggableY;
+	private boolean draggable;
+	
+	private boolean resizable;
+	private Point2D.Float resizePoint;
+	private int radius;
 
-	public JCanvas() {
+	public JCanvas(FractalPanel fFract, FractalPanel gFract) {
 		width = 700;
 		height = 600;
 		scale = 1.0f;
@@ -57,8 +73,13 @@ public class JCanvas extends JPanel {
 		defTriang = UIFrame.defTriangle;
 		hComponentList = null;
 		
+		radius = 10;
+		
 		scalex = width / 10;
 		scaley = -scalex;
+		
+		this.fFractal = fFract;
+		this.gFractal = gFract;
 
 		cList = new LinkedList<Curves>();
 		transform = new AffineTransform();
@@ -81,6 +102,65 @@ public class JCanvas extends JPanel {
 					repaint();
 				}
 			}
+		});
+		
+		this.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mousePressed(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
+				
+				if (isInsideTriang(mouseX,mouseY)) {
+					draggable = true;
+				}
+				
+				if (isInsideOval(mouseX,mouseY)) {
+					resizable = true;
+				}
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				draggable = false;
+				resizable = false;
+			}			
+		});
+		
+		this.addMouseMotionListener(new MouseMotionAdapter() {
+			
+			public void mouseDragged(MouseEvent e) {
+				
+				if (resizable) {
+					resizePoint.x = (e.getX() - width / 2) / scalex;
+					resizePoint.y = (e.getY() - height / 2) / scaley;
+					
+					changeComponent.transform = changeComponent.triang.toTransform();
+					
+					fFractal.setFractalComponentList(fComponentList);
+					gFractal.setFractalComponentList(gComponentList);
+					
+					repaint();					
+				}
+				else {
+					if (draggable) {
+						changeComponent.triang.A.x = (e.getX() - width / 2 - draggableX) / scalex;
+						changeComponent.triang.A.y = (e.getY() - height / 2 - draggableY) / scaley;
+						
+						changeComponent.triang.B.x = changeComponent.triang.A.x + changeComponent.transform.getValue(0,1);
+						changeComponent.triang.B.y = changeComponent.triang.A.y + changeComponent.transform.getValue(1,1);
+						
+						changeComponent.triang.C.x = changeComponent.triang.A.x + changeComponent.transform.getValue(0,0);
+						changeComponent.triang.C.y = changeComponent.triang.A.y + changeComponent.transform.getValue(0,1);	
+						
+						changeComponent.transform = changeComponent.triang.toTransform();
+						
+						fFractal.setFractalComponentList(fComponentList);
+						gFractal.setFractalComponentList(gComponentList);
+						repaint();
+					}
+				}	
+			}
+			
 		});
 	}
 
@@ -134,6 +214,13 @@ public class JCanvas extends JPanel {
 		g.drawString(label, x3, y3);
 	}
 
+	//Kirajzolom a haromszogekhez tartozo koroket
+	public void drawOvals(Graphics2D g, Triangle triang) {
+		g.drawOval((int) (triang.A.x * scalex - radius / 2), (int) (triang.A.y * scaley - radius / 2), radius, radius);
+		g.drawOval((int) (triang.B.x * scalex - radius / 2), (int) (triang.B.y * scaley - radius / 2), radius, radius);
+		g.drawOval((int) (triang.C.x * scalex - radius / 2), (int) (triang.C.y * scaley - radius / 2), radius, radius);
+	}
+	
 	//Kirajzolom a haromszogeket
 	public void drawTriangles(Graphics2D g) {
 		Polygon2D p;
@@ -151,6 +238,7 @@ public class JCanvas extends JPanel {
 			for (FractalComponent component : fComponentList) {
 				g.setColor(component.getColor());
 				drawTexts(g, component.getTriang(), "F");
+				drawOvals(g, component.getTriang());				
 				p = component.getTriang().getPolygon(scalex, scaley);
 				g.draw(p);
 			}
@@ -163,13 +251,15 @@ public class JCanvas extends JPanel {
 			for (FractalComponent component : gComponentList) {
 				g.setColor(component.getColor());
 				drawTexts(g, component.getTriang(), "G");
+				drawOvals(g, component.getTriang());				
 				p = component.getTriang().getPolygon(scalex, scaley);
 				g.draw(p);
 			}
 		}
 		
+		//A h koztes fraktalt alkoto haromszog kirajzolasa
 		if ((hComponentList != null) && (!hComponentList.isEmpty())) {
-			//A h koztes fraktalt alkoto haromszog kirajzolasa	
+		
 			for (FractalComponent component : hComponentList) {
 				g.setColor(component.getColor());
 				drawTexts(g, component.getTriang(), "H");
@@ -302,6 +392,85 @@ public class JCanvas extends JPanel {
 
 	public void sethComponentList(LinkedList<FractalComponent> hComponentList) {
 		this.hComponentList = hComponentList;
+	}
+	
+	public boolean isInsideTriangle(FractalComponent component,Point2D.Float P) {
+		
+		//A háromszög pontjai
+		Point2D.Float A = component.triang.A;
+		Point2D.Float B = component.triang.B;
+		Point2D.Float C = component.triang.C;
+		
+		//Vektorok
+		Point2D.Float v0 = new Point2D.Float((float)((C.x-A.x)*scalex),(float)((C.y-A.y)*scaley));
+		Point2D.Float v1 = new Point2D.Float((float)((B.x-A.x)*scalex),(float)((B.y-A.y)*scaley));
+		Point2D.Float v2 = new Point2D.Float((float)(P.x-A.x*scalex),(float)(P.y-A.y*scaley));
+		
+		double invDenom = 1 / (v0.x * v1.y - v0.y * v1.x);
+		double u = (v2.x * v1.y - v1.x * v2.y) * invDenom;
+		double v = (v0.x * v2.y - v2.x * v0.y) * invDenom;
+		
+		return (u >= 0) && (v >= 0) && (u + v < 1);
+		
+	}
+	
+	public boolean checkIfInsideTriang(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
+		
+		for (FractalComponent component : fComponentList) {
+			if (isInsideTriangle(component,p)) {
+				draggableX = p.x - component.triang.A.x * scalex;
+				draggableY = p.y - component.triang.A.y * scaley;
+				changeComponent = component;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isInsideTriang(int mouseX,int mouseY) {
+		
+		float x = (float)(mouseX - width / 2);
+		float y = (float)(mouseY - height / 2);
+		
+		Point2D.Float p = new Point2D.Float(x,y);
+		
+		return (checkIfInsideTriang(fComponentList,p) || checkIfInsideTriang(gComponentList,p) );
+	}
+	
+	public boolean checkIfInsideOval(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
+				
+		for (FractalComponent component : fComponentList) {			
+			if (Math.pow(component.triang.A.x * scalex - p.x,2) + Math.pow(component.triang.A.y * scaley - p.y,2) < Math.pow(radius,2)) {
+				resizePoint = component.triang.A;
+				changeComponent = component;				
+				return true;
+			}
+			
+			if (Math.pow(component.triang.B.x * scalex - p.x,2) + Math.pow(component.triang.B.y * scaley - p.y,2) < Math.pow(radius,2)) {
+				resizePoint = component.triang.B;
+				changeComponent = component;				
+				return true;
+			}
+			
+			if (Math.pow(component.triang.C.x * scalex - p.x,2) + Math.pow(component.triang.C.y * scaley - p.y,2) < Math.pow(radius,2)) {
+				resizePoint = component.triang.C;
+				changeComponent = component;				
+				return true;
+			}			
+		}
+		
+		return false;
+	}
+	
+	public boolean isInsideOval(int mouseX, int mouseY) {
+		
+		float x = (float)(mouseX - width / 2);
+		float y = (float)(mouseY - height / 2);
+		
+		Point2D.Float p = new Point2D.Float(x,y);		
+		
+		return (checkIfInsideOval(fComponentList,p) || checkIfInsideOval(fComponentList,p));
 	}
 	
 }

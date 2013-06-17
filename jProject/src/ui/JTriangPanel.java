@@ -45,14 +45,14 @@ public class JTriangPanel extends JPanel {
 		ayField = new JCustomField("0");
 		
 		bxEdit = new JLabel("Bx:");
-		bxField = new JCustomField("0");
+		bxField = new JCustomField("1");
 		byEdit = new JLabel("By:");
 		byField = new JCustomField("0");
 		
 		cxEdit = new JLabel("Cx:");
 		cxField = new JCustomField("0");
 		cyEdit = new JLabel("Cy:");
-		cyField = new JCustomField("0");
+		cyField = new JCustomField("1");
 		
 		contentPanel.setLayout(new SpringLayout());
 		contentPanel.add(axEdit);		

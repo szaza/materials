@@ -66,7 +66,7 @@ public class Curves implements Serializable {
 			gComponent = gList.get(i);
 			curves = cList.get(i);
 			
-			//Lekerem egy adott fraktalh komponenshez tartozo harom gorbet
+			//Lekerem egy adott fraktal komponenshez tartozo harom gorbet
 			aCurve = curves.getaCurve();
 			bCurve = curves.getbCurve();
 			cCurve = curves.getcCurve();

@@ -26,7 +26,7 @@ import collect.FractalComponent;
 import collect.Transform;
 import collect.Triangle;
 
-public class FractalPanel extends JPanel{
+public class FractalPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel editPanel;
@@ -49,7 +49,7 @@ public class FractalPanel extends JPanel{
 	private Triangle triangle;
 	private int itNumber;
 	private boolean fVisible;
-	
+		
 	public FractalPanel(UIFrame ui,Triangle triang) {
 		
 		uiFrame = ui;
@@ -132,8 +132,14 @@ public class FractalPanel extends JPanel{
 				FractalComponent component;
 				int index = selectTriangle.getSelectedIndex();
 				
+				try {
 				component = fList.get(index);
 				colorChooser.setColor(component.getColor());
+				} catch (IndexOutOfBoundsException event) {
+					component = fList.get(0);
+					selectTriangle.setSelectedIndex(0);
+					colorChooser.setColor(component.getColor());
+				}
 				
 				refresh();
 			}
