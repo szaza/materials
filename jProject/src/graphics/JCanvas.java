@@ -130,6 +130,7 @@ public class JCanvas extends JPanel {
 			
 			public void mouseDragged(MouseEvent e) {
 				
+				//Ha csak egy csucspontot mozgatunk
 				if (resizable) {
 					resizePoint.x = (e.getX() - width / 2) / scalex;
 					resizePoint.y = (e.getY() - height / 2) / scaley;
@@ -142,6 +143,7 @@ public class JCanvas extends JPanel {
 					repaint();					
 				}
 				else {
+					//Ha az egesz haromszoget mozgatjuk
 					if (draggable) {
 						changeComponent.triang.A.x = (e.getX() - width / 2 - draggableX) / scalex;
 						changeComponent.triang.A.y = (e.getY() - height / 2 - draggableY) / scaley;
@@ -150,7 +152,7 @@ public class JCanvas extends JPanel {
 						changeComponent.triang.B.y = changeComponent.triang.A.y + changeComponent.transform.getValue(1,1);
 						
 						changeComponent.triang.C.x = changeComponent.triang.A.x + changeComponent.transform.getValue(0,0);
-						changeComponent.triang.C.y = changeComponent.triang.A.y + changeComponent.transform.getValue(0,1);	
+						changeComponent.triang.C.y = changeComponent.triang.A.y + changeComponent.transform.getValue(1,0);	
 						
 						changeComponent.transform = changeComponent.triang.toTransform();
 						
@@ -394,6 +396,7 @@ public class JCanvas extends JPanel {
 		this.hComponentList = hComponentList;
 	}
 	
+	//Ellenorzi, hogy az eger a haromszogen belul talalhato-e
 	public boolean isInsideTriangle(FractalComponent component,Point2D.Float P) {
 		
 		//A háromszög pontjai
@@ -414,6 +417,7 @@ public class JCanvas extends JPanel {
 		
 	}
 	
+	//Meghivja az ellenorzest a komponens csalad minden komponensere
 	public boolean checkIfInsideTriang(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
 		
 		for (FractalComponent component : fComponentList) {
@@ -428,6 +432,7 @@ public class JCanvas extends JPanel {
 		return false;
 	}
 	
+	//Ellenorzom, hogy az eger pozicioja valamelyik haromszogen belul van-e
 	public boolean isInsideTriang(int mouseX,int mouseY) {
 		
 		float x = (float)(mouseX - width / 2);
@@ -435,12 +440,16 @@ public class JCanvas extends JPanel {
 		
 		Point2D.Float p = new Point2D.Float(x,y);
 		
+		//Ellenorzom mind a ket fraktal komponens csalad eseteben
 		return (checkIfInsideTriang(fComponentList,p) || checkIfInsideTriang(gComponentList,p) );
 	}
 	
+	//Ez az algoritmus hajtsa vegre az ellenorzest
 	public boolean checkIfInsideOval(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
-				
+		
+		//Bejarom az osszes komponenst es ellenorzom mind a harom csucspont eseteben, hogy az eger a csucspontra mutat-e
 		for (FractalComponent component : fComponentList) {			
+			
 			if (Math.pow(component.triang.A.x * scalex - p.x,2) + Math.pow(component.triang.A.y * scaley - p.y,2) < Math.pow(radius,2)) {
 				resizePoint = component.triang.A;
 				changeComponent = component;				
@@ -463,6 +472,7 @@ public class JCanvas extends JPanel {
 		return false;
 	}
 	
+	//Ellenorzom, hogy az eger pozicioja a korocsken belul van-e
 	public boolean isInsideOval(int mouseX, int mouseY) {
 		
 		float x = (float)(mouseX - width / 2);
@@ -470,6 +480,7 @@ public class JCanvas extends JPanel {
 		
 		Point2D.Float p = new Point2D.Float(x,y);		
 		
+		//Ellenorzom mind a ket fraktal osszes komponensere
 		return (checkIfInsideOval(fComponentList,p) || checkIfInsideOval(fComponentList,p));
 	}
 	

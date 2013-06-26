@@ -3,6 +3,7 @@ package collect;
 import graphics.JCanvas;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -13,9 +14,13 @@ public class GeneticAlg extends HFractal {
 	private static final long serialVersionUID = 1L;
 	private double topLimit;
 	private double bottomLimit;
+	private double mediaBoxDim;	//A box-dimenziok atlaga
+	private LinkedList <Integer> bC; //Bad control points
 	
 	public GeneticAlg(JCanvas canvas, LinkedList<Curves> cL) {
 		super(canvas, cL);
+		
+		bC = new LinkedList <Integer> ();
 	}
 	
 	public double calculateBoxDimension(LinkedList <FractalComponent> hList) {
@@ -66,64 +71,104 @@ public class GeneticAlg extends HFractal {
 		}		
 	}
 	
-	public Point2D.Float[] modifyCurves(Point2D.Float[] tmpCurve) {
-		float x;
-		float y;
-		float tg;
+	public Point2D.Float[] modifyCurves(Point2D.Float[] tmpCurve,LinkedList <Integer> bC) {
+		int [] directions = {-1,0,1};
+		int rnd=0;
 		
-		x = (tmpCurve[tmpCurve.length-1].x - tmpCurve[0].x);
-		y = (tmpCurve[tmpCurve.length-1].y - tmpCurve[0].y);
+		Random generator = new Random();
 		
-		tg = y / x;
-		
-		for (int i=1; i<tmpCurve.length-1; i++) {
-			tmpCurve[i].y = tmpCurve[i].x * tg;
-		}		
+		for (Integer i : bC) {
+			//General egy random szamot es hozzaadja a kontrolpont x koordinatajahoz
+			rnd = generator.nextInt(3);
+			tmpCurve[i].x += directions[rnd];
+			
+			//General egy random szamot es hozzaadja a kontrolpont y koordinatajahoz
+			rnd = generator.nextInt(3);
+			tmpCurve[i].y += directions[rnd];
+		}
 		
 		return tmpCurve;
 	}
 	
-	public void mutation(LinkedList <FractalComponent> hList,LinkedList<Curves> cList) {
+	public void mutation() {
 		Curves curves;
+		
+		LinkedList <Curves> tmpCList = new LinkedList <Curves> ();
+		tmpCList.addAll(cList);
 		
 		for (int j=0; j<cList.size(); j++) {
 			curves = cList.get(j);
 			
 			aCurve = curves.getaCurve();
-			aCurve = modifyCurves(aCurve);
+			aCurve = modifyCurves(aCurve,bC);
 			curves.setaCurve(aCurve);
 			
 			bCurve = curves.getbCurve();
-			bCurve = modifyCurves(bCurve);
+			bCurve = modifyCurves(bCurve,bC);
 			curves.setbCurve(bCurve);
 			
 			cCurve = curves.getcCurve();
-			cCurve = modifyCurves(cCurve);
+			cCurve = modifyCurves(cCurve,bC);
 			curves.setcCurve(cCurve);			
 			
 			cList.set(j,curves);
 		}
 		
+		/*
+		hList = updateHList(j);
+		boxDimension = calculateBoxDimension(hList);
+		
+		//Ha a box-dimenzio nem esik a ket hatar kozze
+		if (boxDimension > topLimit || boxDimension < bottomLimit) {
+			badControls[j] = true;
+		}		
+		*/
+		
 		canvas.setCurves(cList);
+	}
+	
+	//Genetikus algoritmus
+	public void geneticAlg() {
+		int length;
+		boolean [] badControls;
+		double boxDimension;
+		
+		length = cList.size();
+		badControls = new boolean[length];
+		
+		Arrays.fill(badControls, false);
+		
+		//Inicializalja az atlag box-dimenziot
+		mediaBoxDim = 0;
+			
+		//A kontrolpontok szama szerint felosztja a gorbeket, es minden lepesben figyelem a box-dimenziot
+		for (int j=0; j<length; j++) {
+			hList = updateHList(j);
+			boxDimension = calculateBoxDimension(hList);
+			
+			mediaBoxDim += boxDimension;
+			
+			//Ha a box-dimenzio nem esik a ket hatar kozze
+			if (boxDimension > topLimit || boxDimension < bottomLimit) {
+				badControls[j] = true;
+			}
+		}
+		
+		//Uritem a rossz kontrol pontok listajat
+		bC.clear();
+		
+		//Megkeressuk, hogy melyik kontrol pontok lehetnek hibasak
+		for (int i=1; i<length-1; i++) {
+			bC.add(i);
+		}
+		mutation();
 	}
 
 	@Override
-	public void run() {
-		double boxDimension;
-		
+	public void run() {		
 		//Ha a gorbeket tartalmazo lista nem ures
 		if (!cList.isEmpty()) {		
-			for (int j=0; j<=100; j++) {
-				hList = updateHList(j);
-								
-				boxDimension = calculateBoxDimension(hList);				
-				
-				//Ellenorzom, hogy a jelenlegi allapot jo-e
-				if ((boxDimension < bottomLimit) || (boxDimension > topLimit)) {  //Amig nem jo
-					mutation(hList,cList);
-				}
-				
-			}
+			geneticAlg();
 		}
 	}
 
