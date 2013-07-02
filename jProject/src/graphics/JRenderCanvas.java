@@ -62,8 +62,8 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 	
 	public void calculateBoxDimension(int mapSize,int[][] boxMargin) {
 		//Box-dimenzio szamolasa
-		int shapeWidth = boxMargin[0][1] - boxMargin[0][0] + 1;
-		int shapeHeight = boxMargin[1][1] - boxMargin[1][0] + 1;
+		int shapeWidth = Math.abs(boxMargin[0][1] - boxMargin[0][0]) + 1;
+		int shapeHeight = Math.abs(boxMargin[1][1] - boxMargin[1][0]) + 1;
 		double r = Math.max(shapeWidth,shapeHeight);
 		
 		if (r == 1) boxDimension = 0;
@@ -133,10 +133,10 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 						if (!map.containsKey(mapKey)) map.put(mapKey, 1);
 						
 						//Bekeretezi az abrat
-						if (boxMargin[0][0] > xKoord) boxMargin[0][0] = xKoord; //Bal szele
+						if ((boxMargin[0][0] > xKoord) && (xKoord > 0)) boxMargin[0][0] = xKoord; //Bal szele
 						if (boxMargin[0][1] < xKoord) boxMargin[0][1] = xKoord; //Jobb szele
 						
-						if (boxMargin[1][0] > yKoord) boxMargin[1][0] = yKoord; //Teteje
+						if ((boxMargin[1][0] > yKoord) && (yKoord > 0)) boxMargin[1][0] = yKoord; //Teteje
 						if (boxMargin[1][1] < yKoord) boxMargin[1][1] = yKoord; //Alja
 							
 					} catch (NullPointerException e) {

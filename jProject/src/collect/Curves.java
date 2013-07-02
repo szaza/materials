@@ -28,7 +28,27 @@ public class Curves implements Serializable {
 		this.cCurve = cCurves;
 		this.color = color;
 	}
-
+	
+	public Curves(Curves c) {
+		color = new Color(c.color.getRed(),c.color.getGreen(),c.color.getBlue());
+		parentId = c.getParentId();
+		aCurve = new Point2D.Float[c.aCurve.length];
+		bCurve = new Point2D.Float[c.bCurve.length];
+		cCurve = new Point2D.Float[c.cCurve.length];
+		
+		for (int i=0; i<aCurve.length; i++) {
+			aCurve[i] = new Point2D.Float(c.aCurve[i].x,c.aCurve[i].y);
+		}
+		
+		for (int i=0; i<bCurve.length; i++) {
+			bCurve[i] = new Point2D.Float(c.bCurve[i].x,c.bCurve[i].y);
+		}
+		
+		for (int i=0; i<cCurve.length; i++) {
+			cCurve[i] = new Point2D.Float(c.cCurve[i].x,c.cCurve[i].y);
+		}
+	}
+	
 	//Kiszamitja egy gorbe pontjat egy adott t idopillanatban
 	//t->[0,1] kozott van
 	public static Point2D.Float getCurvePoint(float t,Point2D.Float[] points) {

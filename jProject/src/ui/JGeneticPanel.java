@@ -1,7 +1,6 @@
 package ui;
 
-import graphics.JCanvas;
-
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -10,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 
 import collect.Curves;
 import collect.GeneticAlg;
@@ -23,17 +24,23 @@ public class JGeneticPanel extends JDialog {
 	private JPanel buttonPanel;
 	private JLabel bottomLimitLabel;
 	private JLabel topLimitLabel;
-	private JCustomField bottomLimitEdit;
-	private JCustomField topLimitEdit;
-	private JCanvas canvas;
+	private JTextField bottomLimitEdit;
+	private JTextField topLimitEdit;
 	private LinkedList<Curves> cList;
+	private JProgressBar progress;
+	private UIFrame uiFrame;
+	private volatile Thread thread;
+	GeneticAlg genetic;
+
 	
-	public JGeneticPanel(JCanvas canvas,LinkedList<Curves> cList) {
+	public JGeneticPanel(UIFrame ui,LinkedList<Curves> cL) {
 		super();
 		setTitle("Genetikus algoritmus");
 		
-		this.canvas = canvas;
-		this.cList = cList;
+		this.uiFrame = ui;
+		this.cList = new LinkedList <Curves> (); 
+				this.cList.addAll(cL);		
+		this.setBounds(200,200,300,170);			
 		
 		ok = new JButton("Ok");
 		cancel = new JButton("Mégse");
@@ -41,8 +48,17 @@ public class JGeneticPanel extends JDialog {
 		buttonPanel = new JPanel();
 		bottomLimitLabel = new JLabel("Alsó határ:");
 		topLimitLabel = new JLabel("Alsó határ:");
-		bottomLimitEdit = new JCustomField("1");
-		topLimitEdit = new JCustomField("2");
+		bottomLimitEdit = new JTextField("1.3");
+		topLimitEdit = new JTextField("1.5");
+		progress = new JProgressBar(0,100);		
+		
+		Dimension d = new Dimension(150,26);
+		
+		bottomLimitEdit.setPreferredSize(d);
+		topLimitEdit.setPreferredSize(d);
+		
+		progress.setPreferredSize(new Dimension(240,26));
+		progress.setStringPainted(true);
 		
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
@@ -51,21 +67,22 @@ public class JGeneticPanel extends JDialog {
 		contentPanel.add(bottomLimitEdit);
 		contentPanel.add(topLimitLabel);
 		contentPanel.add(topLimitEdit);
+		contentPanel.add(progress);
 		contentPanel.add(buttonPanel);
 		
 		this.setContentPane(contentPanel);	
+		
+		genetic  = new GeneticAlg(uiFrame,this);			
 		
 		ok.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Thread thread = null;
 				
 				topLimitEdit.setEditable(false);
 				bottomLimitEdit.setEditable(false);
 				ok.setEnabled(false);
 				
-				GeneticAlg genetic = new GeneticAlg(JGeneticPanel.this.canvas,JGeneticPanel.this.cList);
 				genetic.setTopLimit(Double.parseDouble(topLimitEdit.getText()));
 				genetic.setBottomLimit(Double.parseDouble(bottomLimitEdit.getText()));
 				thread = new Thread(genetic);
@@ -78,9 +95,24 @@ public class JGeneticPanel extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (genetic  != null) {
+					genetic.stop();
+					Thread tmp = thread;
+					tmp.interrupt();
+					thread = null;
+				}
 				dispose();				
 			}
 			
 		});
-	}	
+	}
+	
+	public LinkedList <Curves> getCList() {
+		return cList;
+	}
+	
+	public JProgressBar getProgress() {
+		return progress;
+	}
+	
 }

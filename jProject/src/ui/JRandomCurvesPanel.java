@@ -93,11 +93,11 @@ public class JRandomCurvesPanel extends JDialog {
 				min = (fList.size() < gList.size()) ? gList.size() : gList.size();
 				
 				for (int i = 0; i < min; i++) {
-					component = fList.get(i);
-					triang1 = component.getTriang();
-
 					component = gList.get(i);
 					triang2 = component.getTriang();					
+					
+					component = fList.get(i);
+					triang1 = component.getTriang();					
 					
 					curves = new Curves();
 					curves.setRandomCurves(triang1,triang2,cpnSlider.getValue(),setSlider.getValue(),component.getColor());

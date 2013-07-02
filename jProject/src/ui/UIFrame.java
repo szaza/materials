@@ -128,6 +128,8 @@ public class UIFrame extends JFrame {
 		
 		canvas = new JCanvas(fFractal,gFractal);
 		
+		menuBar.setPreferredSize(new Dimension(985,26));
+		
 		fileMenu.add(newMenuItem);
 		fileMenu.add(loadMenuItem);
 		fileMenu.add(saveMenuItem);
@@ -474,8 +476,7 @@ public class UIFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {				
 				if (isCurvesValid()) {
-					JGeneticPanel geneticPanel = new JGeneticPanel(canvas,cList);
-					geneticPanel.setBounds(200,200,300,130);
+					JGeneticPanel geneticPanel = new JGeneticPanel(UIFrame.this,cList);
 					geneticPanel.setResizable(false);		
 					geneticPanel.setVisible(true);						
 				}

@@ -481,7 +481,7 @@ public class JCanvas extends JPanel {
 		Point2D.Float p = new Point2D.Float(x,y);		
 		
 		//Ellenorzom mind a ket fraktal osszes komponensere
-		return (checkIfInsideOval(fComponentList,p) || checkIfInsideOval(fComponentList,p));
+		return (checkIfInsideOval(fComponentList,p) || checkIfInsideOval(gComponentList,p));
 	}
 	
 }
