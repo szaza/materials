@@ -3,6 +3,7 @@ package collect;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
+//Kiszámítja az affin transzformációkat a megadott háromszögek alapján
 public class Transform implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -27,14 +28,17 @@ public class Transform implements Serializable {
 		transform[2][2] = 1;		
 	}	
 	
+	//Elvégzi a transzformációt egy x koordinátára nézve
 	public double transformX(double x, double y){
 		return (transform[0][1] * x) + (transform[0][0]*y) + transform[0][2];
 	}
 	
+	//Elvégzi a transzformációt egy y koordinátára nézve
 	public double transformY(double x, double y){
 		return (transform[1][1] * x) + (transform[1][0]*y) + transform[1][2];
 	}	
 	
+	//Elvégzi a transzformációt egy pontra nézve
 	public Point2D.Double transform(Point2D.Double pont) {
 		double x;
 		double y;
@@ -46,6 +50,7 @@ public class Transform implements Serializable {
 		
 	}
 	
+	//Lekéri a transzformációs mátrix valamely értékét
 	public float getValue(int i, int j) {
 		try {
 			return (float)transform[i][j];

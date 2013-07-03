@@ -26,6 +26,7 @@ import collect.FractalComponent;
 import collect.Polygon2D;
 import collect.Triangle;
 
+//A fraktálokat alkotó háromszögeket kirajzoló és megjelenítő felület
 public class JCanvas extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -86,7 +87,7 @@ public class JCanvas extends JPanel {
 		setPreferredSize(new Dimension(width, height));
 
 		this.addMouseWheelListener(new MouseWheelListener() {
-			// Scroll eseten skalazast vegez el
+			// Scroll esetén skálázást végez el
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				float mod = e.getUnitsToScroll() / 3;
@@ -130,7 +131,7 @@ public class JCanvas extends JPanel {
 			
 			public void mouseDragged(MouseEvent e) {
 				
-				//Ha csak egy csucspontot mozgatunk
+				//Ha valamelyik háromszög csúcspontját mozgatjuk
 				if (resizable) {
 					resizePoint.x = (e.getX() - width / 2) / scalex;
 					resizePoint.y = (e.getY() - height / 2) / scaley;
@@ -143,7 +144,7 @@ public class JCanvas extends JPanel {
 					repaint();					
 				}
 				else {
-					//Ha az egesz haromszoget mozgatjuk
+					//Ha az egész háromszöget mozgatjuk
 					if (draggable) {
 						changeComponent.triang.A.x = (e.getX() - width / 2 - draggableX) / scalex;
 						changeComponent.triang.A.y = (e.getY() - height / 2 - draggableY) / scaley;
@@ -173,31 +174,31 @@ public class JCanvas extends JPanel {
 				BufferedImage.TYPE_INT_ARGB);
 		gr = img.getGraphics();
 
-		// Hatterszin beallitasa
+		// Háttérszín beállítása
 		gr.setColor(Color.DARK_GRAY);
 		gr.fillRect(0, 0, width, height);
 
-		// Fuggoleges vonalak
+		// Függőleges vonalak
 		gr.setColor(Color.gray);
 		for (int i = 0; i < width; i = i + 10) {
 			gr.drawLine(i, 0, i, height);
 		}
 
-		// Vizszintes vonalak
+		// Vízszintes vonalak
 		for (int j = 0; j < width; j = j + 10) {
 			gr.drawLine(0, j, width, j);
 		}
 
-		// Fuggoleges kozepvonal
+		// Függőleges középvonal
 		gr.setColor(Color.BLUE);
 		gr.drawLine(width / 2, 0, width / 2, height);
 
-		// Vizszintes kozepvonal
+		// Vízszintes középvonal
 		gr.setColor(Color.RED);
 		gr.drawLine(0, height / 2, width, height / 2);
 	}
 
-	//Kiralyzolom a haromszogek pontjaihoz a megfelelo betuket
+	//Kiralyzolom a háromszögek pontjaihoz a megfelelő betűket
 	public void drawTexts(Graphics2D g, Triangle triang, String label) {
 		float x3;
 		float y3;
@@ -209,33 +210,33 @@ public class JCanvas extends JPanel {
 		g.drawString("C", (float) (triang.C.x * scalex - 10),
 				(float) (triang.C.y * scaley - 5));
 
-		// Haromszog sulypontja
+		// Háromszög súlypontja
 		x3 = ((triang.A.x * scalex + triang.B.x * scalex + triang.C.x * scalex) / 3);
 		y3 = ((triang.A.y * scaley + triang.B.y * scaley + triang.C.y * scaley) / 3);
 
 		g.drawString(label, x3, y3);
 	}
 
-	//Kirajzolom a haromszogekhez tartozo koroket
+	//Kirajzolom a háromszögekhez tartozó köröket
 	public void drawOvals(Graphics2D g, Triangle triang) {
 		g.drawOval((int) (triang.A.x * scalex - radius / 2), (int) (triang.A.y * scaley - radius / 2), radius, radius);
 		g.drawOval((int) (triang.B.x * scalex - radius / 2), (int) (triang.B.y * scaley - radius / 2), radius, radius);
 		g.drawOval((int) (triang.C.x * scalex - radius / 2), (int) (triang.C.y * scaley - radius / 2), radius, radius);
 	}
 	
-	//Kirajzolom a haromszogeket
+	//Kirajzolom a háromszögeket
 	public void drawTriangles(Graphics2D g) {
 		Polygon2D p;
 
 		g.translate(width / 2, height / 2);
 
-		// Alap haromszog kirajzolasa
+		//Alap háromszög kirajzolása
 		defTriang = UIFrame.defTriangle;
 		p = defTriang.getPolygon(scalex, scaley);
 		g.setColor(Color.WHITE);
 		g.draw(p);
 
-		//Az f fraktalhoz tartozo haromszogek kirajzolasa
+		//Az f fraktálhoz tartozó háromszögek kirajzolása
 		if (!fComponentList.isEmpty() && fVisible) {
 			for (FractalComponent component : fComponentList) {
 				g.setColor(component.getColor());
@@ -246,10 +247,10 @@ public class JCanvas extends JPanel {
 			}
 		}
 
-		//Az g fraktalhoz tartozo haromszogek kirajzolasa		
+		//Az g fraktálhoz tartozó háromszögek kirajzolása		
 		if (!gComponentList.isEmpty() && gVisible) {
 
-			// A megadott haromszogek kirajzolasa
+			// A megadott háromszögek kirajzolása
 			for (FractalComponent component : gComponentList) {
 				g.setColor(component.getColor());
 				drawTexts(g, component.getTriang(), "G");
@@ -259,7 +260,7 @@ public class JCanvas extends JPanel {
 			}
 		}
 		
-		//A h koztes fraktalt alkoto haromszog kirajzolasa
+		//A h köztes fraktált alkotó háromszög kirajzolása
 		if ((hComponentList != null) && (!hComponentList.isEmpty())) {
 		
 			for (FractalComponent component : hComponentList) {
@@ -271,12 +272,12 @@ public class JCanvas extends JPanel {
 		}		
 	}
 
-	//Gorbek kirajzolasa
+	//Görbék kirajzolása
 	public void drawCurve(Graphics2D g, Point2D.Float[] points) {
 		Polygon poly = new Polygon();
 		Shape shape;
 
-		//Kontrol pont megjelenitese
+		//Kontrollpont megjelenítése
 		if (controlsVisible) {
 			for (Point2D.Float point : points) {
 				shape = new Ellipse2D.Float((float) (point.x * scalex - 3),
@@ -288,10 +289,10 @@ public class JCanvas extends JPanel {
 		Point2D.Float point;
 
 		if (curvesVisible) {
-			//Egy gorbet 100 pont hataroz meg
+			//Egy görbét 100 pont hataroz meg
 			for (int i = 1; i <= 100; i++) {
-				point = Curves.getCurvePoint((float) i / 100, points); //Kiszamitja a gorbe pontjat egy adott t idopillanatban
-				poly.addPoint((int) Math.round(point.x * scalex),		//Hozzaadom a poligonhoz a kiszamitott pontot
+				point = Curves.getCurvePoint((float) i / 100, points);  //Kiszámítja a görbe pontjat egy adott t időpillanatban
+				poly.addPoint((int) Math.round(point.x * scalex),		//Hozzáadom a poligonhoz a kiszamított pontot
 						(int) Math.round((float) (-point.y * scalex)));
 			}
 	
@@ -299,6 +300,7 @@ public class JCanvas extends JPanel {
 		}
 	}
 
+	//Kirajzolom a görbéket
 	public void drawCurves(Graphics2D g) {
 		Point2D.Float[] points;
 
@@ -337,13 +339,102 @@ public class JCanvas extends JPanel {
 		drawTriangles(gr2D);
 		drawCurves(gr2D);
 	}
-
-	// Frissiti a canvas listajat
+	
+	//Ellenörzi, hogy az egér a háromszögen belül található-e
+	public boolean isInsideTriangle(FractalComponent component,Point2D.Float P) {
+		
+		//A háromszög pontjai
+		Point2D.Float A = component.triang.A;
+		Point2D.Float B = component.triang.B;
+		Point2D.Float C = component.triang.C;
+		
+		//Vektorok
+		Point2D.Float v0 = new Point2D.Float((float)((C.x-A.x)*scalex),(float)((C.y-A.y)*scaley));
+		Point2D.Float v1 = new Point2D.Float((float)((B.x-A.x)*scalex),(float)((B.y-A.y)*scaley));
+		Point2D.Float v2 = new Point2D.Float((float)(P.x-A.x*scalex),(float)(P.y-A.y*scaley));
+		
+		double invDenom = 1 / (v0.x * v1.y - v0.y * v1.x);
+		double u = (v2.x * v1.y - v1.x * v2.y) * invDenom;
+		double v = (v0.x * v2.y - v2.x * v0.y) * invDenom;
+		
+		return (u >= 0) && (v >= 0) && (u + v < 1);
+		
+	}
+	
+	//Meghívja az ellenörzést a komponens család minden komponensére
+	public boolean checkIfInsideTriang(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
+		
+		for (FractalComponent component : fComponentList) {
+			if (isInsideTriangle(component,p)) {
+				draggableX = p.x - component.triang.A.x * scalex;
+				draggableY = p.y - component.triang.A.y * scaley;
+				changeComponent = component;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	//Ellenörzöm, hogy az egér poziciója valamelyik háromszögen belül van-e
+	public boolean isInsideTriang(int mouseX,int mouseY) {
+		
+		float x = (float)(mouseX - width / 2);
+		float y = (float)(mouseY - height / 2);
+		
+		Point2D.Float p = new Point2D.Float(x,y);
+		
+		//Ellenörzöm mind a két fraktál komponensei esetében
+		return (checkIfInsideTriang(fComponentList,p) || checkIfInsideTriang(gComponentList,p) );
+	}
+	
+	//Ez az algoritmus hajtsa végre az ellenörzést
+	public boolean checkIfInsideOval(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
+		
+		//Bejárom az összes komponenst és ellenörzöm mind a három csúcspont esetében, hogy az egér a csúcspontra mutat-e
+		for (FractalComponent component : fComponentList) {			
+			
+			if (Math.pow(component.triang.A.x * scalex - p.x,2) + Math.pow(component.triang.A.y * scaley - p.y,2) < Math.pow(radius,2)) {
+				resizePoint = component.triang.A;
+				changeComponent = component;				
+				return true;
+			}
+			
+			if (Math.pow(component.triang.B.x * scalex - p.x,2) + Math.pow(component.triang.B.y * scaley - p.y,2) < Math.pow(radius,2)) {
+				resizePoint = component.triang.B;
+				changeComponent = component;				
+				return true;
+			}
+			
+			if (Math.pow(component.triang.C.x * scalex - p.x,2) + Math.pow(component.triang.C.y * scaley - p.y,2) < Math.pow(radius,2)) {
+				resizePoint = component.triang.C;
+				changeComponent = component;				
+				return true;
+			}			
+		}
+		
+		return false;
+	}
+	
+	//Ellenörzöm, hogy az egér poziciója a köröcskén belül van-e
+	public boolean isInsideOval(int mouseX, int mouseY) {
+		
+		float x = (float)(mouseX - width / 2);
+		float y = (float)(mouseY - height / 2);
+		
+		Point2D.Float p = new Point2D.Float(x,y);		
+		
+		//Ellenörzöm mind a két fraktál összes komponensére
+		return (checkIfInsideOval(fComponentList,p) || checkIfInsideOval(gComponentList,p));
+	}
+	
+	//Frissíti a canvas F fraktál komponenseit tartalmazó listájat
 	public void setFComponentList(LinkedList<FractalComponent> fComponentList) {
 		this.fComponentList = fComponentList;
 		repaint();
 	}
 
+	//Frissíti a canvas G fraktál komponenseit tartalmazó listájat
 	public void setGComponentList(LinkedList<FractalComponent> gComponentList) {
 		this.gComponentList = gComponentList;
 		repaint();
@@ -394,94 +485,6 @@ public class JCanvas extends JPanel {
 
 	public void sethComponentList(LinkedList<FractalComponent> hComponentList) {
 		this.hComponentList = hComponentList;
-	}
-	
-	//Ellenorzi, hogy az eger a haromszogen belul talalhato-e
-	public boolean isInsideTriangle(FractalComponent component,Point2D.Float P) {
-		
-		//A háromszög pontjai
-		Point2D.Float A = component.triang.A;
-		Point2D.Float B = component.triang.B;
-		Point2D.Float C = component.triang.C;
-		
-		//Vektorok
-		Point2D.Float v0 = new Point2D.Float((float)((C.x-A.x)*scalex),(float)((C.y-A.y)*scaley));
-		Point2D.Float v1 = new Point2D.Float((float)((B.x-A.x)*scalex),(float)((B.y-A.y)*scaley));
-		Point2D.Float v2 = new Point2D.Float((float)(P.x-A.x*scalex),(float)(P.y-A.y*scaley));
-		
-		double invDenom = 1 / (v0.x * v1.y - v0.y * v1.x);
-		double u = (v2.x * v1.y - v1.x * v2.y) * invDenom;
-		double v = (v0.x * v2.y - v2.x * v0.y) * invDenom;
-		
-		return (u >= 0) && (v >= 0) && (u + v < 1);
-		
-	}
-	
-	//Meghivja az ellenorzest a komponens csalad minden komponensere
-	public boolean checkIfInsideTriang(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
-		
-		for (FractalComponent component : fComponentList) {
-			if (isInsideTriangle(component,p)) {
-				draggableX = p.x - component.triang.A.x * scalex;
-				draggableY = p.y - component.triang.A.y * scaley;
-				changeComponent = component;
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	//Ellenorzom, hogy az eger pozicioja valamelyik haromszogen belul van-e
-	public boolean isInsideTriang(int mouseX,int mouseY) {
-		
-		float x = (float)(mouseX - width / 2);
-		float y = (float)(mouseY - height / 2);
-		
-		Point2D.Float p = new Point2D.Float(x,y);
-		
-		//Ellenorzom mind a ket fraktal komponens csalad eseteben
-		return (checkIfInsideTriang(fComponentList,p) || checkIfInsideTriang(gComponentList,p) );
-	}
-	
-	//Ez az algoritmus hajtsa vegre az ellenorzest
-	public boolean checkIfInsideOval(LinkedList <FractalComponent> fComponentList, Point2D.Float p) {
-		
-		//Bejarom az osszes komponenst es ellenorzom mind a harom csucspont eseteben, hogy az eger a csucspontra mutat-e
-		for (FractalComponent component : fComponentList) {			
-			
-			if (Math.pow(component.triang.A.x * scalex - p.x,2) + Math.pow(component.triang.A.y * scaley - p.y,2) < Math.pow(radius,2)) {
-				resizePoint = component.triang.A;
-				changeComponent = component;				
-				return true;
-			}
-			
-			if (Math.pow(component.triang.B.x * scalex - p.x,2) + Math.pow(component.triang.B.y * scaley - p.y,2) < Math.pow(radius,2)) {
-				resizePoint = component.triang.B;
-				changeComponent = component;				
-				return true;
-			}
-			
-			if (Math.pow(component.triang.C.x * scalex - p.x,2) + Math.pow(component.triang.C.y * scaley - p.y,2) < Math.pow(radius,2)) {
-				resizePoint = component.triang.C;
-				changeComponent = component;				
-				return true;
-			}			
-		}
-		
-		return false;
-	}
-	
-	//Ellenorzom, hogy az eger pozicioja a korocsken belul van-e
-	public boolean isInsideOval(int mouseX, int mouseY) {
-		
-		float x = (float)(mouseX - width / 2);
-		float y = (float)(mouseY - height / 2);
-		
-		Point2D.Float p = new Point2D.Float(x,y);		
-		
-		//Ellenorzom mind a ket fraktal osszes komponensere
-		return (checkIfInsideOval(fComponentList,p) || checkIfInsideOval(gComponentList,p));
-	}
+	}	
 	
 }

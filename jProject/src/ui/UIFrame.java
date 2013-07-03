@@ -27,6 +27,7 @@ import collect.WrappingObj;
 import graphics.JCanvas;
 import graphics.JRenderCanvas;
 
+//A főablak
 public class UIFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -339,7 +340,7 @@ public class UIFrame extends JFrame {
 						gList.clear();
 						cList.clear();
 						
-						//Toroljuk a canvasrol is a mar kigeneralt koztes fraktalokat
+						//Töröljük a vászonról is a már kigenerált köztes fraktálokat
 						canvas.sethComponentList(new LinkedList<FractalComponent>());
 						
 						fList.addAll(wrapObject.getfFractal());
@@ -492,7 +493,7 @@ public class UIFrame extends JFrame {
 	public boolean isCurvesValid() {
 		boolean valid;
 		
-		//Ki van-e toltve az osszes gorbe
+		//Ki van-e töltve az összes görbe
 		valid = (!cList.isEmpty());
 		for (int i=0; i<cList.size(); i++) {
 			if ((cList.get(i).getaCurve().length <=1) || (cList.get(i).getbCurve().length <=1) || (cList.get(i).getcCurve().length <=1)) valid=false;

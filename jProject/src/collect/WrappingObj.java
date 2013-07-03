@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+//Egy burkoló osztály
+//A szerializációhoz szükséges
 public class WrappingObj implements Serializable {
 
 	private static final long serialVersionUID = 1L;

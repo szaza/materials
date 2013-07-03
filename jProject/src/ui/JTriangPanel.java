@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
 import layout.SpringUtilities;
-
+//A háromszög csúcspontjait beállító panel
 public class JTriangPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;

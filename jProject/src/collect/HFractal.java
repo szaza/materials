@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+//A köztes fraktálok komponenseit tartalmazó adatszerkezet
 public class HFractal extends JDialog implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
@@ -24,12 +25,12 @@ public class HFractal extends JDialog implements Runnable {
 	private Triangle triang;
 	private Transform transform;
 	
-	//Az f es g fraktalokhoz tartozo gorbek
+	//Az f és g fraktálokhoz tartozó görbék
 	protected Point2D.Float[] aCurve;
 	protected Point2D.Float[] bCurve;
 	protected Point2D.Float[] cCurve;
 	
-	//A H fraktalhoz tartozo pontok
+	//A H köztes fraktálhoz tartozó pontok
 	private Point2D.Float aPoint;
 	private Point2D.Float bPoint;
 	private Point2D.Float cPoint;	
@@ -93,7 +94,7 @@ public class HFractal extends JDialog implements Runnable {
 	public synchronized LinkedList<FractalComponent> updateHList(int t) {
 		LinkedList <FractalComponent> tmpList = new LinkedList<FractalComponent>(); 					
 		
-		//Bejarom a gorbeket tartalmazo listat
+		//Bejárom a görbéket tartalmazó listát
 		for (int i=0; i<cList.size(); i++) {
 			curves = cList.get(i);
 			
@@ -101,9 +102,10 @@ public class HFractal extends JDialog implements Runnable {
 			bCurve = curves.getbCurve();
 			cCurve = curves.getcCurve();
 			
-			aPoint = Curves.getCurvePoint((float) t / deformLength, aCurve); //Kiszamitom az a gorbe pontjat egy adott t idopillanatbban
-			bPoint = Curves.getCurvePoint((float) t / deformLength, bCurve); //Kiszamitom az a gorbe pontjat egy adott t idopillanatbban
-			cPoint = Curves.getCurvePoint((float) t / deformLength, cCurve); //Kiszamitom az a gorbe pontjat egy adott t idopillanatbban
+			//Kiszámítom a görbék pontjait egy adott t időpillanatban
+			aPoint = Curves.getCurvePoint((float) t / deformLength, aCurve); 
+			bPoint = Curves.getCurvePoint((float) t / deformLength, bCurve); 
+			cPoint = Curves.getCurvePoint((float) t / deformLength, cCurve); 
 		
 			triang = new Triangle(aPoint,bPoint,cPoint);
 			transform = triang.toTransform();
@@ -117,16 +119,16 @@ public class HFractal extends JDialog implements Runnable {
 	@Override
 	public void run() {
 		
-		//Ha a gorbeket tartalmazo lista nem ures
+		//Ha a görbéket tartalmazó lista nem üres
 		if (!cList.isEmpty()) {		
 			for (int j=0; j<=deformLength; j++) {
 				hList = updateHList(j);
 				
-				//A UIFramen levo canvast frissiti
+				//Az UIFramen levő canvast frissíti
 				canvas.sethComponentList(hList);
 				canvas.repaint();
 				
-				//A render canvast frissiti
+				//A render canvast frissíti
 				rCanvas.setComponentList(hList);
 				
 				try {

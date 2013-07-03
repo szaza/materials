@@ -3,6 +3,7 @@ package collect;
 import java.awt.Color;
 import java.io.Serializable;
 
+//A fraktálokat alkotó háromszögeket és transzformációkat tárolja
 public class FractalComponent implements Serializable {
 
 	private static final long serialVersionUID = 1L;

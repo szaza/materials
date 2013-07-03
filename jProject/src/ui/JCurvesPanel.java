@@ -23,7 +23,7 @@ import collect.FractalComponent;
 import collect.Triangle;
 
 import layout.SpringUtilities;
-
+//A görbék adatait szerkesztő felület
 public class JCurvesPanel extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -169,6 +169,7 @@ public class JCurvesPanel extends JDialog {
 		});
 	}
 
+	//Megnézi, hogy melyik háromszögek között húzható görbe
 	public void init() {
 		int min;
 
@@ -216,7 +217,7 @@ public class JCurvesPanel extends JDialog {
 		}
 	}
 	
-	//Kontrol pontok szerkesztese
+	//Kontrollpontok szerkesztése
 	public Point2D.Float[] addControlPoint(String s,Point2D.Float[] points,Point2D.Float begin,Point2D.Float end) {
 		int length;
 		String[] koord;		

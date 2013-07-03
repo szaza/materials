@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+//A fraktál generálásához szükséges beállításokat tartalmazó panel
 public class JSettingsPanel extends JDialog {
 
 	private static final long serialVersionUID = 1L;

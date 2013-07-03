@@ -3,6 +3,7 @@ package collect;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
+//A fraktálokat alkotó háromszög objektumok
 public class Triangle implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -12,7 +12,7 @@ import javax.swing.JSlider;
 import collect.Curves;
 import collect.FractalComponent;
 import collect.Triangle;
-
+//A véletlenszerű görbéket létrehozó felület
 public class JRandomCurvesPanel extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -89,7 +89,7 @@ public class JRandomCurvesPanel extends JDialog {
 				
 				Curves curves = null;
 				
-				//Kiszamolom, hogy hany darab gorbet kell generaljon
+				//Kiszámolom, hogy hány darab görbét kell generáljon
 				min = (fList.size() < gList.size()) ? gList.size() : gList.size();
 				
 				for (int i = 0; i < min; i++) {

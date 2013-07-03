@@ -26,6 +26,7 @@ import collect.FractalComponent;
 import collect.Transform;
 import collect.Triangle;
 
+//A fraktálokhoz tartozó háromszögek adatait kezelő felület
 public class FractalPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -108,7 +109,7 @@ public class FractalPanel extends JPanel {
 					
 					@Override
 					public void windowClosed(WindowEvent e){
-						//Beteszi a lennyilo menube az uj elem sorszamat
+						//Beteszi a lennyilló menübe az új elem sorszámát
 						fList = addFrame.getList();
 						
 						if (selectTriangle.getItemCount() < fList.size()) {
@@ -150,10 +151,10 @@ public class FractalPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int index = selectTriangle.getSelectedIndex();
-				fList.remove(index);											//Torlom a listabol a megfelelo elemet
-				selectTriangle.removeItemAt(selectTriangle.getItemCount() - 1);	//Torlom a lenyillo menubol az elem sorszamat
-				setRemoveTriangButtonState();									//Beallitom a torles gomb erteket
-				refresh();														//Frissitem az ablakokat
+				fList.remove(index);											//Törlöm a listából a megfelelő elemet
+				selectTriangle.removeItemAt(selectTriangle.getItemCount() - 1);	//Törlöm a lenyillo menüből az elem sorszámát
+				setRemoveTriangButtonState();									//Beállítom a törlés gomb értékét
+				refresh();														//Frissítem az ablakokat
 			}
 		});
 		
@@ -186,7 +187,7 @@ public class FractalPanel extends JPanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				//Boxdimenzio kiiratasa
+				//Box-dimenzió kiíratása
 				boxDim.setText("Box dimenzió: " + String.format("%.6f",rCanvas.getBoxDimension()));				
 			}
 			
@@ -201,18 +202,18 @@ public class FractalPanel extends JPanel {
 		
 		fList.add(new FractalComponent(triangle,transform,colorChooser.getColor()));		
 		
-		selectTriangle.addItem("1");	//A lista elemszamat novelem 1-el
+		selectTriangle.addItem("1");	//A lista elemszámát növelem 1-el
 		
-		triangPanel.addFocusListener(new triangListener());			//A haromszoget beallito mezokre figyelot teszek
-		transformPanel.addFocusListener(new transformListener());	//A transzformaciokat beallito mezokre figyelot teszek
+		triangPanel.addFocusListener(new triangListener());			//A háromszöget beállító mezőkre figyelőt teszek
+		transformPanel.addFocusListener(new transformListener());	//A transzformációkat beállító mezőkre figyelőt teszek
 		
 		rCanvas.setItNumber(itNumber);
 		
-		setRemoveTriangButtonState();		//A torles gomb allapotat frissitem
-		refreshPanels();					//Frissitem a paneleket
+		setRemoveTriangButtonState();		//A törlés gomb állapotát frissítem
+		refreshPanels();					//Frissítem a paneleket
 	}	
 	
-	//Beallitom a torles gomb allapotat
+	//Beállítom a törlés gomb állapotát
 	public void setRemoveTriangButtonState() {
 		if (selectTriangle.getItemCount() > 1)
 			removeTriang.setEnabled(true);
@@ -220,20 +221,20 @@ public class FractalPanel extends JPanel {
 			removeTriang.setEnabled(false);
 	}
 
-	//Frissitem a transzformacio adatait tarolo panelt
+	//Frissítem a transzformáció adatait tároló panelt
 	public void refreshPanels() {
 		int index = selectTriangle.getSelectedIndex();
 		
 		FractalComponent component;
 		component = fList.get(index);
 		
-		//Frissiti a haromszog panelek adatait 
+		//Frissíti a háromszög panelek adatait 
 		triangPanel.setFields(component.triang.A, component.triang.B, component.triang.C);
 		transformPanel.setFields(component.transform.getValue(0,2),component.transform.getValue(1,2),
 								component.transform.getValue(0,1),component.transform.getValue(1,1),
 								component.transform.getValue(0,0),component.transform.getValue(1,0));
 		
-		//Szin valaszto beallitasa
+		//Szin választó beállítása
 		colorChooser.setColor(component.getColor());
 	}
 	
@@ -249,13 +250,13 @@ public class FractalPanel extends JPanel {
 		FractalComponent component;
 		int index = selectTriangle.getSelectedIndex();
 		
-		triang = triangPanel.getTriangSettings();	//Frissitem a kijelolt haromszog erteket
-		transform = triang.toTransform();			//Ujraszamolom a transformaciot
+		triang = triangPanel.getTriangSettings();	//Frissítem a kijelölt háromszög értéket
+		transform = triang.toTransform();			//Újraszámolom a transformációt
 		
 		component = new FractalComponent(triang,transform,colorChooser.getColor());
 		fList.set(index, component);
 		
-		refresh();	//Frissitem a paneleket		
+		refresh();	//Frissítem a paneleket		
 	}
 
 	class triangListener implements FocusListener {
@@ -265,7 +266,7 @@ public class FractalPanel extends JPanel {
 
 		}
 
-		//Amikor egy mezo elveszti a fokuszt, akkor frissul a lista
+		//Amikor egy mező elveszti a fókuszt, akkor frissül a lista
 		@Override
 		public void focusLost(FocusEvent e) {
 			setComponents();
@@ -280,7 +281,7 @@ public class FractalPanel extends JPanel {
 
 		}
 
-		//Amikor egy transform mezo elveszti a fokuszt, akkor frissul a lista
+		//Amikor egy transformációs mező elveszti a fókuszt, akkor frissül a lista
 		@Override
 		public void focusLost(FocusEvent e) {
 			Triangle triang;
@@ -311,12 +312,12 @@ public class FractalPanel extends JPanel {
 	public void setFractalComponentList(LinkedList<FractalComponent> fList) {
 		this.fList = fList;
 		
-		//Ha a lista kissebb mint az elozo, akkor ki kell toroljek elemeket a listabol
+		//Ha a lista kissebb mint az előző, akkor ki kell töröljek elemeket a listából
 		while (selectTriangle.getItemCount() > fList.size()) {
 			selectTriangle.removeItemAt(selectTriangle.getItemCount()-1);
 		}
 		
-		//Ha uj fraktal komponensek toltottek be akkor novelem a select lista meretet
+		//Ha új fraktál komponensek töltődtek be akkor növelem a select lista méretét
 		for (int i=selectTriangle.getItemCount(); i<fList.size(); i++) {
 			selectTriangle.addItem(Integer.toString(i+1));
 		}

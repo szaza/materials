@@ -16,6 +16,7 @@ import collect.FractalComponent;
 import collect.Transform;
 import collect.Triangle;
 
+//Az új háromszögek adatait rögzítő felület
 public class JAddTriangFrame extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -96,6 +97,13 @@ public class JAddTriangFrame extends JDialog {
 		});
 	}
 	
+	public void saveSettings() {
+		Triangle triang = triangSettings.getTriangSettings();
+		Transform transform = triang.toTransform();
+		FractalComponent component = new FractalComponent(triang,transform,colorChooser.getColor());	
+		componentList.add(component);
+	}	
+	
 	public int getWidth() {
 		return width;
 	}
@@ -138,12 +146,5 @@ public class JAddTriangFrame extends JDialog {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public void saveSettings() {
-		Triangle triang = triangSettings.getTriangSettings();
-		Transform transform = triang.toTransform();
-		FractalComponent component = new FractalComponent(triang,transform,colorChooser.getColor());	
-		componentList.add(component);
 	}
 }

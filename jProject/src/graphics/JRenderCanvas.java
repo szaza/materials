@@ -22,6 +22,7 @@ import javax.swing.event.ChangeListener;
 import collect.FractalComponent;
 import collect.Triangle;
 
+//A fraktálok képét kirajzoló és megjelenítő felület
 public class JRenderCanvas extends JPanel implements ChangeListener {
 
 	private static final long serialVersionUID = 1L;
@@ -54,14 +55,15 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 		this.setPreferredSize(new Dimension(width,height));
 	}
 	
+	//Kirajzolja a pixeleket
 	public void drawEllipse(Point2D.Double pont,Graphics2D gr2D){
 		Shape shape;		
 		shape = new Ellipse2D.Float((float)(pont.x * scale),(float)(pont.y*scale), 0.1f, 0.0f);
 		gr2D.draw(shape);
 	}
 	
+	//A box-dimenziót kiszámoló függvény
 	public void calculateBoxDimension(int mapSize,int[][] boxMargin) {
-		//Box-dimenzio szamolasa
 		int shapeWidth = Math.abs(boxMargin[0][1] - boxMargin[0][0]) + 1;
 		int shapeHeight = Math.abs(boxMargin[1][1] - boxMargin[1][0]) + 1;
 		double r = Math.max(shapeWidth,shapeHeight);
@@ -89,7 +91,7 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 		Random rnd = new Random();
 		FractalComponent component;
 		AffineTransform transform;
-		Map<Object,Integer> map = new HashMap<Object,Integer>();	//Rogzitem a kirajzolt pontokat a koordinatajuk szerint. (A boxdimenzio szamolasahoz kell)
+		Map<Object,Integer> map = new HashMap<Object,Integer>();	//Rögzítem a kirajzolt pontokat a koordinatajuk szerint. (A box-dimenzió számolásához kell)
 		
 		img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);	
 		
@@ -98,6 +100,7 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 		g.setColor(bgColor);
 		g.fillRect(0, 0, width, height);
 		
+		//Megfordítom a canvast, hogy ne fejjel lefele jelenjenek meg az ábrák
 		transform = gr2D.getTransform();
 		transform.scale(1,-1);
 		transform.translate(0,-height);
@@ -132,9 +135,9 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 						mapKey = width * xKoord + yKoord;
 						if (!map.containsKey(mapKey)) map.put(mapKey, 1);
 						
-						//Bekeretezi az abrat
-						if ((boxMargin[0][0] > xKoord) && (xKoord > 0)) boxMargin[0][0] = xKoord; //Bal szele
-						if (boxMargin[0][1] < xKoord) boxMargin[0][1] = xKoord; //Jobb szele
+						//Megkeresi a kirajzolt ábrát
+						if ((boxMargin[0][0] > xKoord) && (xKoord > 0)) boxMargin[0][0] = xKoord; //Bal széle
+						if (boxMargin[0][1] < xKoord) boxMargin[0][1] = xKoord; //Jobb széle
 						
 						if ((boxMargin[1][0] > yKoord) && (yKoord > 0)) boxMargin[1][0] = yKoord; //Teteje
 						if (boxMargin[1][1] < yKoord) boxMargin[1][1] = yKoord; //Alja

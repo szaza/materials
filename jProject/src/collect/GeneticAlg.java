@@ -12,6 +12,8 @@ import javax.swing.JProgressBar;
 import ui.JGeneticPanel;
 import ui.UIFrame;
 
+//Genetikus algoritmus amely úgy próbálja módosítani a görbéket, hogy a köztes fraktálok box-dimenziója
+//valamilyen alsó és felső határ közzé essen
 public class GeneticAlg extends HFractal {
 
 	private static final long serialVersionUID = 1L;
@@ -38,7 +40,7 @@ public class GeneticAlg extends HFractal {
 		generator = new Random();
 	}
 	
-	//Box dimenziot szamol
+	//Box dimenziót számol
 	public double calculateBoxDimension(LinkedList <FractalComponent> hList) {
 		int index;
 		int xKoord;
@@ -70,26 +72,26 @@ public class GeneticAlg extends HFractal {
 			mapKey = width * xKoord + yKoord;
 			if (!map.containsKey(mapKey)) map.put(mapKey, 1);
 			
-			//Bekeretezi az abrat
-			if ((boxMargin[0][0] > xKoord) && (xKoord > 0)) boxMargin[0][0] = xKoord; //Bal szele
-			if (boxMargin[0][1] < xKoord) boxMargin[0][1] = xKoord; //Jobb szele
+			//Megkeresi a fraktál képét
+			if ((boxMargin[0][0] > xKoord) && (xKoord > 0)) boxMargin[0][0] = xKoord; //Bal széle
+			if (boxMargin[0][1] < xKoord) boxMargin[0][1] = xKoord; //Jobb széle
 			
 			if ((boxMargin[1][0] > yKoord) && (yKoord > 0)) boxMargin[1][0] = yKoord; //Teteje
 			if (boxMargin[1][1] < yKoord) boxMargin[1][1] = yKoord; //Alja		
 		}
 		
-		
+		//Kiszámítja a létrejött fraktál szélességét és magasságát
 		int shapeWidth = Math.abs(boxMargin[0][1] - boxMargin[0][0]) + 1;
 		int shapeHeight = Math.abs(boxMargin[1][1] - boxMargin[1][0]) + 1;
 		double r = Math.max(shapeWidth,shapeHeight);
 		
 		if (r == 1) return 0;
 		else {
-			return Math.log10(map.size()) / Math.log10(r);
+			return Math.log10(map.size()) / Math.log10(r);	//Kiszámítja a box-dimenziót
 		}		
 	}
 	
-	//Modositja egy gorbe veletlenszeruen kivalasztott kontrolpontjat
+	//Módosítja egy görbe véletlenszerűen kiválasztott kontrollpontját
 	public Point2D.Float[] modifyCurves(Point2D.Float[] tmpCurve) {
 		float [] directions = {-0.5f,0,0.5f};
 		int index1,index2;
@@ -100,7 +102,7 @@ public class GeneticAlg extends HFractal {
 		index1 = generator.nextInt(3);
 		index2 = generator.nextInt(3);
 		
-		//Ha jo iranyba valtozik a boxdimenzio, akkor tobbszor is lefut az algoritmus
+		//Ha jó irányba változik a box-dimenzió, akkor többször is lefut az algoritmus
 		do {
 			tmpBoxDim = mediaBoxDim;
 			tmpCurve[curveIndex].x += directions[index1];
@@ -114,7 +116,7 @@ public class GeneticAlg extends HFractal {
 		return tmpCurve;
 	}
 	
-	//MUTACIO: Veletlenszeruen kivalaszt egy gorbet, majd modositja
+	//MUTÁCIÓ: Véletlenszerűen kiválaszt egy görbét, majd módosítja valamelyik kontrollpontját
 	public void mutation() {
 		Curves curves;
 		int i,index,rnd,maxIterationNumber;
@@ -127,14 +129,14 @@ public class GeneticAlg extends HFractal {
 		tmpBoxDim = mediaBoxDim;
 		
 		while ((!interrupted) && (i<maxIterationNumber)) {
-			//Masolatot keszit a gorbe keszletrol
+			//DEEP COPY: Másolatot készít a görbe készletről
 			LinkedList <Curves> tmpCList = new LinkedList <Curves> ();
 
 			for (int j=0; j<cList.size(); j++) {
 				tmpCList.add(new Curves(cList.get(j)));
 			}
 			
-			//Veletlenszeruen kivalaszt egy gorbe-csaladot
+			//Véletlenszerűen kiválaszt egy görbe-családot
 			index = generator.nextInt(cList.size());
 			curves = cList.get(index);
 			
@@ -164,7 +166,7 @@ public class GeneticAlg extends HFractal {
 			
 			limit = (topLimit + bottomLimit) / 2;
 			
-			//Ha a box-dimenzio nem megfelelo iranyba valtozott, akkor visszaallitja a regi gorbe-csaladot
+			//Ha a box-dimenzió nem megfelelő irányba változott, akkor visszaállitja a régi görbe-csáladot
 			if ((Math.abs(mediaBoxDim - limit) < Math.abs(tmpBoxDim - limit))) {
 				tmpBoxDim = mediaBoxDim;
 				uiFrame.setcList(cList);
@@ -187,7 +189,7 @@ public class GeneticAlg extends HFractal {
 		gPanel.dispose();
 	}
 
-	//Kiszamolja a koztes fraktalok box-dimenziojanak az atlagat
+	//Kiszámolja a köztes fraktálok box-dimenziójának az átlagát
 	public boolean mediaBoxDimension() {
 		boolean badControl;
 		int subdivision;
@@ -197,14 +199,14 @@ public class GeneticAlg extends HFractal {
 		mediaBoxDim = 0;
 		subdivision = 100;
 		
-		//A kontrolpontok szama szerint felosztja a gorbeket, es minden lepesben figyeli a box-dimenziot
+		//A kontrollpontok száma szerint felosztja a görbéket, és minden lépésben figyeli a box-dimenziót
 		for (int j=0; j<subdivision; j++) {
 			hList = updateHList(j);
 			boxDimension = calculateBoxDimension(hList);
 			
 			mediaBoxDim += boxDimension;
 			
-			//Ha a box-dimenzio nem esik a ket hatar kozze
+			//Ha a box-dimenzió nem esik a két határ közzé
 			if (boxDimension > topLimit || boxDimension < bottomLimit) {
 				badControl = true;
 			}
@@ -222,7 +224,7 @@ public class GeneticAlg extends HFractal {
 
 	@Override
 	public void run() {		
-		//Ha a gorbeket tartalmazo lista nem ures
+		//Ha a gorbeket tartalmazó lista nem üres
 		if (!cList.isEmpty()) {		
 			geneticAlg();
 		}

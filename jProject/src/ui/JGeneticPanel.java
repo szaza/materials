@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 import collect.Curves;
 import collect.GeneticAlg;
-
+//A genetikus algoritmuson végezhető beállítások megjelenítése
 public class JGeneticPanel extends JDialog {
 
 	private static final long serialVersionUID = 1L;
