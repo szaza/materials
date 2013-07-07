@@ -200,4 +200,13 @@ public class Curves implements Serializable {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+	
+	public Point2D.Float[] getCurve(int n) {
+		switch (n) {
+			case 0: return aCurve;
+			case 1: return bCurve;
+			case 2: return cCurve;
+			default: return aCurve;
+		}
+	}
 }

@@ -18,13 +18,14 @@ public class GeneticAlg extends HFractal {
 
 	private static final long serialVersionUID = 1L;
 	private boolean interrupted;
-	private boolean found;	
 	private UIFrame uiFrame;
 	private JProgressBar progressBar;
 	private JGeneticPanel gPanel;	
-	private double topLimit;
 	private double bottomLimit;
 	private double mediaBoxDim;
+	private double prevBoxDim;
+	private int badControls;
+	private int prevBadControls;
 	private Random generator;
 	
 	public GeneticAlg(UIFrame ui, JGeneticPanel genetic) {
@@ -32,12 +33,6 @@ public class GeneticAlg extends HFractal {
 		this.uiFrame = ui;
 		this.gPanel = genetic;
 		this.progressBar = gPanel.getProgress();
-		
-		mediaBoxDim = 0;
-		found = false;
-		interrupted = false;
-		
-		generator = new Random();
 	}
 	
 	//Box dimenziót számol
@@ -90,6 +85,40 @@ public class GeneticAlg extends HFractal {
 			return Math.log10(map.size()) / Math.log10(r);	//Kiszámítja a box-dimenziót
 		}		
 	}
+
+	//Kiszámolja a köztes fraktálok box-dimenziójának az átlagát
+	public int mediaBoxDimension() {
+		int badControl;
+		int subdivision;
+		double boxDimension;
+		
+		badControl = 0;
+		mediaBoxDim = 0;
+		subdivision = 100;
+		
+		//A kontrollpontok száma szerint felosztja a görbéket, és minden lépésben figyeli a box-dimenziót
+		for (int j=0; j<subdivision; j++) {
+			hList = updateHList(j);
+			boxDimension = calculateBoxDimension(hList);
+			
+			mediaBoxDim += boxDimension;
+			
+			//Ha a box-dimenzió nem esik a két határ közzé
+			if (boxDimension < bottomLimit) {
+				badControl++;
+			}
+		}
+		
+		mediaBoxDim = mediaBoxDim / subdivision;
+		return badControl;
+	}	
+	
+	public void initGeneticAlg() {
+		mediaBoxDim = 0;
+		interrupted = false;
+		
+		generator = new Random();		
+	}
 	
 	//Módosítja egy görbe véletlenszerűen kiválasztott kontrollpontját
 	public Point2D.Float[] modifyCurves(Point2D.Float[] tmpCurve) {
@@ -106,8 +135,10 @@ public class GeneticAlg extends HFractal {
 		do {
 			tmpBoxDim = mediaBoxDim;
 			tmpCurve[curveIndex].x += directions[index1];
-			tmpCurve[curveIndex].y += directions[index2];					
-			if (!mediaBoxDimension()) interrupted = true;
+			tmpCurve[curveIndex].y += directions[index2];
+			badControls = mediaBoxDimension();
+			if (badControls == 0) interrupted = true;
+				  
 		} while ((mediaBoxDim > tmpBoxDim) && (!interrupted));
 		
 		tmpCurve[curveIndex].x -= directions[index1];
@@ -119,107 +150,139 @@ public class GeneticAlg extends HFractal {
 	//MUTÁCIÓ: Véletlenszerűen kiválaszt egy görbét, majd módosítja valamelyik kontrollpontját
 	public void mutation() {
 		Curves curves;
-		int i,index,rnd,maxIterationNumber;
-		double tmpBoxDim;
-		double limit;
+		int index,rnd;
 		
-		i=0;
-		maxIterationNumber = 300;
+		//Véletlenszerűen kiválaszt egy görbe-családot
+		index = generator.nextInt(cList.size());
+		curves = cList.get(index);
 		
-		tmpBoxDim = mediaBoxDim;
+		rnd = generator.nextInt(3);
 		
-		while ((!interrupted) && (i<maxIterationNumber)) {
-			//DEEP COPY: Másolatot készít a görbe készletről
-			LinkedList <Curves> tmpCList = new LinkedList <Curves> ();
-
-			for (int j=0; j<cList.size(); j++) {
-				tmpCList.add(new Curves(cList.get(j)));
-			}
+		switch (rnd) {
+			case 0:
+				aCurve = curves.getaCurve();
+				aCurve = modifyCurves(aCurve);
+				curves.setaCurve(aCurve);
+			break;
 			
-			//Véletlenszerűen kiválaszt egy görbe-családot
-			index = generator.nextInt(cList.size());
-			curves = cList.get(index);
+			case 1:
+				bCurve = curves.getbCurve();
+				bCurve = modifyCurves(bCurve);
+				curves.setbCurve(bCurve);
+			break;
 			
-			rnd = generator.nextInt(3);
-			
-			switch (rnd) {
-				case 0:
-					aCurve = curves.getaCurve();
-					aCurve = modifyCurves(aCurve);
-					curves.setaCurve(aCurve);
-				break;
-				
-				case 1:
-					bCurve = curves.getbCurve();
-					bCurve = modifyCurves(bCurve);
-					curves.setbCurve(bCurve);
-				break;
-				
-				case 2:
-					cCurve = curves.getcCurve();
-					cCurve = modifyCurves(cCurve);
-					curves.setcCurve(cCurve);
-				break;
-			}
-			
-			cList.set(index,curves);
-			
-			limit = (topLimit + bottomLimit) / 2;
-			
-			//Ha a box-dimenzió nem megfelelő irányba változott, akkor visszaállitja a régi görbe-csáladot
-			if ((Math.abs(mediaBoxDim - limit) < Math.abs(tmpBoxDim - limit))) {
-				tmpBoxDim = mediaBoxDim;
-				uiFrame.setcList(cList);
-				System.out.println("Box Dim: " + mediaBoxDim);
-			} else {
-				cList = tmpCList;
-			}	
-
-			i++;
-			
-			if (i % 3 == 0) progressBar.setValue(i/3);
+			case 2:
+				cCurve = curves.getcCurve();
+				cCurve = modifyCurves(cCurve);
+				curves.setcCurve(cCurve);
+			break;
 		}
 		
-		if (!found) 
-			JOptionPane.showMessageDialog(null,"<html>A genetikus algoritmus lefutott! <br/> Sajnos nem találta meg az optimumot! <br/> Próbálja meg még egyszer! </html>","Vége",JOptionPane.ERROR_MESSAGE);
-		else
-			JOptionPane.showMessageDialog(null,"A genetikus algoritmus sikeresen lefutott!","Vége",JOptionPane.INFORMATION_MESSAGE);
+		cList.set(index,curves);
+	}
+	
+	public void crossing(Curves curves1,Curves curves2) {
+		int cIndex1,cIndex2,rnd;
+		Point2D.Float p;
 		
-		System.out.println("Vege");		
-		gPanel.dispose();
+		//Kivalasztok egy-egy gorbet a ket csaladbol
+		rnd = generator.nextInt(3);
+		Point2D.Float[] tmpCurve1 = curves1.getCurve(rnd);
+		
+		rnd = generator.nextInt(3);
+		Point2D.Float[] tmpCurve2 = curves2.getCurve(rnd);
+		
+		//Kivalasztok egy-egy kontrollpontot
+		cIndex1 = generator.nextInt(tmpCurve1.length - 2) + 1;
+		cIndex2 = generator.nextInt(tmpCurve2.length - 2) + 1;
+		
+		p = tmpCurve1[cIndex1];
+		tmpCurve1[cIndex1] = tmpCurve2[cIndex2];
+		tmpCurve2[cIndex2] = p;
+		
+		badControls = mediaBoxDimension();
+		if (badControls == 0) interrupted = true;
+	}
+	
+	public void crossOver() {
+		Curves curves1,curves2;
+		int index1,index2;
+		
+		if (!interrupted) {
+			//Véletlenszerűen kiválaszt ket görbe-családot
+			index1 = generator.nextInt(cList.size());
+			curves1 = cList.get(index1);
+			
+			index2 = generator.nextInt(cList.size());
+			curves2 = cList.get(index2);
+			
+			crossing(curves1,curves2);
+		}
+	}
+	
+	//Szelekció
+	public void selection(LinkedList <Curves> tmpCList) {
+		if ((mediaBoxDim > prevBoxDim) && (badControls <= prevBadControls)) {
+			System.out.println("Box Dim: " + mediaBoxDim + " BadControls: " + badControls);			
+			prevBoxDim = mediaBoxDim;
+			prevBadControls = badControls;
+			uiFrame.setcList(cList);
+		} else {
+			cList = tmpCList;
+		}
 	}
 
-	//Kiszámolja a köztes fraktálok box-dimenziójának az átlagát
-	public boolean mediaBoxDimension() {
-		boolean badControl;
-		int subdivision;
-		double boxDimension;
+	//DEEP COPY: Másolatot készít a görbe készletről
+	public LinkedList <Curves> deepCopy() {
 		
-		badControl = false;
-		mediaBoxDim = 0;
-		subdivision = 100;
-		
-		//A kontrollpontok száma szerint felosztja a görbéket, és minden lépésben figyeli a box-dimenziót
-		for (int j=0; j<subdivision; j++) {
-			hList = updateHList(j);
-			boxDimension = calculateBoxDimension(hList);
-			
-			mediaBoxDim += boxDimension;
-			
-			//Ha a box-dimenzió nem esik a két határ közzé
-			if (boxDimension > topLimit || boxDimension < bottomLimit) {
-				badControl = true;
-			}
+		LinkedList <Curves> tmpCList = new LinkedList <Curves> ();
+
+		for (int j=0; j<cList.size(); j++) {
+			tmpCList.add(new Curves(cList.get(j)));
 		}
 		
-		mediaBoxDim = mediaBoxDim / subdivision;
-		found = !badControl;
-		return badControl;
+		return tmpCList;
 	}
 	
 	//Genetikus algoritmus
-	public void geneticAlg() {			
-		if (mediaBoxDimension()) mutation();
+	public void geneticAlg() {
+		int counter,maxIterationNumber;
+		
+		initGeneticAlg();
+		
+		counter=0;
+		maxIterationNumber = 300;
+		prevBadControls = mediaBoxDimension(); 
+		
+		if (prevBadControls > 0) {
+			
+			//Az elozo box-dimenzio
+			prevBoxDim = mediaBoxDim;			
+			
+			while ((!interrupted) && (counter<maxIterationNumber)) {
+				//Mutáció
+				LinkedList <Curves> tmpCList = deepCopy();
+				mutation();
+				selection(tmpCList);
+				
+				//Keresztezés
+				LinkedList <Curves> tmpCList2 = deepCopy();
+				crossOver();
+				selection(tmpCList2);				
+				
+				counter++;
+				
+				if (counter % 3 == 0) progressBar.setValue(counter/3);				
+			}
+			
+			if (badControls > 0) 
+				JOptionPane.showMessageDialog(null,"<html>A genetikus algoritmus lefutott! <br/> Sajnos nem találta meg az optimumot! <br/> Próbálja meg még egyszer! </html>","Vége",JOptionPane.ERROR_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(null,"A genetikus algoritmus sikeresen lefutott!","Vége",JOptionPane.INFORMATION_MESSAGE);			
+			
+			System.out.println("Vege");		
+			gPanel.dispose();			
+		}
 	}
 
 	@Override
@@ -232,14 +295,6 @@ public class GeneticAlg extends HFractal {
 
 	public void stop() {
 		interrupted = true;
-	}
-	
-	public double getTopLimit() {
-		return topLimit;
-	}
-
-	public void setTopLimit(double topLimit) {
-		this.topLimit = topLimit;
 	}
 
 	public double getBottomLimit() {

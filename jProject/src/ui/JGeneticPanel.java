@@ -23,9 +23,7 @@ public class JGeneticPanel extends JDialog {
 	private JPanel contentPanel;
 	private JPanel buttonPanel;
 	private JLabel bottomLimitLabel;
-	private JLabel topLimitLabel;
 	private JTextField bottomLimitEdit;
-	private JTextField topLimitEdit;
 	private LinkedList<Curves> cList;
 	private JProgressBar progress;
 	private UIFrame uiFrame;
@@ -40,22 +38,19 @@ public class JGeneticPanel extends JDialog {
 		this.uiFrame = ui;
 		this.cList = new LinkedList <Curves> (); 
 				this.cList.addAll(cL);		
-		this.setBounds(200,200,300,170);			
+		this.setBounds(200,200,300,135);			
 		
 		ok = new JButton("Ok");
 		cancel = new JButton("Mégse");
 		contentPanel = new JPanel();
 		buttonPanel = new JPanel();
 		bottomLimitLabel = new JLabel("Alsó határ:");
-		topLimitLabel = new JLabel("Alsó határ:");
 		bottomLimitEdit = new JTextField("1.3");
-		topLimitEdit = new JTextField("1.5");
 		progress = new JProgressBar(0,100);		
 		
 		Dimension d = new Dimension(150,26);
 		
 		bottomLimitEdit.setPreferredSize(d);
-		topLimitEdit.setPreferredSize(d);
 		
 		progress.setPreferredSize(new Dimension(240,26));
 		progress.setStringPainted(true);
@@ -65,8 +60,6 @@ public class JGeneticPanel extends JDialog {
 		
 		contentPanel.add(bottomLimitLabel);
 		contentPanel.add(bottomLimitEdit);
-		contentPanel.add(topLimitLabel);
-		contentPanel.add(topLimitEdit);
 		contentPanel.add(progress);
 		contentPanel.add(buttonPanel);
 		
@@ -79,11 +72,9 @@ public class JGeneticPanel extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				topLimitEdit.setEditable(false);
 				bottomLimitEdit.setEditable(false);
 				ok.setEnabled(false);
 				
-				genetic.setTopLimit(Double.parseDouble(topLimitEdit.getText()));
 				genetic.setBottomLimit(Double.parseDouble(bottomLimitEdit.getText()));
 				thread = new Thread(genetic);
 				thread.start();
@@ -95,11 +86,11 @@ public class JGeneticPanel extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (genetic  != null) {
+				if (thread  != null) {
 					genetic.stop();
 					Thread tmp = thread;
-					tmp.interrupt();
 					thread = null;
+					tmp.interrupt();
 				}
 				dispose();				
 			}
