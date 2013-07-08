@@ -5,6 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -31,6 +36,12 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 	private int height;
 	private int scale;
 	private int itNumber;
+	private int mouseX;
+	private int mouseY;
+	private double tmpOffsetX;
+	private double tmpOffsetY;	
+	private double offsetX;
+	private double offsetY;	
 	private double boxDimension;
 	private Color bgColor;
 	private Triangle defTriang;
@@ -45,14 +56,62 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 	public JRenderCanvas(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.boxDimension = 0;
-		this.bgColor = Color.black;
-		this.scale = width/6;
-		this.itNumber = 30000;
+		
+		boxDimension = 0;
+		bgColor = Color.black;
+		scale = width/6;
+		itNumber = 30000;
+		offsetX = 0;
+		offsetY = 0;
+		tmpOffsetX = 0;
+		tmpOffsetY = 0;
+		mouseX = 0;
+		mouseY = 0;
 		
 		listenerList = new ArrayList<ChangeListener>();
 		this.setBackground(bgColor);
 		this.setPreferredSize(new Dimension(width,height));
+		
+		this.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mousePressed(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
+				tmpOffsetX = offsetX;
+				tmpOffsetY = offsetY;
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				offsetX = tmpOffsetX + e.getX() - mouseX;
+				offsetY = tmpOffsetY + mouseY - e.getY();
+				repaint();
+			}			
+		});
+		
+		this.addMouseMotionListener(new MouseMotionAdapter(){
+			public void mouseDragged(MouseEvent e) {
+				offsetX = tmpOffsetX + e.getX() - mouseX;
+				offsetY = tmpOffsetY + mouseY - e.getY();	
+				repaint();
+			}
+		});
+		
+		this.addMouseWheelListener(new MouseWheelListener() {
+			// Scroll esetén skálázást végez el			
+			
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				float mod = e.getUnitsToScroll();
+				
+				if (((scale + mod) <= 1200.0f) && ((scale + mod) >= 60.0f)) {
+					scale += mod;
+					offsetX -= (e.getX() - JRenderCanvas.this.width / 2) * 30 / scale;
+					offsetY += (e.getY() - JRenderCanvas.this.height / 2) * 30 / scale;
+					repaint();
+				}
+			}
+		});		
 	}
 	
 	//Kirajzolja a pixeleket
@@ -108,7 +167,7 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 		
 		if ((componentList != null) && (!componentList.isEmpty())) {	
 			
-			gr2D.translate(width/2,height/2);		
+			gr2D.translate(width/2+offsetX,height/2+offsetY);		
 			
 			component = componentList.get(0);
 			
