@@ -108,8 +108,11 @@ public class JCanvas extends JPanel {
 		this.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mousePressed(MouseEvent e) {
-				mouseX = e.getX();
-				mouseY = e.getY();
+				mouseX = (int) (e.getX() / scale - offsetX);
+				mouseY = (int) (e.getY() / scale - offsetY);
+				
+				System.out.println(e.getX() + " " + offsetX + " " + " " + scale + " " + mouseX);
+				System.out.println(e.getY() + " " + offsetY + " " + " " + scale + " " + mouseY);
 				
 				if (isInsideTriang(mouseX,mouseY)) {
 					draggable = true;
@@ -133,8 +136,8 @@ public class JCanvas extends JPanel {
 				
 				//Ha valamelyik háromszög csúcspontját mozgatjuk
 				if (resizable) {
-					resizePoint.x = (e.getX() - width / 2) / scalex;
-					resizePoint.y = (e.getY() - height / 2) / scaley;
+					resizePoint.x = (float)((e.getX() / scale - offsetX - width / 2) / scalex);
+					resizePoint.y = (float)((e.getY() /scale - offsetY - height / 2) / scaley);
 					
 					changeComponent.transform = changeComponent.triang.toTransform();
 					
@@ -146,8 +149,8 @@ public class JCanvas extends JPanel {
 				else {
 					//Ha az egész háromszöget mozgatjuk
 					if (draggable) {
-						changeComponent.triang.A.x = (e.getX() - width / 2 - draggableX) / scalex;
-						changeComponent.triang.A.y = (e.getY() - height / 2 - draggableY) / scaley;
+						changeComponent.triang.A.x = (float)((e.getX() / scale - offsetX - width / 2 - draggableX) / scalex);
+						changeComponent.triang.A.y = (float)((e.getY() / scale - offsetY - height / 2 - draggableY) / scaley);
 						
 						changeComponent.triang.B.x = changeComponent.triang.A.x + changeComponent.transform.getValue(0,1);
 						changeComponent.triang.B.y = changeComponent.triang.A.y + changeComponent.transform.getValue(1,1);
