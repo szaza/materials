@@ -111,9 +111,6 @@ public class JCanvas extends JPanel {
 				mouseX = (int) (e.getX() / scale - offsetX);
 				mouseY = (int) (e.getY() / scale - offsetY);
 				
-				System.out.println(e.getX() + " " + offsetX + " " + " " + scale + " " + mouseX);
-				System.out.println(e.getY() + " " + offsetY + " " + " " + scale + " " + mouseY);
-				
 				if (isInsideTriang(mouseX,mouseY)) {
 					draggable = true;
 				}

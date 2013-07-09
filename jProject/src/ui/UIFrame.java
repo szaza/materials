@@ -347,6 +347,9 @@ public class UIFrame extends JFrame {
 						gList.addAll(wrapObject.getgFractal());
 						cList.addAll(wrapObject.getcList());
 						
+						fFractal.reset();
+						gFractal.reset();						
+						
 						fFractal.setFractalComponentList(fList);
 						gFractal.setFractalComponentList(gList);
 						

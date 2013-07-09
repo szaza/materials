@@ -215,6 +215,15 @@ public class JRenderCanvas extends JPanel implements ChangeListener {
 		calculateBoxDimension(map.size(),boxMargin);
 	}
 	
+	public void reset() {
+		offsetX = 0;
+		offsetY = 0;
+		tmpOffsetX = 0;
+		tmpOffsetY = 0;
+		mouseX = 0;
+		mouseY = 0;		
+	}
+	
 	public synchronized void addChangeListener(ChangeListener listener){
 		listenerList.add(listener);
 	}	

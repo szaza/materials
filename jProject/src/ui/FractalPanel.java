@@ -305,6 +305,10 @@ public class FractalPanel extends JPanel {
 		}
 	}
 	
+	public void reset() {
+		rCanvas.reset();
+	}
+	
 	public LinkedList <FractalComponent> getFractalComponentList() {
 		return fList;
 	}
