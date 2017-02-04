@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.2.4)  4 FEB 2017 15:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.2.4)  4 FEB 2017 16:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -592,8 +592,48 @@ options: showrefs, showcites, msgs, chckunlbld
 (/usr/share/texlive/texmf-dist/tex/latex/base/report.cls
 LaTeX Info: Redefining \cal on input line 591.
 LaTeX Info: Redefining \mit on input line 592.
+) (./Subpages/title.tex <./Images/ubb_logo_ro_100x98.png, id=1, 100.375pt x 98.
+3675pt>
+File: ./Images/ubb_logo_ro_100x98.png Graphic file (type png)
+
+<use ./Images/ubb_logo_ro_100x98.png>
+Package pdftex.def Info: ./Images/ubb_logo_ro_100x98.png used on input line 7.
+(pdftex.def)             Requested size: 62.52238pt x 61.27388pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 7--8
+[][]  
+ []
+
+LaTeX Font Info:    Try loading font information for U+msa on input line 8.
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-(./Subpages/IFS-fraktal.tex
+LaTeX Font Info:    Try loading font information for U+msb on input line 8.
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+<./Images/cs_ubb_logo.png, id=3, 100.375pt x 100.375pt>
+File: ./Images/cs_ubb_logo.png Graphic file (type png)
+
+<use ./Images/cs_ubb_logo.png>
+Package pdftex.def Info: ./Images/cs_ubb_logo.png used on input line 17.
+(pdftex.def)             Requested size: 62.52238pt x 62.52438pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 17--18
+[][]  
+ []
+
+
+Overfull \hbox (41.67946pt too wide) in paragraph at lines 5--18
+ []$[]$[]$ 
+ []
+
+[1
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./Images/ubb_logo_ro_100x9
+8.png> <./Images/cs_ubb_logo.png>]) (./Subpages/IFS-fraktal.tex
 1. fejezet.
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 7.
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
@@ -621,9 +661,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 18--19
 
 [1
 
-
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+] [2]
 2. fejezet.
 
 Underfull \hbox (badness 2027) in paragraph at lines 31--32
@@ -643,18 +681,9 @@ Underfull \hbox (badness 1789) in paragraph at lines 37--39
 ris al-geb-ra r^^Seszek^^Sent is
  []
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 43.
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 43.
+[3
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [3
-
-]
-<Images/Grafikon1.png, id=18, 957.5775pt x 588.1975pt>
+] <Images/Grafikon1.png, id=28, 957.5775pt x 588.1975pt>
 File: Images/Grafikon1.png Graphic file (type png)
 
 <use Images/Grafikon1.png>
@@ -670,14 +699,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 62--64
 
  []
 
-<Images/Grafikon2.png, id=19, 1022.82124pt x 616.3025pt>
+<Images/Grafikon2.png, id=29, 1022.82124pt x 616.3025pt>
 File: Images/Grafikon2.png Graphic file (type png)
 
 <use Images/Grafikon2.png>
 Package pdftex.def Info: Images/Grafikon2.png used on input line 69.
 (pdftex.def)             Requested size: 357.9928pt x 215.7091pt.
  [4 <./Images/Grafikon1.png (PNG copy)> <./Images/Grafikon2.png (PNG copy)>] <I
-mages/Grafikon3.png, id=23, 1055.945pt x 660.4675pt>
+mages/Grafikon3.png, id=33, 1055.945pt x 660.4675pt>
 File: Images/Grafikon3.png Graphic file (type png)
 
 <use Images/Grafikon3.png>
@@ -698,7 +727,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 93--94
 
  []
 
-<Images/Figture4.png, id=24, 1559.8275pt x 879.285pt>
+<Images/Figture4.png, id=34, 1559.8275pt x 879.285pt>
 File: Images/Figture4.png Graphic file (type png)
 
 <use Images/Figture4.png>
@@ -725,7 +754,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 111--112
 
  []
 
-<Images/Sierpinski-triangle.png, id=29, 763.85374pt x 611.28375pt>
+<Images/Sierpinski-triangle.png, id=39, 763.85374pt x 611.28375pt>
 File: Images/Sierpinski-triangle.png Graphic file (type png)
 
 <use Images/Sierpinski-triangle.png>
@@ -733,21 +762,21 @@ Package pdftex.def Info: Images/Sierpinski-triangle.png used on input line 122.
 
 (pdftex.def)             Requested size: 229.15788pt x 183.38654pt.
  [6 <./Images/Figture4.png (PNG copy)>]
-<Images/Sierpinski-szonyeg.png, id=36, 736.7525pt x 656.4525pt>
+<Images/Sierpinski-szonyeg.png, id=47, 736.7525pt x 656.4525pt>
 File: Images/Sierpinski-szonyeg.png Graphic file (type png)
 
 <use Images/Sierpinski-szonyeg.png>
 Package pdftex.def Info: Images/Sierpinski-szonyeg.png used on input line 130.
 (pdftex.def)             Requested size: 221.02745pt x 196.93727pt.
 
-<Images/Menger-sponge.png, id=37, 692.5875pt x 521.95pt>
+<Images/Menger-sponge.png, id=48, 692.5875pt x 521.95pt>
 File: Images/Menger-sponge.png Graphic file (type png)
 
 <use Images/Menger-sponge.png>
 Package pdftex.def Info: Images/Menger-sponge.png used on input line 138.
 (pdftex.def)             Requested size: 207.77785pt x 156.5862pt.
 
-<Images/Kock-hopehely.png, id=38, 709.65125pt x 690.58pt>
+<Images/Kock-hopehely.png, id=49, 709.65125pt x 690.58pt>
 File: Images/Kock-hopehely.png Graphic file (type png)
 
 <use Images/Kock-hopehely.png>
@@ -813,30 +842,32 @@ Package refcheck Warning: Unused bibitem `10' on input line 30.
 
 ] (./IFS-Fraktál.aux) ) 
 Here is how much of TeX's memory you used:
- 4472 strings out of 493029
- 66165 string characters out of 6136235
+ 4491 strings out of 493029
+ 66576 string characters out of 6136235
  148160 words of memory out of 5000000
- 7902 multiletter control sequences out of 15000+600000
- 10755 words of font info for 41 fonts, out of 8000000 for 9000
+ 7914 multiletter control sequences out of 15000+600000
+ 11672 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,6n,34p,579b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,8n,32p,579b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
-2.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/symbols/msbm10.pfb>
-Output written on IFS-Fraktál.pdf (10 pages, 1265299 bytes).
+/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/m
+sbm10.pfb>
+Output written on IFS-Fraktál.pdf (11 pages, 1312340 bytes).
 PDF statistics:
- 97 PDF objects out of 1000 (max. 8388607)
- 63 compressed objects within 1 object stream
+ 113 PDF objects out of 1000 (max. 8388607)
+ 72 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
 
