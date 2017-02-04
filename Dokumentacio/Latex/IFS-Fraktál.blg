@@ -1,0 +1,57 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: IFS-Fraktál.aux
+The style file: plain.bst
+Database file #1: Bibliography.bib
+Warning--to sort, need author or key in 1
+Warning--to sort, need author or key in 2
+Warning--to sort, need author or key in 3
+Warning--to sort, need author or key in 4
+Warning--to sort, need author or key in 5
+Warning--to sort, need author or key in 6
+Warning--to sort, need author or key in 7
+Warning--to sort, need author or key in 8
+Warning--to sort, need author or key in 9
+Warning--to sort, need author or key in 10
+You've used 10 entries,
+            2118 wiz_defined-function locations,
+            513 strings with 4639 characters,
+and the built_in function-call counts, 1512 in all, are:
+= -- 130
+> -- 10
+< -- 0
++ -- 10
+- -- 0
+* -- 52
+:= -- 151
+add.period$ -- 10
+call.type$ -- 10
+change.case$ -- 20
+chr.to.int$ -- 0
+cite$ -- 20
+duplicate$ -- 70
+empty$ -- 231
+format.name$ -- 0
+if$ -- 381
+int.to.chr$ -- 0
+int.to.str$ -- 10
+missing$ -- 0
+newline$ -- 33
+num.names$ -- 0
+pop$ -- 90
+preamble$ -- 1
+purify$ -- 20
+quote$ -- 0
+skip$ -- 89
+stack$ -- 0
+substring$ -- 50
+swap$ -- 10
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 40
+warning$ -- 10
+while$ -- 0
+width$ -- 12
+write$ -- 52
+(There were 10 warnings)

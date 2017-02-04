@@ -1,0 +1,55 @@
+\documentclass[pdftex,12pt,a4paper]{report}
+
+\usepackage[pdftex]{graphicx}
+\usepackage[utf8]{inputenc}
+
+%For romanian characters
+\usepackage[romanian,magyar]{babel}
+\usepackage{combelow}
+\usepackage{newunicodechar}
+\usepackage{amsfonts}
+
+\usepackage{float}
+
+\usepackage{refcheck}
+
+\newunicodechar{Ș}{\cb{S}}
+\newunicodechar{ș}{\cb{s}}
+\newunicodechar{Ț}{\cb{T}}
+\newunicodechar{ț}{\cb{t}}
+
+%Setting up the margins
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+%Setting up indention
+\usepackage{indentfirst}
+
+%Table of content depth
+\setcounter{tocdepth}{3}
+
+%Table of command title
+\addto\captionsromanian{
+  \renewcommand{\contentsname}%
+    {Tartalomjegyzék}%
+}
+
+%Bibiliography settings
+\setcounter{tocdepth}{3}
+\usepackage{cite}
+\usepackage{url}
+
+%Remove Chapter labels
+\usepackage{titlesec}
+
+%No wrapping and justified
+\usepackage[none]{hyphenat}
+\sloppy
+
+\begin{document}
+\input{./Subpages/IFS-fraktal.tex}
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{Bibliography}
+
+\end{document}
