@@ -5,12 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import collect.Curves;
 import collect.GeneticAlg;
@@ -27,8 +22,10 @@ public class JGeneticPanel extends JDialog {
 	private LinkedList<Curves> cList;
 	private JProgressBar progress;
 	private UIFrame uiFrame;
+	private JLabel mutationPerCrossOverLabel;
+	private JSlider mutationPerCrossOverSlider;
 	private volatile Thread thread;
-	GeneticAlg genetic;
+	private GeneticAlg genetic;
 
 	
 	public JGeneticPanel(UIFrame ui,LinkedList<Curves> cL) {
@@ -38,7 +35,7 @@ public class JGeneticPanel extends JDialog {
 		this.uiFrame = ui;
 		this.cList = new LinkedList <Curves> (); 
 				this.cList.addAll(cL);		
-		this.setBounds(200,200,300,135);			
+		this.setBounds(200,200,300,195);
 		
 		ok = new JButton("Ok");
 		cancel = new JButton("Mégse");
@@ -46,6 +43,14 @@ public class JGeneticPanel extends JDialog {
 		buttonPanel = new JPanel();
 		bottomLimitLabel = new JLabel("Alsó határ:");
 		bottomLimitEdit = new JTextField("1.3");
+
+		mutationPerCrossOverLabel = new JLabel("Mutáció/Keresztezés:");
+		mutationPerCrossOverSlider = new JSlider(JSlider.HORIZONTAL,0,15,5);
+		mutationPerCrossOverSlider.setMajorTickSpacing(5);
+		mutationPerCrossOverSlider.setMinorTickSpacing(1);
+		mutationPerCrossOverSlider.setPaintTicks(true);
+		mutationPerCrossOverSlider.setPaintLabels(true);
+
 		progress = new JProgressBar(0,100);		
 		
 		Dimension d = new Dimension(150,26);
@@ -60,6 +65,8 @@ public class JGeneticPanel extends JDialog {
 		
 		contentPanel.add(bottomLimitLabel);
 		contentPanel.add(bottomLimitEdit);
+		contentPanel.add(mutationPerCrossOverLabel);
+		contentPanel.add(mutationPerCrossOverSlider);
 		contentPanel.add(progress);
 		contentPanel.add(buttonPanel);
 		
@@ -76,6 +83,8 @@ public class JGeneticPanel extends JDialog {
 				ok.setEnabled(false);
 				
 				genetic.setBottomLimit(Double.parseDouble(bottomLimitEdit.getText()));
+				genetic.setMutationPerCrossOver(mutationPerCrossOverSlider.getValue());
+
 				thread = new Thread(genetic);
 				thread.start();
 			}
@@ -105,5 +114,5 @@ public class JGeneticPanel extends JDialog {
 	public JProgressBar getProgress() {
 		return progress;
 	}
-	
+
 }

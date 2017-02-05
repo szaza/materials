@@ -377,14 +377,15 @@ public class UIFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JDialog settingsDialog = new JSettingsPanel(itNumber);
 				settingsDialog.setVisible(true);
-				settingsDialog.setBounds(200,200,200,130);
+				settingsDialog.setBounds(200,200,220,130);
 				settingsDialog.setResizable(false);
 				
 				settingsDialog.addWindowListener(new WindowAdapter(){
 					
 					@Override
 					public void windowClosed(WindowEvent e){
-						setIterationNumber(((JSettingsPanel)e.getSource()).getItNumber());
+						JSettingsPanel settingsPanel = (JSettingsPanel) e.getSource();
+						setIterationNumber(settingsPanel.getItNumber());
 					}
 					
 				});

@@ -26,6 +26,7 @@ public class GeneticAlg extends HFractal {
 	private double prevBoxDim;
 	private int badControls;
 	private int prevBadControls;
+	private int mutationPerCrossOver;
 	private Random generator;
 	
 	public GeneticAlg(UIFrame ui, JGeneticPanel genetic) {
@@ -33,6 +34,7 @@ public class GeneticAlg extends HFractal {
 		this.uiFrame = ui;
 		this.gPanel = genetic;
 		this.progressBar = gPanel.getProgress();
+		this.mutationPerCrossOver = 5;
 	}
 	
 	//Box dimenziót számol
@@ -261,9 +263,11 @@ public class GeneticAlg extends HFractal {
 			
 			while ((!interrupted) && (counter<maxIterationNumber)) {
 				//Mutáció
-				LinkedList <Curves> tmpCList = deepCopy();
-				mutation();
-				selection(tmpCList);
+				for (int i=0; i<mutationPerCrossOver; i++) {
+					LinkedList<Curves> tmpCList = deepCopy();
+					mutation();
+					selection(tmpCList);
+				}
 				
 				//Keresztezés
 				LinkedList <Curves> tmpCList2 = deepCopy();
@@ -303,5 +307,9 @@ public class GeneticAlg extends HFractal {
 
 	public void setBottomLimit(double bottomLimit) {
 		this.bottomLimit = bottomLimit;
-	}	
+	}
+
+	public void setMutationPerCrossOver(int mutationPerCrossOver) {
+		this.mutationPerCrossOver = mutationPerCrossOver;
+	}
 }

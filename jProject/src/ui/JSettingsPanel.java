@@ -3,10 +3,7 @@ package ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 //A fraktál generálásához szükséges beállításokat tartalmazó panel
 public class JSettingsPanel extends JDialog {
@@ -29,9 +26,10 @@ public class JSettingsPanel extends JDialog {
 		cancel = new JButton("Mégse");
 		contentPanel = new JPanel();
 		buttonPanel = new JPanel();
-		this.iterationLabel = new JLabel("Iterációk száma");
-		this.iterationEdit = new JCustomField(Integer.toString(itNumber));
-		
+
+		iterationLabel = new JLabel("Iterációk száma");
+		iterationEdit = new JCustomField(Integer.toString(itNumber));
+
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 		
@@ -68,5 +66,5 @@ public class JSettingsPanel extends JDialog {
 	public void setItNumber(int itNumber) {
 		this.itNumber = itNumber;
 	}
-	
+
 }
